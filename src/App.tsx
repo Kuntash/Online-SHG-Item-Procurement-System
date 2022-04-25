@@ -1,57 +1,37 @@
+import { Box } from '@mui/material';
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
-
+import { Route, Routes } from 'react-router-dom';
+import Dashboard from './components/dashboard/Dashboard';
+import ViewOrders from './features/orders/ViewOrders';
+import LandingPage from './components/landing-page';
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <Box className="app">
+      <Routes>
+        {/* TODO: For root path, render the landing page and then embed login form inside of it */}
+        <Route
+          path="/"
+          element={<LandingPage />}
+        />
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        >
+          <Route
+            path="home"
+            element={<h1>Home</h1>}
+          />
+          <Route
+            path="all-orders"
+            element={<ViewOrders />}
+          />
+          <Route
+            path="place-order"
+            element={<h1>Place Orders</h1>}
+          />
+        </Route>
+      </Routes>
+    </Box>
   );
 }
 
