@@ -1,82 +1,104 @@
-import {
-  Grid,
-  TableBody,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
-import React, { useEffect } from 'react';
+import { Grid, TableBody, TableRow, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { fetchOrders, selectAllOrders } from './ordersSlice';
+import { fetchAllOrdersOfInstitute, selectAllOrders } from './ordersSlice';
 import {
   StyledContainer,
   StyledPaper,
   StyledStatus,
   StyledTable,
   StyledTableCell,
+  StyledTableHead,
   StyledTableHeadCell,
   StyledTableRow,
 } from '../../components/custom';
 import { RootState } from '../../app/store';
 import { parseISO, format } from 'date-fns';
+import { selectUser } from '../auth/authSlice';
+import { ChevronRightRounded } from '@mui/icons-material';
+import InstituteOrderDetails from './InstituteOrderDetails';
 
 const ViewOrders = () => {
   const dispatch = useAppDispatch();
   const orders = useAppSelector(selectAllOrders);
+  const user = useAppSelector(selectUser);
 
-  const formatedOrders = orders.map((order, index) => ({
+  const formattedOrders = orders.map((order, index) => ({
     ...order,
     backgroundColor:
-      order.orderStatus === 'cancelled'
+      order.status === 'cancelled'
         ? 'error.light'
-        : order.orderStatus === 'ordered'
+        : order.status === 'approved'
         ? 'success.light'
         : 'warning.light',
     color:
-      order.orderStatus === 'cancelled'
+      order.status === 'cancelled'
         ? 'error.main'
-        : order.orderStatus === 'ordered'
+        : order.status === 'approved'
         ? 'success.main'
         : 'warning.main',
-    orderDate: format(parseISO(order.orderDate), 'do MMM yyyy'),
+    orderDate: format(parseISO(order.createdAt), 'do MMM yyyy'),
   }));
+
+  const [selectedRow, setSelectedRow] = useState<{
+    index: number;
+    id: string;
+  }>({
+    index: 0,
+    id: formattedOrders[0]?._id,
+  });
   const ordersStatus = useAppSelector(
     (state: RootState) => state.orders.status
   );
-
   useEffect(() => {
-    if (ordersStatus === 'idle') dispatch(fetchOrders());
-  }, [ordersStatus, dispatch]);
+    setSelectedRow({ index: 0, id: formattedOrders[0]?._id });
+  }, [orders]);
+  useEffect(() => {
+    if (ordersStatus === 'idle' && user.token)
+      dispatch(fetchAllOrdersOfInstitute(user.token));
+  }, [ordersStatus, dispatch, user.token]);
 
   if (ordersStatus === 'loading') return <h1>Loading</h1>;
   return (
     <>
       <StyledContainer sx={{ flexGrow: 1 }}>
-        <Grid container>
+        <Grid
+          container
+          spacing={4}
+        >
           <Grid
             item
             xs={12}
+            md={7}
           >
             <StyledPaper sx={{ padding: '1rem' }}>
               <Typography
                 variant="h2"
                 sx={{ marginBottom: '1rem' }}
               >
-                Orders Table
+                All Orders
               </Typography>
               <StyledTable>
-                <TableHead>
+                <StyledTableHead sx={{ fontSize: '1rem' }}>
                   <TableRow>
                     <StyledTableHeadCell>Order Id</StyledTableHeadCell>
                     <StyledTableHeadCell>Order date</StyledTableHeadCell>
                     <StyledTableHeadCell>Status</StyledTableHeadCell>
+                    <StyledTableHeadCell></StyledTableHeadCell>
                   </TableRow>
-                </TableHead>
+                </StyledTableHead>
                 <TableBody>
-                  {formatedOrders.map((order, index) => (
-                    <StyledTableRow key={order.orderId}>
+                  {formattedOrders.map((order, index) => (
+                    <StyledTableRow
+                      sx={{ fontSize: '0.875rem' }}
+                      key={order._id}
+                      selected={selectedRow.index === index}
+                      onClick={() => {
+                        setSelectedRow({ index, id: order._id });
+                      }}
+                    >
                       <StyledTableCell sx={{ marginTop: '1rem' }}>
-                        {order.orderId}
+                        {order._id}
                       </StyledTableCell>
                       <StyledTableCell sx={{ marginTop: '1rem' }}>
                         {order.orderDate}
@@ -88,14 +110,24 @@ const ViewOrders = () => {
                             backgroundColor: order.backgroundColor,
                           }}
                         >
-                          {order.orderStatus}
+                          {order.status}
                         </StyledStatus>
+                      </StyledTableCell>
+                      <StyledTableCell sx={{ marginTop: '1rem' }}>
+                        <ChevronRightRounded color="primary" />
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
                 </TableBody>
               </StyledTable>
             </StyledPaper>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={5}
+          >
+            <InstituteOrderDetails orderId={selectedRow.id} />
           </Grid>
         </Grid>
       </StyledContainer>

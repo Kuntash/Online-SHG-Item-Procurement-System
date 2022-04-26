@@ -26,6 +26,7 @@ export const theme = createTheme({
     success: {
       main: 'rgb(34, 154, 22)',
       light: 'rgba(84, 214, 44, 0.16)',
+      dark: '#00ab55',
     },
     warning: {
       main: 'rgb(183, 129, 3)',
