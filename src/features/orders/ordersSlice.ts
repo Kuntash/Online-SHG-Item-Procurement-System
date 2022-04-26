@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
-interface Order {
+export interface Order {
   _id: string;
   approvedfordisplay: boolean;
   bid: [];
@@ -55,7 +55,10 @@ export const postOrderOfInstitute = createAsyncThunk(
         redirect: 'follow',
         headers,
       };
-      const response = await fetch('https://selfhelpgroup-backend.herokuapp.com/order/postorder', requestOptions);
+      const response = await fetch(
+        'https://selfhelpgroup-backend.herokuapp.com/order/postorder',
+        requestOptions
+      );
 
       if (response.status === 400) throw new Error('An error occurred');
       const result = response.json();

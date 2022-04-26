@@ -1,5 +1,5 @@
 import { Grid, TableBody, TableRow, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { fetchAllOrdersOfInstitute, selectAllOrders } from './ordersSlice';
 import {
@@ -15,30 +15,55 @@ import {
 import { RootState } from '../../app/store';
 import { parseISO, format } from 'date-fns';
 import { selectUser } from '../auth/authSlice';
+import { Order } from './ordersSlice';
 import { ChevronRightRounded } from '@mui/icons-material';
 import InstituteOrderDetails from './InstituteOrderDetails';
+
+export interface FormattedOrdersType extends Order {
+  backgroundColor?: string;
+  color?: string;
+  orderDate?: string;
+}
 
 const ViewOrders = () => {
   const dispatch = useAppDispatch();
   const orders = useAppSelector(selectAllOrders);
   const user = useAppSelector(selectUser);
-
-  const formattedOrders = orders.map((order, index) => ({
-    ...order,
-    backgroundColor:
-      order.status === 'cancelled'
-        ? 'error.light'
-        : order.status === 'approved'
-        ? 'success.light'
-        : 'warning.light',
-    color:
-      order.status === 'cancelled'
-        ? 'error.main'
-        : order.status === 'approved'
-        ? 'success.main'
-        : 'warning.main',
-    orderDate: format(parseISO(order.createdAt), 'do MMM yyyy'),
-  }));
+  // const [formattedOrders, setFormattedOrders] = use;
+  let formattedOrders: any = useRef(
+    orders.map((order, index) => ({
+      ...order,
+      backgroundColor:
+        order.status === 'cancelled'
+          ? 'error.light'
+          : order.status === 'approved'
+          ? 'success.light'
+          : 'warning.light',
+      color:
+        order.status === 'cancelled'
+          ? 'error.main'
+          : order.status === 'approved'
+          ? 'success.main'
+          : 'warning.main',
+      orderDate: format(parseISO(order.createdAt), 'do MMM yyyy'),
+    }))
+  ).current;
+  // formattedOrders = orders.map((order, index) => ({
+  //   ...order,
+  //   backgroundColor:
+  //     order.status === 'cancelled'
+  //       ? 'error.light'
+  //       : order.status === 'approved'
+  //       ? 'success.light'
+  //       : 'warning.light',
+  //   color:
+  //     order.status === 'cancelled'
+  //       ? 'error.main'
+  //       : order.status === 'approved'
+  //       ? 'success.main'
+  //       : 'warning.main',
+  //   orderDate: format(parseISO(order.createdAt), 'do MMM yyyy'),
+  // }));
 
   const [selectedRow, setSelectedRow] = useState<{
     index: number;
@@ -52,7 +77,7 @@ const ViewOrders = () => {
   );
   useEffect(() => {
     setSelectedRow({ index: 0, id: formattedOrders[0]?._id });
-  }, [orders]);
+  }, [orders, formattedOrders]);
   useEffect(() => {
     if (ordersStatus === 'idle' && user.token)
       dispatch(fetchAllOrdersOfInstitute(user.token));
@@ -88,7 +113,7 @@ const ViewOrders = () => {
                   </TableRow>
                 </StyledTableHead>
                 <TableBody>
-                  {formattedOrders.map((order, index) => (
+                  {formattedOrders.map((order: any, index: number) => (
                     <StyledTableRow
                       sx={{ fontSize: '0.875rem' }}
                       key={order._id}
