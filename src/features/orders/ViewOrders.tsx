@@ -1,5 +1,5 @@
 import { Grid, TableBody, TableRow, Typography } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { fetchAllOrdersOfInstitute, selectAllOrders } from './ordersSlice';
 import {
@@ -29,25 +29,47 @@ const ViewOrders = () => {
   const dispatch = useAppDispatch();
   const orders = useAppSelector(selectAllOrders);
   const user = useAppSelector(selectUser);
+  const [formattedOrders, setFormattedOrders] = useState<any>([]);
+
+  useEffect(() => {
+    setFormattedOrders(
+      orders.map((order, index) => ({
+        ...order,
+        backgroundColor:
+          order.status === 'cancelled'
+            ? 'error.light'
+            : order.status === 'approved'
+            ? 'success.light'
+            : 'warning.light',
+        color:
+          order.status === 'cancelled'
+            ? 'error.main'
+            : order.status === 'approved'
+            ? 'success.main'
+            : 'warning.main',
+        orderDate: format(parseISO(order.createdAt), 'do MMM yyyy'),
+      }))
+    );
+  }, [orders]);
   // const [formattedOrders, setFormattedOrders] = use;
-  let formattedOrders: any = useRef(
-    orders.map((order, index) => ({
-      ...order,
-      backgroundColor:
-        order.status === 'cancelled'
-          ? 'error.light'
-          : order.status === 'approved'
-          ? 'success.light'
-          : 'warning.light',
-      color:
-        order.status === 'cancelled'
-          ? 'error.main'
-          : order.status === 'approved'
-          ? 'success.main'
-          : 'warning.main',
-      orderDate: format(parseISO(order.createdAt), 'do MMM yyyy'),
-    }))
-  ).current;
+  // let formattedOrders: any = useRef(
+  //   orders.map((order, index) => ({
+  //     ...order,
+  //     backgroundColor:
+  //       order.status === 'cancelled'
+  //         ? 'error.light'
+  //         : order.status === 'approved'
+  //         ? 'success.light'
+  //         : 'warning.light',
+  //     color:
+  //       order.status === 'cancelled'
+  //         ? 'error.main'
+  //         : order.status === 'approved'
+  //         ? 'success.main'
+  //         : 'warning.main',
+  //     orderDate: format(parseISO(order.createdAt), 'do MMM yyyy'),
+  //   }))
+  // ).current;
   // formattedOrders = orders.map((order, index) => ({
   //   ...order,
   //   backgroundColor:
