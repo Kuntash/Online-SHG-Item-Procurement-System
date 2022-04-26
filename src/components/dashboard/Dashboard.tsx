@@ -4,8 +4,10 @@ import {
   NotificationsRounded,
 } from '@mui/icons-material';
 import { Box, IconButton, Slide, useScrollTrigger } from '@mui/material';
-import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../app/hooks';
+import { selectUser } from '../../features/auth/authSlice';
 import {
   AppBar,
   ContainerColumnBox,
@@ -13,7 +15,8 @@ import {
   Drawer,
   DrawerHeader,
 } from '../custom';
-import OrderSideMenu from './OrderSideMenu';
+import DepartmentSideMenu from './DepartmentSideMenu';
+import InstituteSideMenu from './InstituteSideMenu';
 
 const HideOnScroll = (props: { children: JSX.Element }) => {
   const trigger = useScrollTrigger();
@@ -29,6 +32,22 @@ const HideOnScroll = (props: { children: JSX.Element }) => {
 };
 const Dashboard = () => {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true);
+  const user = useAppSelector(selectUser);
+  const navigate = useNavigate();
+  let sideMenu;
+
+  if (user.status === 'succeeded') {
+    if (user.userType === 'department')
+      sideMenu = <DepartmentSideMenu drawerOpen={drawerOpen} />;
+    if (user.userType === 'institute')
+      sideMenu = <InstituteSideMenu drawerOpen={drawerOpen} />;
+  }
+
+  useEffect(() => {
+    if (user.status === 'idle' || user.status === 'failed') {
+      navigate('/');
+    }
+  }, [user.status, navigate]);
   const handleDrawerState = () => {
     setDrawerOpen(!drawerOpen);
   };
@@ -72,9 +91,7 @@ const Dashboard = () => {
           </IconButton>
         </DrawerHeader>
 
-        <ContainerColumnBox>
-          <OrderSideMenu drawerOpen={drawerOpen} />
-        </ContainerColumnBox>
+        <ContainerColumnBox>{sideMenu}</ContainerColumnBox>
       </Drawer>
       <ContainerColumnBox sx={{ flexGrow: 1, minHeight: '100vh' }}>
         <DrawerHeader />

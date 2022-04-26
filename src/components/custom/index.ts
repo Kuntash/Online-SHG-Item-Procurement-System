@@ -62,7 +62,9 @@ export const ContainerRowBox = styled(Box)<BoxProps>(({ theme }) => ({
 export const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   borderRadius: theme.spacing(1),
   boxShadow: '0 8px 16px 0 rgb(255 48 48 / 24%)',
-
+  [theme.breakpoints.up('lg')]: {
+    minWidth: theme.spacing(20),
+  },
   '&:hover': {
     boxShadow: 'none',
   },
@@ -156,7 +158,7 @@ export const Drawer = styled(MuiDrawer, {
 
 // Lists
 export const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
-  '&:focus': {
+  '&.Mui-selected': {
     '& .MuiTypography-root': {
       fontWeight: 500,
     },
@@ -166,7 +168,6 @@ export const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
     color: theme.palette.primary.main,
     backgroundColor: theme.palette.redColor.main,
   },
-
   '& .MuiSvgIcon-root': {
     color: theme.palette.secondary.dark,
   },
@@ -207,12 +208,20 @@ export const StyledContainer = styled(Container)(({ theme }) => ({
 export const StyledTable = styled(Table)(({ theme }) => ({}));
 export const StyledTableHead = styled(TableHead)(({ theme }) => ({}));
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&.Mui-selected': {
+    backgroundColor: 'rgba(0,0,0,0.04)',
+  },
+  '&.Mui-selected:hover': {
+    backgroundColor: 'rgba(0,0,0,0.04)',
+  },
   '&:hover': {
     cursor: 'pointer',
-    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+    backgroundColor: 'rgba(0, 0, 0, 0.01)',
   },
+  '&:focus': {},
 }));
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  fontSize: 'unset',
   borderBottom: 'none',
   '&:first-of-type': {
     paddingLeft: theme.spacing(3),

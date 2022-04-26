@@ -5,14 +5,16 @@ import {
   InputAdornment,
   IconButton,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
   ContainerColumnBox,
   StyledButton,
   StyledPaper,
   StyledTextField,
 } from '../../components/custom';
+import { login, selectUser } from './authSlice';
 
 interface HelperTextType {
   email: string;
@@ -20,6 +22,8 @@ interface HelperTextType {
 }
 const LoginForm = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
   const [inputEmail, setInputEmail] = useState<string>('');
   const [helperTexts, setHelperTexts] = useState<HelperTextType>({
     email: '',
@@ -31,15 +35,25 @@ const LoginForm = () => {
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
+  useEffect(() => {
+    if (user.status === 'loading') console.log('Loading user info');
+    if (user.status === 'succeeded') {
+      if (user.userType === 'department')
+        navigate('/dashboard/department/home');
 
-  const handleLogin = () => {
+      if (user.userType === 'institute')
+        navigate('/dashboard/institute/all-orders');
+    }
+  }, [user, navigate]);
+  const handleLogin = async () => {
     if (!inputEmail)
       setHelperTexts((prev) => ({ ...prev, email: 'Email is required' }));
 
     if (!inputPassword)
       setHelperTexts((prev) => ({ ...prev, password: 'Password is required' }));
     if (!inputPassword || !inputPassword) return;
-    navigate('/dashboard/all-orders');
+
+    await dispatch(await login({ email: inputEmail, password: inputPassword }));
   };
   return (
     <StyledPaper>
@@ -95,9 +109,9 @@ const LoginForm = () => {
         <StyledButton
           variant="contained"
           color="primary"
+          sx={{ padding: '0.75rem 1.2rem' }}
           type="submit"
           onClick={handleLogin}
-          sx={{ padding: '0.75rem 1.2rem' }}
         >
           Login
         </StyledButton>
