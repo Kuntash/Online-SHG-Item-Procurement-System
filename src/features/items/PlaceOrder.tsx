@@ -1,4 +1,3 @@
-
 import { Grid, TableBody, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -21,11 +20,6 @@ import {
   selectAllItems,
 } from './itemsSlice';
 import PlaceOrderDetails from './PlaceOrderDetails';
-export interface AddedItem {
-  itemId: string | undefined;
-  itemName: string | undefined;
-  itemQuantity: number | undefined;
-}
 
 /*
   [{
@@ -55,7 +49,8 @@ const PlaceOrder = () => {
   };
 
   const handleAddItem = (item: Item): void => {
-    const { _id, itemdescription, itemname, itemtype, itemunit } = item;
+    const { _id, itemdescription, itemname, itemtype, itemunit, itemprice } =
+      item;
 
     if (isNaN(orderItemsForm?.[_id] as number)) {
       console.log('Enter a number please');
@@ -68,6 +63,7 @@ const PlaceOrder = () => {
     const obj: PlaceOrderItem = {
       _id,
       itemname,
+      itemprice,
       itemquantity: Number(orderItemsForm?.[_id]),
       itemtype,
       itemunit,
