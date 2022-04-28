@@ -39,7 +39,7 @@ const LoginForm = () => {
     if (user.status === 'loading') console.log('Loading user info');
     if (user.status === 'succeeded') {
       if (user.userType === 'department')
-        navigate('/dashboard/department/home');
+        navigate('/dashboard/department/approve-orders');
 
       if (user.userType === 'institute')
         navigate('/dashboard/institute/all-orders');

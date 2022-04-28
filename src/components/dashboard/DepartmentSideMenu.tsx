@@ -1,13 +1,14 @@
 import {
-  AddShoppingCartRounded,
+  AddTaskRounded,
   LogoutRounded,
-  TableViewRounded,
+  SellRounded,
 } from '@mui/icons-material';
 import { ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
 import { logout } from '../../features/auth/authSlice';
+import { resetOnLogout } from '../../features/departmentOrders/departmentOrdersSlice';
 import { StyledList, StyledListItemButton } from '../custom';
 
 interface DepartmentSideMenuType {
@@ -26,14 +27,14 @@ const DepartmentSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
   const [listItemSelectedIndex, setListItemSelectedIndex] = useState<number>(0);
   const departmentSideMenu: DepartmentSideMenuType[] = [
     {
-      title: 'Department all orders',
-      route: 'all-orders',
-      icon: <TableViewRounded />,
+      title: 'Approve orders',
+      route: 'approve-orders',
+      icon: <AddTaskRounded />,
     },
     {
-      title: 'Place order',
-      route: 'place-order',
-      icon: <AddShoppingCartRounded />,
+      title: 'Biddings',
+      route: 'biddings',
+      icon: <SellRounded />,
     },
   ];
   const handleRedirect = (route: string): void => {
@@ -77,6 +78,7 @@ const DepartmentSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
         key={'logout'}
         onClick={() => {
           dispatch(logout());
+          dispatch(resetOnLogout());
           handleRedirect('/');
         }}
       >

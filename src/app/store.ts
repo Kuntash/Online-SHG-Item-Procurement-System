@@ -1,12 +1,14 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
-import ordersReducer from '../features/orders/ordersSlice';
-import itemsReducer from '../features/items/itemsSlice';
+import ordersReducer from '../features/instituteOrders/ordersSlice';
+import itemsReducer from '../features/instituteItems/itemsSlice';
+import departmentOrdersReducer from '../features/departmentOrders/departmentOrdersSlice';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     orders: ordersReducer,
     items: itemsReducer,
+    departmentOrders: departmentOrdersReducer,
   },
 });
 

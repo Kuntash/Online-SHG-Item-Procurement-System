@@ -62,15 +62,18 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
           </StyledTableHead>
           {/* TODO: Convert this to a list when the data changes from the api side */}
           <TableBody>
-            <StyledTableRow sx={{ fontSize: '0.875rem' }}>
-              <StyledTableCell>{orderDetail.itemname}</StyledTableCell>
-              <StyledTableCell>{orderDetail.itemtype}</StyledTableCell>
-              <StyledTableCell>
-                {orderDetail.itemquantity}
-                {''}
-                {orderDetail.itemtype === 'packed' && orderDetail.itemunit}
-              </StyledTableCell>
-            </StyledTableRow>
+            {orderDetail &&
+              orderDetail.items.map((item, index) => (
+                <StyledTableRow sx={{ fontSize: '0.875rem' }}>
+                  <StyledTableCell>{item.itemname}</StyledTableCell>
+                  <StyledTableCell>{item.itemtype}</StyledTableCell>
+                  <StyledTableCell>
+                    {item.itemquantity}
+                    {''}
+                    {item.itemtype === 'packed' && item.itemunit}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
           </TableBody>
         </StyledTable>
       </ContainerColumnBox>

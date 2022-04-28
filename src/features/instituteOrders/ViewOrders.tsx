@@ -51,41 +51,6 @@ const ViewOrders = () => {
       }))
     );
   }, [orders]);
-  // const [formattedOrders, setFormattedOrders] = use;
-  // let formattedOrders: any = useRef(
-  //   orders.map((order, index) => ({
-  //     ...order,
-  //     backgroundColor:
-  //       order.status === 'cancelled'
-  //         ? 'error.light'
-  //         : order.status === 'approved'
-  //         ? 'success.light'
-  //         : 'warning.light',
-  //     color:
-  //       order.status === 'cancelled'
-  //         ? 'error.main'
-  //         : order.status === 'approved'
-  //         ? 'success.main'
-  //         : 'warning.main',
-  //     orderDate: format(parseISO(order.createdAt), 'do MMM yyyy'),
-  //   }))
-  // ).current;
-  // formattedOrders = orders.map((order, index) => ({
-  //   ...order,
-  //   backgroundColor:
-  //     order.status === 'cancelled'
-  //       ? 'error.light'
-  //       : order.status === 'approved'
-  //       ? 'success.light'
-  //       : 'warning.light',
-  //   color:
-  //     order.status === 'cancelled'
-  //       ? 'error.main'
-  //       : order.status === 'approved'
-  //       ? 'success.main'
-  //       : 'warning.main',
-  //   orderDate: format(parseISO(order.createdAt), 'do MMM yyyy'),
-  // }));
 
   const [selectedRow, setSelectedRow] = useState<{
     index: number;
@@ -101,9 +66,8 @@ const ViewOrders = () => {
     setSelectedRow({ index: 0, id: formattedOrders[0]?._id });
   }, [orders, formattedOrders]);
   useEffect(() => {
-    if (ordersStatus === 'idle' && user.token)
-      dispatch(fetchAllOrdersOfInstitute(user.token));
-  }, [ordersStatus, dispatch, user.token]);
+    dispatch(fetchAllOrdersOfInstitute(user.token));
+  }, [dispatch, user.token]);
 
   if (ordersStatus === 'loading') return <h1>Loading</h1>;
   return (
