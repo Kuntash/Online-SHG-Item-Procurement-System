@@ -1,6 +1,7 @@
 import { RemoveRounded } from '@mui/icons-material';
 import { Alert, TableBody, TableRow, Typography } from '@mui/material';
 import React from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
   ContainerColumnBox,
   StyledButton,
@@ -11,7 +12,8 @@ import {
   StyledTableHeadCell,
   StyledTableRow,
 } from '../../components/custom';
-import { PlaceOrderItem } from './itemsSlice';
+import { selectUser } from '../auth/authSlice';
+import { placeOrder, PlaceOrderItem } from './itemsSlice';
 const PlaceOrderDetails = ({
   addedItemsList,
   setAddedItemsList,
@@ -19,6 +21,8 @@ const PlaceOrderDetails = ({
   addedItemsList: PlaceOrderItem[];
   setAddedItemsList: React.Dispatch<React.SetStateAction<PlaceOrderItem[]>>;
 }) => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
   const handleRemoveAddedItem = (itemId: string | undefined) => {
     setAddedItemsList((prev) => {
       return prev.filter((addedItem, index) => addedItem._id !== itemId);
@@ -27,7 +31,7 @@ const PlaceOrderDetails = ({
 
   const handlePlaceOrder = () => {
     // TODO: Uncomment the next lines once the api starts to work
-    // dispatch(placeOrder({ addedItemsList, userToken }));
+    dispatch(placeOrder({ addedItemsList, token: user.token }));
   };
   return (
     <StyledPaper>

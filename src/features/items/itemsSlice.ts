@@ -3,6 +3,7 @@ import { RootState } from '../../app/store';
 export interface Item {
   _id: string;
   itemtype: 'loose' | 'packed';
+  itemprice: number;
   itemname: string;
   itemdescription: string;
   itemunit?: string;
@@ -17,21 +18,7 @@ export interface ItemsState {
 }
 const initialState: ItemsState = {
   status: 'idle',
-  items: [
-    {
-      _id: '1',
-      itemtype: 'loose',
-      itemname: 'टमाटर',
-      itemdescription: 'टमाटर',
-      itemunit: 'kg',
-    },
-    {
-      _id: '2',
-      itemtype: 'packed',
-      itemname: 'नमक',
-      itemdescription: 'नमक',
-    },
-  ],
+  items: [],
 };
 
 export const fetchAllItems = createAsyncThunk(
@@ -65,29 +52,36 @@ export const placeOrder = createAsyncThunk(
   async (
     {
       addedItemsList,
-      userToken,
+      token,
     }: {
       addedItemsList: PlaceOrderItem[];
-      userToken: string | undefined;
+      token: string | undefined;
     },
     { rejectWithValue }
   ) => {
+    const formattedAddedItemsList = addedItemsList.map((addedItem, index) => ({
+      itemid: addedItem._id,
+      itemquantity: addedItem.itemquantity,
+    }));
+
     try {
       const headers = new Headers();
-      headers.append('Authorization', `Bearer ${userToken}`);
+      headers.append('Authorization', `Bearer ${token}`);
+      const raw = JSON.stringify(formattedAddedItemsList);
       const requestOptions: RequestInit = {
         method: 'POST',
         headers,
         redirect: 'follow',
+        body: raw,
       };
 
       const response = await fetch(
-        'localhost:5000/order/postorder',
+        'https://selfhelpgroup-backend.herokuapp.com/order/postorder',
         requestOptions
       );
       if (response.status === 400)
         throw new Error('An error occured while posting orders');
-      const result = response.json();
+      const result = await response.json();
       console.log(result);
       return result;
     } catch (err) {
