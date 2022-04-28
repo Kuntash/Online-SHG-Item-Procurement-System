@@ -34,7 +34,7 @@ const DepartmentOrderDetails = ({ orderId }: { orderId: string }) => {
       approveOrderById({
         token: user.token,
         orderid: departmentOrder?._id,
-        status: 'approved',
+        status: 'approve',
       })
     );
   };
