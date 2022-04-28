@@ -54,7 +54,7 @@ export const approveOrderById = createAsyncThunk(
     body: {
       token: string | undefined;
       orderid: string | undefined;
-      status: 'pending' | 'cancelled' | 'approved' | 'completed';
+      status: 'pending' | 'cancel' | 'approve' | 'complete';
     },
     { rejectWithValue }
   ) => {
@@ -62,6 +62,8 @@ export const approveOrderById = createAsyncThunk(
     try {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${body.token}`);
+      headers.append('Content-Type', 'application/json');
+
       const requestOptions: RequestInit = {
         headers,
         method: 'POST',
@@ -76,6 +78,7 @@ export const approveOrderById = createAsyncThunk(
         requestOptions
       );
 
+      console.log(response);
       if (response.status === 400)
         throw new Error("Couldn't update status of the order");
       const result = await response.json();
