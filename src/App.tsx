@@ -2,9 +2,10 @@ import { Box } from '@mui/material';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Dashboard from './components/dashboard/Dashboard';
-import ViewOrders from './features/orders/ViewOrders';
+import ViewOrders from './features/instituteOrders/ViewOrders';
 import LandingPage from './components/landing-page';
-import PlaceOrder from './features/items/PlaceOrder';
+import PlaceOrder from './features/instituteItems/PlaceOrder';
+import DepartmentOrders from './features/departmentOrders/DepartmentOrders';
 function App() {
   return (
     <Box className="app">
@@ -36,7 +37,15 @@ function App() {
             <Route
               path="home"
               element={<h1> Department home</h1>}
-            ></Route>
+            />
+            <Route
+              path="approve-orders"
+              element={<DepartmentOrders />}
+            />
+            <Route
+              path="biddings"
+              element={<h1>Biddings</h1>}
+            />
           </Route>
         </Route>
       </Routes>
