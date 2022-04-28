@@ -43,6 +43,8 @@ const LoginForm = () => {
 
       if (user.userType === 'institute')
         navigate('/dashboard/institute/all-orders');
+      if(user.userType === 'ceo')
+        navigate('/dashboard/ceo/home');  
     }
   }, [user, navigate]);
   const handleLogin = async () => {

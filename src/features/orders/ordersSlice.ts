@@ -50,6 +50,8 @@ export const postOrderOfInstitute = createAsyncThunk(
     try {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
+      headers.append('Content-Type', 'application/json');
+      headers.append('access-control-allow-origin', '*');
       const requestOptions: RequestInit = {
         method: 'POST',
         redirect: 'follow',
@@ -58,6 +60,7 @@ export const postOrderOfInstitute = createAsyncThunk(
       const response = await fetch(
         'https://selfhelpgroup-backend.herokuapp.com/order/postorder',
         requestOptions
+
       );
 
       if (response.status === 400) throw new Error('An error occurred');

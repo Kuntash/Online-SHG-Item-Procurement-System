@@ -17,7 +17,7 @@ import {
 } from '../custom';
 import DepartmentSideMenu from './DepartmentSideMenu';
 import InstituteSideMenu from './InstituteSideMenu';
-
+import CeoSideMenu from './CeoSideMenu';
 const HideOnScroll = (props: { children: JSX.Element }) => {
   const trigger = useScrollTrigger();
   return (
@@ -41,6 +41,8 @@ const Dashboard = () => {
       sideMenu = <DepartmentSideMenu drawerOpen={drawerOpen} />;
     if (user.userType === 'institute')
       sideMenu = <InstituteSideMenu drawerOpen={drawerOpen} />;
+    if (user.userType === 'ceo')
+      sideMenu = <CeoSideMenu drawerOpen={drawerOpen} />;
   }
 
   useEffect(() => {

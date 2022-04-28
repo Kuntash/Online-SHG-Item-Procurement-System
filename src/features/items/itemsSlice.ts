@@ -67,6 +67,8 @@ export const placeOrder = createAsyncThunk(
     try {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
+      headers.append('Content-Type', 'application/json');
+      headers.append('Access-Control-Allow-Origin', '*');
       const raw = JSON.stringify(formattedAddedItemsList);
       const requestOptions: RequestInit = {
         method: 'POST',

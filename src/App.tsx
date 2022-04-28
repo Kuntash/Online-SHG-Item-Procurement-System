@@ -5,13 +5,15 @@ import Dashboard from './components/dashboard/Dashboard';
 import ViewOrders from './features/orders/ViewOrders';
 import LandingPage from './components/landing-page';
 import PlaceOrder from './features/items/PlaceOrder';
+import Home from './components/Home/Home';
 function App() {
   return (
     <Box className="app">
       <Routes>
         {/* TODO: For root path, render the landing page and then embed login form inside of it */}
+        <Route path="/" element={<Home />} />
         <Route
-          path="/"
+          path="/login"
           element={<LandingPage />}
         />
         <Route
@@ -36,6 +38,12 @@ function App() {
             <Route
               path="home"
               element={<h1> Department home</h1>}
+            ></Route>
+          </Route>
+          <Route path="ceo">
+            <Route
+              path="home"
+              element={<h1> CEO home</h1>}
             ></Route>
           </Route>
         </Route>
