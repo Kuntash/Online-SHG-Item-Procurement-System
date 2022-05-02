@@ -1,8 +1,4 @@
-import {
-  AddTaskRounded,
-  LogoutRounded,
-  SellRounded,
-} from '@mui/icons-material';
+import { AddTaskRounded, LogoutRounded } from '@mui/icons-material';
 import { ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -30,11 +26,6 @@ const DepartmentSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
       title: 'Approve orders',
       route: 'approve-orders',
       icon: <AddTaskRounded />,
-    },
-    {
-      title: 'Biddings',
-      route: 'biddings',
-      icon: <SellRounded />,
     },
   ];
   const handleRedirect = (route: string): void => {
@@ -79,7 +70,7 @@ const DepartmentSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
         onClick={() => {
           dispatch(logout());
           dispatch(resetOnLogout());
-          handleRedirect('/');
+          navigate('/');
         }}
       >
         <ListItemIcon>{<LogoutRounded />}</ListItemIcon>

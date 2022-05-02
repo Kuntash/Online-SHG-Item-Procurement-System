@@ -61,7 +61,7 @@ const LoginForm = () => {
     <StyledPaper>
       <ContainerColumnBox sx={{ rowGap: '1.5rem' }}>
         <ContainerColumnBox sx={{ rowGap: '1rem', marginBottom: '1rem' }}>
-          <Typography variant="h2">Login Form</Typography>
+          <Typography variant="h2">Welcome</Typography>
           <Typography
             variant="body1"
             color="secondary.dark"

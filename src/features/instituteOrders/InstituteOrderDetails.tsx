@@ -64,7 +64,10 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
           <TableBody>
             {orderDetail &&
               orderDetail.items.map((item, index) => (
-                <StyledTableRow sx={{ fontSize: '0.875rem' }}>
+                <StyledTableRow
+                  sx={{ fontSize: '0.875rem' }}
+                  key={index}
+                >
                   <StyledTableCell>{item.itemname}</StyledTableCell>
                   <StyledTableCell>{item.itemtype}</StyledTableCell>
                   <StyledTableCell>

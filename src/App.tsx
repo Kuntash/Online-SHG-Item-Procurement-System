@@ -47,11 +47,9 @@ function App() {
               element={<h1>Biddings</h1>}
             />
           </Route>
-          <Route path="ceo">
-            <Route
-              path="home"
-              element={<h1> CEO home</h1>}
-            ></Route>
+          <Route path="admin">
+            {/* SHG List */}
+            {/* Shg Individual profile */}
           </Route>
         </Route>
       </Routes>

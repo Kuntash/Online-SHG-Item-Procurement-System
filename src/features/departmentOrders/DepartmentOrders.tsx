@@ -19,7 +19,7 @@ import {
 import { ChevronRightRounded } from '@mui/icons-material';
 import { format, parseISO } from 'date-fns';
 import DepartmentOrderDetails from './DepartmentOrderDetails';
-
+import DepartmentBiddings from './DepartmentBiddings';
 const DepartmentOrders = () => {
   const dispatch = useAppDispatch();
   const departmentOrders = useAppSelector(selectDeparmentOrders);
@@ -27,13 +27,13 @@ const DepartmentOrders = () => {
   const [departmentFormattedOrders, setDepartmentFormattedOrders] =
     useState<any>([]);
 
-  const [selectedRow, setSelectedRow] = useState<{
-    index: number;
-    id: string;
-  }>({
-    index: 0,
-    id: departmentFormattedOrders[0]?._id,
-  });
+  const [selectedRow, setSelectedRow] = useState<
+    | {
+        index: number;
+        id: string;
+      }
+    | undefined
+  >();
   useEffect(() => {
     setDepartmentFormattedOrders(
       departmentOrders.map((departmentOrder, index) => ({
@@ -60,12 +60,9 @@ const DepartmentOrders = () => {
   }, [departmentOrders]);
 
   useEffect(() => {
-    setSelectedRow({ index: 0, id: departmentFormattedOrders[0]?._id });
-  }, [departmentOrders, departmentFormattedOrders]);
-
-  useEffect(() => {
-    dispatch(fetchDepartmentOrders(user.token));
-  }, [dispatch, user.token]);
+    if (user.status === 'succeeded')
+      dispatch(fetchDepartmentOrders(user.token));
+  }, [dispatch, user]);
 
   return (
     <>
@@ -105,7 +102,7 @@ const DepartmentOrders = () => {
                       <StyledTableRow
                         sx={{ fontSize: '0.875rem' }}
                         key={order._id}
-                        selected={selectedRow.index === index}
+                        selected={selectedRow?.index === index}
                         onClick={() => {
                           setSelectedRow({ index, id: order._id });
                         }}
@@ -132,8 +129,11 @@ const DepartmentOrders = () => {
                             {order.status}
                           </StyledStatus>
                         </StyledTableCell>
+
                         <StyledTableCell sx={{ marginTop: '1rem' }}>
-                          <ChevronRightRounded color="primary" />
+                          {selectedRow?.index === index && (
+                            <ChevronRightRounded color="primary" />
+                          )}
                         </StyledTableCell>
                       </StyledTableRow>
                     )
@@ -147,8 +147,10 @@ const DepartmentOrders = () => {
             xs={12}
             md={5}
           >
-            <DepartmentOrderDetails orderId={selectedRow.id} />
+            <DepartmentOrderDetails orderId={selectedRow?.id} />
           </Grid>
+
+          <DepartmentBiddings orderId={selectedRow?.id} />
         </Grid>
       </StyledContainer>
     </>
