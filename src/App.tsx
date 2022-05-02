@@ -47,6 +47,10 @@ function App() {
               element={<h1>Biddings</h1>}
             />
           </Route>
+          <Route path="admin">
+            {/* SHG List */}
+            {/* Shg Individual profile */}
+          </Route>
         </Route>
       </Routes>
     </Box>
