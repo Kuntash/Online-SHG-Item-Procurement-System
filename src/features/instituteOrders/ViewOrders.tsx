@@ -66,8 +66,9 @@ const ViewOrders = () => {
     setSelectedRow({ index: 0, id: formattedOrders[0]?._id });
   }, [orders, formattedOrders]);
   useEffect(() => {
-    dispatch(fetchAllOrdersOfInstitute(user.token));
-  }, [dispatch, user.token]);
+    if (user.status === 'succeeded')
+      dispatch(fetchAllOrdersOfInstitute(user.token));
+  }, [dispatch, user]);
 
   if (ordersStatus === 'loading') return <h1>Loading</h1>;
   return (

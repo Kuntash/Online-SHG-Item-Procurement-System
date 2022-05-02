@@ -1,6 +1,23 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
+export interface SHGProduct {
+  shgproduct: string;
+  quantity: number;
+  unit: string;
+  _id: string;
+}
+export interface Bidder {
+  shgId: string;
+  shgname: string;
+  shgcontact: string;
+  shglocation: string;
+  products: SHGProduct[];
+  status: 'approved' | 'pending';
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
 export interface DepartmentOrdersState {
   status: 'idle' | 'failed' | 'succeeded' | 'loading';
   orders: {
@@ -15,17 +32,7 @@ export interface DepartmentOrdersState {
       itemdescription: string;
       _id: string;
     }[];
-    bid: {
-      shgId: string;
-      shgname: string;
-      shgcontact: string;
-      shglocation: string;
-      shgproduct: string;
-      quantity: string;
-      approved: boolean;
-      _id: string;
-      unit: string;
-    }[];
+    bid: Bidder[];
     institutename: string;
     instituteid: string;
     departmentid: string;
@@ -48,6 +55,49 @@ const initialState: DepartmentOrdersState = {
   orders: [],
 };
 
+export const approveBidByIds = createAsyncThunk(
+  'departmentOrders/approveBidByIds',
+  async (
+    {
+      orderId,
+      shgId,
+      token,
+    }: { orderId: string; shgId: string; token: string | undefined },
+    { rejectWithValue }
+  ) => {
+    try {
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${token}`);
+      headers.append('Content-Type', 'application/json');
+      const raw = JSON.stringify({
+        orderid: orderId,
+        shgId: shgId,
+        token: token,
+      });
+      const requestOptions: RequestInit = {
+        method: 'POST',
+        redirect: 'follow',
+        body: raw,
+        headers,
+      };
+
+      const response = await fetch(
+        'https://selfhelpgroup-backend.herokuapp.com/department/approveorder',
+        requestOptions
+      );
+      console.log(response);
+      if (response.status === 400)
+        throw new Error('An error occurred while approving bid');
+
+      const result = await response.json();
+      console.log(result);
+      return result;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
 export const approveOrderById = createAsyncThunk(
   'departmentOrders/approveOrderById',
   async (
@@ -58,7 +108,6 @@ export const approveOrderById = createAsyncThunk(
     },
     { rejectWithValue }
   ) => {
-    console.log(body.orderid);
     try {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${body.token}`);
@@ -83,7 +132,6 @@ export const approveOrderById = createAsyncThunk(
         throw new Error("Couldn't update status of the order");
       const result = await response.json();
       console.log(result);
-      return result.message;
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -146,6 +194,15 @@ export const departmentOrdersSlice = createSlice({
         state.status = 'succeeded';
       })
       .addCase(approveOrderById.rejected, (state, action) => {
+        state.status = 'failed';
+      })
+      .addCase(approveBidByIds.pending, (state, action) => {
+        state.status = 'loading';
+      })
+      .addCase(approveBidByIds.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+      })
+      .addCase(approveBidByIds.rejected, (state, action) => {
         state.status = 'failed';
       });
   },
