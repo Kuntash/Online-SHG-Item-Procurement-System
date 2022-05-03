@@ -46,11 +46,18 @@ const DepartmentSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
           handleRedirect(route);
         }}
       >
-        <ListItemIcon>{icon}</ListItemIcon>
+        <ListItemIcon
+        // sx={{ justifyContent: drawerOpen ? 'flex-start' : 'center' }}
+        >
+          {icon}
+        </ListItemIcon>
         <ListItemText
           color="secondary"
           primary={title}
-          sx={{ opacity: drawerOpen ? 1 : 0 }}
+          sx={{
+            opacity: drawerOpen ? 1 : 0,
+            display: drawerOpen ? 'block' : 'none',
+          }}
         />
       </StyledListItemButton>
     );

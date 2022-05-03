@@ -31,7 +31,7 @@ const HideOnScroll = (props: { children: JSX.Element }) => {
   );
 };
 const Dashboard = () => {
-  const [drawerOpen, setDrawerOpen] = useState<boolean>(true);
+  const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const user = useAppSelector(selectUser);
   const navigate = useNavigate();
   let sideMenu;

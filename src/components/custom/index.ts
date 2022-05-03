@@ -71,10 +71,11 @@ export const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
 }));
 
 // Side Drawer Styles
-const drawerWidth = '18rem';
-
+const drawerWidthOpen = '18rem';
+const drawerWidthCloseMobile = '3.5rem';
+const drawerWidthCloseDesktop = '5.5rem';
 const openedMixin = (theme: Theme): CSSObject => ({
-  width: drawerWidth,
+  width: drawerWidthOpen,
   borderRight: '1px dashed rgba(145, 158, 171, 0.24)',
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
@@ -90,9 +91,9 @@ const closedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 1px)`,
+  width: `calc(${drawerWidthCloseMobile} + 1px)`,
   [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(11)})`,
+    width: `calc(${drawerWidthCloseDesktop})`,
   },
 });
 
@@ -128,21 +129,27 @@ export const AppBar = styled(MuiAppBar, {
   flexDirection: 'row',
   justifyContent: 'flex-end',
   alignItems: 'center',
-  marginLeft: drawerWidth,
+  marginLeft: drawerWidthOpen,
   height: '60px',
-  width: `calc(100% - ${drawerWidth})`,
+  width: `calc(100% - ${drawerWidthOpen})`,
   ...(open && {
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
+  ...(!open && {
+    width: `calc(100% - ${drawerWidthCloseMobile} - 1px)`,
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${drawerWidthCloseDesktop})`,
+    },
+  }),
 }));
 
 export const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
-  width: drawerWidth,
+  width: drawerWidthOpen,
   flexShrink: 0,
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
@@ -175,6 +182,16 @@ export const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
   color: theme.palette.secondary.dark,
   borderRadius: theme.spacing(1),
   marginBottom: theme.spacing(1 / 2),
+
+  [theme.breakpoints.down('sm')]: {
+    '& .MuiListItemIcon-root': {
+      minWidth: 'unset',
+      alignItems: 'center',
+      flexGrow: 1,
+    },
+
+    padding: theme.spacing(1, 1),
+  },
 }));
 
 export const StyledList = styled(List)(({ theme }) => ({
@@ -182,6 +199,10 @@ export const StyledList = styled(List)(({ theme }) => ({
     textTransform: 'uppercase',
     color: theme.palette.blackColor.main,
     fontWeight: 700,
+  },
+
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(0, 1 / 2),
   },
   padding: theme.spacing(0, 2),
 }));
