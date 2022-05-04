@@ -43,8 +43,7 @@ const LoginForm = () => {
 
       if (user.userType === 'institute')
         navigate('/dashboard/institute/all-orders');
-      if(user.userType === 'ceo')
-        navigate('/dashboard/ceo/home');  
+      if (user.userType === 'ceo') navigate('/dashboard/ceo/home');
     }
   }, [user, navigate]);
   const handleLogin = async () => {
@@ -58,7 +57,7 @@ const LoginForm = () => {
     await dispatch(await login({ email: inputEmail, password: inputPassword }));
   };
   return (
-    <StyledPaper>
+    <StyledPaper sx={{ width: '90%' }}>
       <ContainerColumnBox sx={{ rowGap: '1.5rem' }}>
         <ContainerColumnBox sx={{ rowGap: '1rem', marginBottom: '1rem' }}>
           <Typography variant="h2">Welcome</Typography>
@@ -74,7 +73,7 @@ const LoginForm = () => {
             helperText={helperTexts.email}
             value={inputEmail}
             onChange={(e) => setInputEmail(e.target.value)}
-            sx={{ borderRadius: '0.8rem' }}
+            sx={{ borderRadius: '0.8rem', width: '100%' }}
             label="Email address"
             variant="outlined"
             type="email"
@@ -86,6 +85,7 @@ const LoginForm = () => {
             value={inputPassword}
             onChange={(e) => setInputPassword(e.target.value)}
             label="Password"
+            sx={{ borderRadius: '0.8rem', width: '100%' }}
             type={showPassword ? 'text' : 'password'}
             variant="outlined"
             InputProps={{
