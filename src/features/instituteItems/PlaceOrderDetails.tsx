@@ -17,7 +17,11 @@ import { placeOrder, PlaceOrderItem } from './itemsSlice';
 const PlaceOrderDetails = ({
   addedItemsList,
   setAddedItemsList,
+  setOrdersItemForm,
 }: {
+  setOrdersItemForm: React.Dispatch<
+    React.SetStateAction<{ [key: string]: number | string }>
+  >;
   addedItemsList: PlaceOrderItem[];
   setAddedItemsList: React.Dispatch<React.SetStateAction<PlaceOrderItem[]>>;
 }) => {
@@ -29,9 +33,15 @@ const PlaceOrderDetails = ({
     });
   };
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
+    console.log('placeOrder() about to be executed');
     // TODO: Uncomment the next lines once the api starts to work
-    dispatch(placeOrder({ addedItemsList, token: user.token }));
+    await dispatch(placeOrder({ addedItemsList, token: user.token }));
+
+    // NOTE: Resetting all the form inputs and items added after placeOrder is completed
+    console.log('placeOrder() got executed');
+    setOrdersItemForm({});
+    setAddedItemsList([]);
   };
   return (
     <StyledPaper>

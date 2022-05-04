@@ -119,7 +119,11 @@ const PlaceOrder = () => {
                       <StyledTextField
                         sx={{ width: 'unset' }}
                         name={item._id}
-                        value={orderItemsForm?.[item._id]}
+                        value={
+                          orderItemsForm?.[item._id]
+                            ? orderItemsForm?.[item._id]
+                            : 0
+                        }
                         label={`${item.itemname} की मात्रा (in ${item.itemunit})`}
                         onChange={handleOnFormChange}
                       />
@@ -166,6 +170,7 @@ const PlaceOrder = () => {
           md={5}
         >
           <PlaceOrderDetails
+            setOrdersItemForm={setOrdersItemForm}
             addedItemsList={addedItemsList}
             setAddedItemsList={setAddedItemsList}
           />
