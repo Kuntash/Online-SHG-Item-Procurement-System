@@ -10,31 +10,37 @@ import { Container, Typography, Grid } from '@mui/material';
 const LandingPage = () => {
   return (
     <Container sx={{ minWidth: '90vw' }}>
-      <Box
+      <Grid
+        container
+        columns={{ xs: 1, sm: 2 }}
         sx={{
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
+          margin: '20px auto',
+          maxWidth: '100%',
           alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        <img
-          src="/cglogo.png"
-          alt="logo"
-          width="100px"
-          height="100px"
-        />
-        <Typography
-          variant="h3"
-          sx={{
-            textAlign: 'center',
-            margin: '30px',
-            fontWeight: 'bold',
-          }}
-        >
-          Online SHG Item Procurement System
-        </Typography>
-      </Box>
+        <Grid item>
+          <img
+            src="/cglogo.png"
+            alt="logo"
+            width="100px"
+            height="100px"
+          />
+        </Grid>
+        <Grid item>
+          <Typography
+            variant="h3"
+            sx={{
+              textAlign: 'center',
+              margin: '30px',
+              fontWeight: 'bold',
+            }}
+          >
+            Online SHG Item Procurement System
+          </Typography>
+        </Grid>
+      </Grid>
       <Swiper
         spaceBetween={50}
         slidesPerView={1}
@@ -47,8 +53,17 @@ const LandingPage = () => {
         <SwiperSlide>
           <Grid
             container
-            columns={{ xs: 2 }}
+            columns={{ xs: 1, sm: 2 }}
           >
+            <Grid item>
+              <img
+                width="100%"
+                alt="cm"
+                height="500px"
+                object-fit="cover"
+                src="https://gumlet.assettype.com/freepressjournal/2020-10/05ad4dc5-93bf-43ab-83f0-9915fcd9baf7/741CD789_C517_4AD1_A738_8F20F9D273D8.jpeg?format=webp&w=400&dpr=2.6"
+              />
+            </Grid>
             <Grid
               item
               xs={1}
@@ -73,15 +88,6 @@ const LandingPage = () => {
                 </Typography>
               </Box>
             </Grid>
-            <Grid item>
-              <img
-                width="100%"
-                alt="cm"
-                height="500px"
-                object-fit="cover"
-                src="https://gumlet.assettype.com/freepressjournal/2020-10/05ad4dc5-93bf-43ab-83f0-9915fcd9baf7/741CD789_C517_4AD1_A738_8F20F9D273D8.jpeg?format=webp&w=400&dpr=2.6"
-              />
-            </Grid>
           </Grid>
         </SwiperSlide>
         <SwiperSlide>
@@ -105,8 +111,17 @@ const LandingPage = () => {
         <SwiperSlide>
           <Grid
             container
-            columns={{ xs: 2 }}
+            columns={{ xs: 1, sm: 2 }}
           >
+            <Grid item>
+              <img
+                width="100%"
+                alt="cm"
+                height="500px"
+                object-fit="cover"
+                src="https://cgstate.gov.in/documents/10179/1556f570-7dce-487f-8d08-90ffcf9e7034"
+              />
+            </Grid>
             <Grid
               item
               xs={1}
@@ -132,22 +147,13 @@ const LandingPage = () => {
                 </Typography>
               </Box>
             </Grid>
-            <Grid item>
-              <img
-                width="100%"
-                alt="cm"
-                height="500px"
-                object-fit="cover"
-                src="https://cgstate.gov.in/documents/10179/1556f570-7dce-487f-8d08-90ffcf9e7034"
-              />
-            </Grid>
           </Grid>
         </SwiperSlide>
       </Swiper>
 
       <Grid
         container
-        columns={{ xs: 2 }}
+        columns={{ xs: 1, sm: 2 }}
       >
         <Grid
           item
