@@ -1,6 +1,6 @@
 import { PrintRounded } from '@mui/icons-material';
 import { IconButton, TableBody, TableRow, Typography } from '@mui/material';
-import { formatDistance, parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -9,6 +9,7 @@ import {
   ContainerRowBox,
   StyledButton,
   StyledPaper,
+  StyledStatus,
   StyledTable,
   StyledTableCell,
   StyledTableHead,
@@ -26,7 +27,6 @@ import {
 interface DepartmentBiddingDetailsProps {
   productsBidded: SHGProduct[] | undefined;
   createdAt: string;
-  status: 'pending' | 'approved';
   bidInfo: Bidder;
   orderId: string;
 }
@@ -34,7 +34,6 @@ const DepartmentBiddingDetails = ({
   bidInfo,
   productsBidded,
   createdAt,
-  status,
   orderId,
 }: DepartmentBiddingDetailsProps) => {
   const dispatch = useAppDispatch();
@@ -44,7 +43,7 @@ const DepartmentBiddingDetails = ({
     content: () => bidRef.current,
   });
   let ApproveButtonContent;
-  switch (status) {
+  switch (bidInfo.status) {
     case 'pending':
       ApproveButtonContent = {
         disabled: false,
@@ -57,6 +56,11 @@ const DepartmentBiddingDetails = ({
         text: 'Bid Approved',
       };
       break;
+    case 'cancelled':
+      ApproveButtonContent = {
+        disabled: true,
+        text: 'This bid has been cancelled',
+      };
   }
 
   const handleApproveBid = async (orderId: string, shgId: string) => {
@@ -86,11 +90,56 @@ const DepartmentBiddingDetails = ({
             sx={{ fontSize: '0.75rem' }}
             color="secondary"
           >
-            {formatDistance(parseISO(createdAt), new Date(), {
-              addSuffix: true,
-            })}
+            {`at ${format(parseISO(createdAt), 'h:m a do MMM yyyy')}`}
           </Typography>
         </ContainerRowBox>
+      </ContainerRowBox>
+      <ContainerRowBox
+        sx={{ marginBottom: '1rem', justifyContent: 'space-between' }}
+      >
+        <ContainerRowBox sx={{ columnGap: '0.5rem' }}>
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: 600,
+              color: 'greyColor.main',
+            }}
+          >
+            SHG name:
+          </Typography>
+          <Typography>{bidInfo.shgname}</Typography>
+        </ContainerRowBox>
+        <ContainerRowBox sx={{ columnGap: '0.5rem' }}>
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: 600,
+              color: 'greyColor.main',
+            }}
+          >
+            Contact:
+          </Typography>
+
+          <Typography>{bidInfo.shgcontact}</Typography>
+        </ContainerRowBox>
+        <StyledStatus
+          sx={{
+            backgroundColor:
+              bidInfo.status === 'cancelled'
+                ? 'error.light'
+                : bidInfo.status === 'approved'
+                ? 'success.light'
+                : 'warning.light',
+            color:
+              bidInfo.status === 'cancelled'
+                ? 'error.main'
+                : bidInfo.status === 'approved'
+                ? 'success.main'
+                : 'warning.main',
+          }}
+        >
+          {bidInfo.status}
+        </StyledStatus>
       </ContainerRowBox>
       <ContainerColumnBox>
         <Typography

@@ -7,7 +7,7 @@ import {
   IconButton,
   Divider,
 } from '@mui/material';
-import { formatDistance, parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -17,6 +17,7 @@ import {
   ContainerRowBox,
   StyledButton,
   StyledPaper,
+  StyledStatus,
   StyledTable,
   StyledTableCell,
   StyledTableHead,
@@ -113,15 +114,63 @@ const DepartmentOrderDetails = ({
                 color="secondary"
               >
                 {departmentOrder &&
-                  formatDistance(
+                  `at ${format(
                     parseISO(departmentOrder?.createdAt),
-                    new Date(),
-                    {
-                      addSuffix: true,
-                    }
-                  )}
+                    'h:m a do MMM yyyy'
+                  )}`}
               </Typography>
             </ContainerRowBox>
+          </ContainerRowBox>
+          <ContainerRowBox
+            sx={{ marginBottom: '1rem', justifyContent: 'space-between' }}
+          >
+            <ContainerRowBox sx={{ columnGap: '0.5rem' }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontWeight: 600,
+                  color: 'greyColor.main',
+                }}
+              >
+                Institute:
+              </Typography>
+              <Typography>{departmentOrder.institutename}</Typography>
+            </ContainerRowBox>
+            <ContainerRowBox sx={{ columnGap: '0.5rem' }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontWeight: 600,
+                  color: 'greyColor.main',
+                }}
+              >
+                Location:
+              </Typography>
+
+              <Typography>{departmentOrder.institutelocation}</Typography>
+            </ContainerRowBox>
+            <StyledStatus
+              sx={{
+                backgroundColor:
+                  departmentOrder.status === 'cancelled'
+                    ? 'error.light'
+                    : departmentOrder.status === 'approved'
+                    ? 'success.light'
+                    : departmentOrder.status === 'completed'
+                    ? 'success.light'
+                    : 'warning.light',
+                color:
+                  departmentOrder.status === 'cancelled'
+                    ? 'error.main'
+                    : departmentOrder.status === 'approved'
+                    ? 'success.main'
+                    : departmentOrder.status === 'completed'
+                    ? 'white'
+                    : 'warning.main',
+              }}
+            >
+              {departmentOrder.status}
+            </StyledStatus>
           </ContainerRowBox>
           <ContainerColumnBox>
             <Typography

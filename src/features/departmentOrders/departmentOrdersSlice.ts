@@ -13,7 +13,7 @@ export interface Bidder {
   shgcontact: string;
   shglocation: string;
   products: SHGProduct[];
-  status: 'approved' | 'pending';
+  status: 'approved' | 'pending' | 'cancelled';
   _id: string;
   createdAt: string;
   updatedAt: string;

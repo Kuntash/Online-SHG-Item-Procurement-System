@@ -29,6 +29,8 @@ const DepartmentBiddings = ({ orderId }: BiddingProps) => {
       <Grid
         item
         sx={{ flexGrow: 1 }}
+        xs={12}
+        md={5}
       >
         <StyledPaper sx={{ padding: '1rem' }}>
           {departmentOrder?.bid.length !== 0 ? (
@@ -91,7 +93,6 @@ const DepartmentBiddings = ({ orderId }: BiddingProps) => {
             bidInfo={departmentOrder?.bid[selectedRow]}
             productsBidded={departmentOrder?.bid[selectedRow]?.products}
             createdAt={departmentOrder?.bid[selectedRow]?.createdAt}
-            status={departmentOrder.bid[selectedRow].status}
             orderId={departmentOrder._id}
           />
         </Grid>
