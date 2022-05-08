@@ -18,6 +18,7 @@ import {
   TableRow,
   TableCell,
   Typography,
+  TablePagination,
 } from '@mui/material';
 
 import MuiDrawer from '@mui/material/Drawer';
@@ -273,4 +274,10 @@ export const StyledStatus = styled(Typography)(({ theme }) => ({
   borderRadius: theme.spacing(1),
   alignItems: 'center',
   fontSize: '0.75rem',
+}));
+
+// Table Pagination
+
+export const StyledTablePagination = styled(TablePagination)(({ theme }) => ({
+  borderBottom: 'none',
 }));

@@ -10,9 +10,11 @@ import {
   StyledTableCell,
   StyledTableHead,
   StyledTableHeadCell,
+  StyledTablePagination,
   StyledTableRow,
   StyledTextField,
 } from '../../components/custom';
+import TablePaginationActions from '../../components/custom/TablePaginationActions';
 import {
   fetchAllItems,
   Item,
@@ -41,6 +43,17 @@ const PlaceOrder = () => {
     [key: string]: number | string;
   }>({});
   const [addedItemsList, setAddedItemsList] = useState<PlaceOrderItem[]>([]);
+  const [page, setPage] = useState<number>(0);
+  const rowsPerPage = 5;
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - items.length) : 0;
+
+  const handleChangePage = (
+    e: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setPage(newPage);
+  };
   const handleOnFormChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setOrdersItemForm((prev) => ({
       ...prev,
@@ -108,58 +121,81 @@ const PlaceOrder = () => {
                 </TableRow>
               </StyledTableHead>
               <TableBody>
-                {items.map((item, index) => (
-                  <StyledTableRow
-                    key={index}
-                    sx={{ fontSize: '0.875rem' }}
-                  >
-                    <StyledTableCell>{item.itemname}</StyledTableCell>
-                    <StyledTableCell>{item.itemtype}</StyledTableCell>
-                    <StyledTableCell>
-                      <StyledTextField
-                        sx={{ width: 'unset' }}
-                        name={item._id}
-                        value={
-                          orderItemsForm?.[item._id]
-                            ? orderItemsForm?.[item._id]
-                            : 0
-                        }
-                        label={`${item.itemname} की मात्रा (in ${item.itemunit})`}
-                        onChange={handleOnFormChange}
-                      />
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {!addedItemsList.find(
-                        (addedItem, index) => addedItem._id === item._id
-                      ) ? (
-                        <StyledButton
-                          variant="contained"
-                          color="success"
-                          sx={{
-                            minWidth: '100px',
-                            padding: '0.5rem 0.9rem',
-                            boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
-                          }}
-                          onClick={() => {
-                            handleAddItem(item);
-                          }}
-                          // startIcon={<AddRounded sx={{ color: 'white' }} />}
-                        >
-                          Add item
-                        </StyledButton>
-                      ) : (
-                        <StyledButton
-                          disabled
-                          variant="contained"
-                          color="primary"
-                          sx={{ padding: '0.5rem 0.9rem' }}
-                        >
-                          Item Added
-                        </StyledButton>
-                      )}
-                    </StyledTableCell>
+                {items
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <StyledTableRow
+                      key={index}
+                      sx={{ fontSize: '0.875rem' }}
+                    >
+                      <StyledTableCell>{item.itemname}</StyledTableCell>
+                      <StyledTableCell>{item.itemtype}</StyledTableCell>
+                      <StyledTableCell>
+                        <StyledTextField
+                          sx={{ width: 'unset' }}
+                          name={item._id}
+                          value={
+                            orderItemsForm?.[item._id]
+                              ? orderItemsForm?.[item._id]
+                              : ''
+                          }
+                          label={`${item.itemname} की मात्रा (in ${item.itemunit})`}
+                          onChange={handleOnFormChange}
+                        />
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {!addedItemsList.find(
+                          (addedItem, index) => addedItem._id === item._id
+                        ) ? (
+                          <StyledButton
+                            variant="contained"
+                            color="success"
+                            sx={{
+                              minWidth: '100px',
+                              padding: '0.5rem 0.9rem',
+                              boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
+                            }}
+                            onClick={() => {
+                              handleAddItem(item);
+                            }}
+                            // startIcon={<AddRounded sx={{ color: 'white' }} />}
+                          >
+                            Add item
+                          </StyledButton>
+                        ) : (
+                          <StyledButton
+                            disabled
+                            variant="contained"
+                            color="primary"
+                            sx={{ padding: '0.5rem 0.9rem' }}
+                          >
+                            Item Added
+                          </StyledButton>
+                        )}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+                {emptyRows > 0 && (
+                  <StyledTableRow style={{ height: 53 * emptyRows }}>
+                    <StyledTableCell colSpan={5} />
                   </StyledTableRow>
-                ))}
+                )}
+                <TableRow>
+                  <StyledTablePagination
+                    rowsPerPageOptions={[5]}
+                    SelectProps={{
+                      inputProps: {
+                        'aria-label': 'rows per page',
+                      },
+                      native: true,
+                    }}
+                    count={items.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    ActionsComponent={TablePaginationActions}
+                  />
+                </TableRow>
               </TableBody>
             </StyledTable>
           </StyledPaper>
