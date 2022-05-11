@@ -4,6 +4,7 @@ import {
   Typography,
   InputAdornment,
   IconButton,
+  CircularProgress,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +15,7 @@ import {
   StyledPaper,
   StyledTextField,
 } from '../../components/custom';
+import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
 import { login, selectUser } from './authSlice';
 
 interface HelperTextType {
@@ -40,12 +42,35 @@ const LoginForm = () => {
     if (user.status === 'succeeded') {
       if (user.userType === 'department')
         navigate('/dashboard/department/approve-orders');
-
       if (user.userType === 'institute')
         navigate('/dashboard/institute/all-orders');
-      if (user.userType === 'ceo') navigate('/dashboard/ceo/home');
+      if (user.userType === 'ceo') navigate('/dashboard/admin/view-all-shgs');
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    if (user.status === 'loading')
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Logging in',
+          snackbarType: 'info',
+        })
+      );
+    if (user.status === 'failed')
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Error while logging in',
+          snackbarType: 'error',
+        })
+      );
+    if (user.status === 'succeeded')
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Successfully logged in',
+          snackbarType: 'success',
+        })
+      );
+  }, [user.status, dispatch]);
   const handleLogin = async () => {
     if (!inputEmail)
       setHelperTexts((prev) => ({ ...prev, email: 'Email is required' }));
@@ -54,7 +79,7 @@ const LoginForm = () => {
       setHelperTexts((prev) => ({ ...prev, password: 'Password is required' }));
     if (!inputPassword || !inputPassword) return;
 
-    await dispatch(await login({ email: inputEmail, password: inputPassword }));
+    await dispatch(login({ email: inputEmail, password: inputPassword }));
   };
   return (
     <StyledPaper sx={{ width: '90%' }}>
@@ -109,6 +134,11 @@ const LoginForm = () => {
           />
         </FormControl>
         <StyledButton
+          startIcon={
+            user.status === 'loading' ? (
+              <CircularProgress sx={{ color: 'white' }} />
+            ) : null
+          }
           variant="contained"
           color="primary"
           sx={{ padding: '0.75rem 1.2rem' }}

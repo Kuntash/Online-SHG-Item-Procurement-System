@@ -1,7 +1,14 @@
 import { RemoveRounded } from '@mui/icons-material';
-import { Alert, TableBody, TableRow, Typography } from '@mui/material';
-import React from 'react';
+import {
+  Alert,
+  CircularProgress,
+  TableBody,
+  TableRow,
+  Typography,
+} from '@mui/material';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { RootState } from '../../app/store';
 import {
   ContainerColumnBox,
   StyledButton,
@@ -13,6 +20,7 @@ import {
   StyledTableRow,
 } from '../../components/custom';
 import { selectUser } from '../auth/authSlice';
+import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
 import { placeOrder, PlaceOrderItem } from './itemsSlice';
 const PlaceOrderDetails = ({
   addedItemsList,
@@ -27,6 +35,9 @@ const PlaceOrderDetails = ({
 }) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
+  const placeOrderStatus = useAppSelector(
+    (state: RootState) => state.items.placeOrderStatus
+  );
   const handleRemoveAddedItem = (itemId: string | undefined) => {
     setAddedItemsList((prev) => {
       return prev.filter((addedItem, index) => addedItem._id !== itemId);
@@ -34,15 +45,36 @@ const PlaceOrderDetails = ({
   };
 
   const handlePlaceOrder = async () => {
-    console.log('placeOrder() about to be executed');
-    // TODO: Uncomment the next lines once the api starts to work
     await dispatch(placeOrder({ addedItemsList, token: user.token }));
 
     // NOTE: Resetting all the form inputs and items added after placeOrder is completed
-    console.log('placeOrder() got executed');
     setOrdersItemForm({});
     setAddedItemsList([]);
   };
+
+  useEffect(() => {
+    if (placeOrderStatus === 'succeeded')
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Order successfully placed',
+          snackbarType: 'success',
+        })
+      );
+    if (placeOrderStatus === 'failed')
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Error while placing order',
+          snackbarType: 'error',
+        })
+      );
+    if (placeOrderStatus === 'loading')
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Placing order',
+          snackbarType: 'info',
+        })
+      );
+  }, [dispatch, placeOrderStatus]);
   return (
     <StyledPaper>
       <Typography
@@ -95,6 +127,11 @@ const PlaceOrderDetails = ({
       </StyledTable>
       <ContainerColumnBox sx={{ marginTop: '1rem' }}>
         <StyledButton
+          startIcon={
+            placeOrderStatus === 'loading' ? (
+              <CircularProgress sx={{ color: 'white' }} />
+            ) : null
+          }
           color="success"
           variant="contained"
           sx={{

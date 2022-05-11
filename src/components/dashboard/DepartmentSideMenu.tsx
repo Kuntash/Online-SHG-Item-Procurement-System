@@ -66,7 +66,7 @@ const DepartmentSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
     <StyledList
       ref={listRef}
       subheader={
-        drawerOpen ? <ListSubheader component="li">Orders</ListSubheader> : null
+        drawerOpen ? <ListSubheader component="li">Menu</ListSubheader> : null
       }
     >
       {departmentSideMenu.map((menuItem, index) =>

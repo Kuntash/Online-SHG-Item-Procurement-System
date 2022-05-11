@@ -20,6 +20,8 @@ export interface Bidder {
 }
 export interface DepartmentOrdersState {
   status: 'idle' | 'failed' | 'succeeded' | 'loading';
+  approveOrderStatus: 'idle' | 'failed' | 'succeeded' | 'loading';
+  approveBidStatus: 'idle' | 'failed' | 'succeeded' | 'loading';
   orders: {
     _id: string;
     items: {
@@ -52,6 +54,8 @@ export interface DepartmentOrdersState {
 
 const initialState: DepartmentOrdersState = {
   status: 'idle',
+  approveOrderStatus: 'idle',
+  approveBidStatus: 'idle',
   orders: [],
 };
 
@@ -188,22 +192,22 @@ export const departmentOrdersSlice = createSlice({
         state.status = 'failed';
       })
       .addCase(approveOrderById.pending, (state, action) => {
-        state.status = 'loading';
+        state.approveOrderStatus = 'loading';
       })
       .addCase(approveOrderById.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.approveOrderStatus = 'succeeded';
       })
       .addCase(approveOrderById.rejected, (state, action) => {
-        state.status = 'failed';
+        state.approveOrderStatus = 'failed';
       })
       .addCase(approveBidByIds.pending, (state, action) => {
-        state.status = 'loading';
+        state.approveBidStatus = 'loading';
       })
       .addCase(approveBidByIds.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.approveBidStatus = 'succeeded';
       })
       .addCase(approveBidByIds.rejected, (state, action) => {
-        state.status = 'failed';
+        state.approveBidStatus = 'failed';
       });
   },
 });

@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Alert, Box, Snackbar } from '@mui/material';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Dashboard from './components/dashboard/Dashboard';
@@ -6,7 +6,12 @@ import ViewOrders from './features/instituteOrders/ViewOrders';
 import LandingPage from './components/landing-page';
 import PlaceOrder from './features/instituteItems/PlaceOrder';
 import DepartmentOrders from './features/departmentOrders/DepartmentOrders';
+import { useAppDispatch, useAppSelector } from './app/hooks';
+import { RootState } from './app/store';
+import { handleCloseSnackbar } from './features/utilityStates/utilitySlice';
 function App() {
+  const snackbarInfo = useAppSelector((state: RootState) => state.utility);
+  const dispatch = useAppDispatch();
   return (
     <Box className="app">
       <Routes>
@@ -48,11 +53,38 @@ function App() {
             />
           </Route>
           <Route path="admin">
+            <Route
+              path="view-all-shgs"
+              element={<h1>View All Shgs</h1>}
+            />
+            <Route
+              path="view-all-orders"
+              element={<h1>View All Orders</h1>}
+            />
             {/* SHG List */}
             {/* Shg Individual profile */}
           </Route>
         </Route>
       </Routes>
+      <Snackbar
+        onClose={() => {
+          dispatch(handleCloseSnackbar());
+        }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+        open={snackbarInfo.shouldSnackbarOpen}
+        autoHideDuration={3000}
+      >
+        <Alert
+          onClose={() => {
+            dispatch(handleCloseSnackbar());
+          }}
+          variant="filled"
+          severity={snackbarInfo.snackbarType}
+          sx={{ width: '100%' }}
+        >
+          {snackbarInfo.snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

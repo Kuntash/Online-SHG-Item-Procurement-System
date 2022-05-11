@@ -14,10 +14,12 @@ export interface PlaceOrderItem extends Item {
 }
 export interface ItemsState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  placeOrderStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
   items: Item[];
 }
 const initialState: ItemsState = {
   status: 'idle',
+  placeOrderStatus: 'idle',
   items: [],
 };
 
@@ -109,13 +111,13 @@ const itemsSlice = createSlice({
         state.status = 'failed';
       })
       .addCase(placeOrder.pending, (state, action) => {
-        state.status = 'loading';
+        state.placeOrderStatus = 'loading';
       })
       .addCase(placeOrder.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.placeOrderStatus = 'succeeded';
       })
       .addCase(placeOrder.rejected, (state, action) => {
-        state.status = 'failed';
+        state.placeOrderStatus = 'failed';
       });
   },
 });

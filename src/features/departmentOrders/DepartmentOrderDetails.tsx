@@ -6,9 +6,10 @@ import {
   Alert,
   IconButton,
   Divider,
+  CircularProgress,
 } from '@mui/material';
 import { format, parseISO } from 'date-fns';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RootState } from '../../app/store';
@@ -25,6 +26,7 @@ import {
   StyledTableRow,
 } from '../../components/custom';
 import { selectUser } from '../auth/authSlice';
+import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
 import {
   approveOrderById,
   fetchDepartmentOrders,
@@ -47,6 +49,10 @@ const DepartmentOrderDetails = ({
     if (orderId === undefined) return undefined;
     return selectDepartmentOrderById(state, orderId);
   });
+
+  const approveOrderStatus = useAppSelector(
+    (state: RootState) => state.departmentOrders.approveOrderStatus
+  );
 
   let ApproveButtonContent;
   switch (departmentOrder?.status) {
@@ -75,6 +81,12 @@ const DepartmentOrderDetails = ({
       };
   }
   const handleApproveOrder = async () => {
+    dispatch(
+      handleOpenSnackbar({
+        snackbarMessage: 'Approving Order',
+        snackbarType: 'info',
+      })
+    );
     await dispatch(
       approveOrderById({
         token: user.token,
@@ -82,9 +94,27 @@ const DepartmentOrderDetails = ({
         status: 'approve',
       })
     );
+
     await dispatch(fetchDepartmentOrders(user.token));
   };
 
+  useEffect(() => {
+    if (approveOrderStatus === 'failed')
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Error while approving order',
+          snackbarType: 'error',
+        })
+      );
+
+    if (approveOrderStatus === 'succeeded')
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Order approved',
+          snackbarType: 'success',
+        })
+      );
+  }, [approveOrderStatus, dispatch]);
   return (
     <StyledPaper ref={orderDetailRef}>
       {departmentOrder === undefined ? (
@@ -224,6 +254,11 @@ const DepartmentOrderDetails = ({
               }}
             >
               <StyledButton
+                startIcon={
+                  approveOrderStatus === 'loading' ? (
+                    <CircularProgress sx={{ color: 'white' }} />
+                  ) : null
+                }
                 color="success"
                 variant="contained"
                 disabled={ApproveButtonContent?.disabled}

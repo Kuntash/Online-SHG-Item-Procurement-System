@@ -69,6 +69,10 @@ export const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   '&:hover': {
     boxShadow: 'none',
   },
+  '& .MuiButton-startIcon .MuiCircularProgress-root': {
+    height: '20px !important',
+    width: '20px !important',
+  },
 }));
 
 // Side Drawer Styles
