@@ -9,6 +9,8 @@ import DepartmentOrders from './features/departmentOrders/DepartmentOrders';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { RootState } from './app/store';
 import { handleCloseSnackbar } from './features/utilityStates/utilitySlice';
+import AdminAllShg from './features/adminData/AdminAllShg';
+import AdminAllOrders from './features/adminData/AdminAllOrders';
 function App() {
   const snackbarInfo = useAppSelector((state: RootState) => state.utility);
   const dispatch = useAppDispatch();
@@ -53,14 +55,22 @@ function App() {
             />
           </Route>
           <Route path="admin">
-            <Route
-              path="view-all-shgs"
-              element={<h1>View All Shgs</h1>}
-            />
-            <Route
-              path="view-all-orders"
-              element={<h1>View All Orders</h1>}
-            />
+            <Route path="view-all-shgs">
+              <Route
+                index
+                element={<AdminAllShg />}
+              />
+              <Route
+                path=":id"
+                element={<h1>Individual SHG</h1>}
+              />
+            </Route>
+            <Route path="department">
+              <Route
+                path=":id"
+                element={<h1>Department</h1>}
+              ></Route>
+            </Route>
             {/* SHG List */}
             {/* Shg Individual profile */}
           </Route>

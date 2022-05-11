@@ -174,7 +174,7 @@ export const departmentOrdersSlice = createSlice({
   name: 'departmentOrders',
   initialState,
   reducers: {
-    resetOnLogout: (state) => {
+    resetOnLogout: (state: DepartmentOrdersState) => {
       state.orders = [];
       state.status = 'idle';
     },

@@ -60,7 +60,7 @@ const DepartmentSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
           }}
         />
       </StyledListItemButton>
-    );
+  );
   };
   return (
     <StyledList
