@@ -7,10 +7,11 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RootState } from '../../app/store';
 import {
-  ContainerColumnBox,
+  ContainerRowBox,
   StyledButton,
   StyledPaper,
   StyledTable,
@@ -19,9 +20,11 @@ import {
   StyledTableHeadCell,
   StyledTableRow,
 } from '../../components/custom';
+import { PlaceOrderItem, RouterStateType } from '../../types/custom';
 import { selectUser } from '../auth/authSlice';
 import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
-import { placeOrder, PlaceOrderItem } from './itemsSlice';
+import { modifyOrder, resetStatus, saveOrder, submitOrder } from './itemsSlice';
+
 const PlaceOrderDetails = ({
   addedItemsList,
   setAddedItemsList,
@@ -35,8 +38,12 @@ const PlaceOrderDetails = ({
 }) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
-  const placeOrderStatus = useAppSelector(
-    (state: RootState) => state.items.placeOrderStatus
+  const { state } = useLocation() as RouterStateType;
+  const submitOrderStatus = useAppSelector(
+    (state: RootState) => state.items.submitOrderStatus
+  );
+  const saveOrderStatus = useAppSelector(
+    (state: RootState) => state.items.saveOrderStatus
   );
   const handleRemoveAddedItem = (itemId: string | undefined) => {
     setAddedItemsList((prev) => {
@@ -44,37 +51,107 @@ const PlaceOrderDetails = ({
     });
   };
 
-  const handlePlaceOrder = async () => {
-    await dispatch(placeOrder({ addedItemsList, token: user.token }));
+  const handleOrder = async (type: 'save' | 'submit') => {
+    if (state?.id) {
+      switch (type) {
+        case 'save':
+          await dispatch(saveOrder({ addedItemsList, token: user.token }));
+          break;
+        case 'submit':
+          await dispatch(
+            modifyOrder({
+              addedItemsList,
+              token: user.token,
+              orderId: state.id,
+            })
+          );
+      }
+    } else {
+      if (addedItemsList.length === 0) {
+        dispatch(
+          handleOpenSnackbar({
+            snackbarMessage: 'No items in the cart',
+            snackbarType: 'warning',
+          })
+        );
+        return;
+      }
 
-    // NOTE: Resetting all the form inputs and items added after placeOrder is completed
+      switch (type) {
+        case 'save':
+          await handleSaveOrder();
+          break;
+        case 'submit':
+          await handleSubmitOrder();
+          break;
+      }
+    }
+
+    // NOTE: Resetting all the form inputs and items added after saveOrder or lockOrder is completed
     setOrdersItemForm({});
     setAddedItemsList([]);
   };
 
+  const handleSaveOrder = async () => {
+    await dispatch(saveOrder({ addedItemsList, token: user.token }));
+  };
+  const handleSubmitOrder = async () => {
+    await dispatch(submitOrder({ addedItemsList, token: user.token }));
+  };
+
+  // NOTE: Reset the saveOrderStatus and submitOrderStatus on render to 'idle'
   useEffect(() => {
-    if (placeOrderStatus === 'succeeded')
+    dispatch(resetStatus());
+  }, [dispatch]);
+
+  useEffect(() => {
+    let snackbarMessage = '',
+      snackbarType: 'error' | 'success' | 'warning' | 'info' = 'info';
+
+    if (saveOrderStatus === 'succeeded') {
+      snackbarMessage = 'Order successfully saved';
+      snackbarType = 'success';
+    } else if (saveOrderStatus === 'failed') {
+      snackbarMessage = 'Error while saving order';
+      snackbarType = 'error';
+    } else if (saveOrderStatus === 'loading') {
+      snackbarMessage = 'Saving order';
+      snackbarType = 'info';
+    }
+
+    if (snackbarMessage !== '')
       dispatch(
         handleOpenSnackbar({
-          snackbarMessage: 'Order successfully placed',
-          snackbarType: 'success',
+          snackbarMessage,
+          snackbarType,
         })
       );
-    if (placeOrderStatus === 'failed')
+  }, [dispatch, saveOrderStatus]);
+  useEffect(() => {
+    let snackbarMessage = '',
+      snackbarType: 'error' | 'success' | 'warning' | 'info' = 'info';
+
+    if (submitOrderStatus === 'succeeded') {
+      snackbarMessage = 'Order successfully submitted';
+      snackbarType = 'success';
+    } else if (submitOrderStatus === 'failed') {
+      snackbarMessage = 'Error while Submitting order';
+      snackbarType = 'error';
+    } else if (submitOrderStatus === 'loading') {
+      snackbarMessage = 'Submitting order';
+      snackbarType = 'info';
+    } else {
+      snackbarMessage = '';
+    }
+
+    if (snackbarMessage !== '')
       dispatch(
         handleOpenSnackbar({
-          snackbarMessage: 'Error while placing order',
-          snackbarType: 'error',
+          snackbarMessage,
+          snackbarType,
         })
       );
-    if (placeOrderStatus === 'loading')
-      dispatch(
-        handleOpenSnackbar({
-          snackbarMessage: 'Placing order',
-          snackbarType: 'info',
-        })
-      );
-  }, [dispatch, placeOrderStatus]);
+  }, [dispatch, submitOrderStatus]);
   return (
     <StyledPaper>
       <Typography
@@ -83,66 +160,86 @@ const PlaceOrderDetails = ({
       >
         Order Cart
       </Typography>
-      {addedItemsList.length === 0 && (
+      {addedItemsList.length === 0 ? (
         <Alert
           severity="info"
           sx={{ marginBottom: '1rem', borderRadius: '8px' }}
         >
           Try adding some items
         </Alert>
-      )}
-      <StyledTable>
-        <StyledTableHead sx={{ fontSize: '1rem' }}>
-          <TableRow>
-            <StyledTableHeadCell>Item name</StyledTableHeadCell>
-            <StyledTableHeadCell>Item type</StyledTableHeadCell>
-            <StyledTableHeadCell>Item quantity</StyledTableHeadCell>
-            <StyledTableHeadCell></StyledTableHeadCell>
-          </TableRow>
-        </StyledTableHead>
-        <TableBody>
-          {addedItemsList.map((addedItem, index) => (
-            <StyledTableRow
-              key={index}
-              sx={{ fontSize: '0.875rem' }}
-            >
-              <StyledTableCell>{addedItem.itemname}</StyledTableCell>
-              <StyledTableCell>{addedItem.itemquantity}</StyledTableCell>
-              <StyledTableCell>
-                <StyledButton
-                  variant="contained"
-                  color="primary"
-                  startIcon={<RemoveRounded sx={{ color: 'white' }} />}
-                  sx={{ padding: '0.5rem 0.9rem' }}
-                  onClick={() => {
-                    handleRemoveAddedItem(addedItem._id);
-                  }}
+      ) : (
+        <>
+          <StyledTable>
+            <StyledTableHead sx={{ fontSize: '1rem' }}>
+              <TableRow>
+                <StyledTableHeadCell>Item name</StyledTableHeadCell>
+                <StyledTableHeadCell>Item quantity</StyledTableHeadCell>
+                <StyledTableHeadCell></StyledTableHeadCell>
+              </TableRow>
+            </StyledTableHead>
+            <TableBody>
+              {addedItemsList.map((addedItem, index) => (
+                <StyledTableRow
+                  key={index}
+                  sx={{ fontSize: '0.875rem' }}
                 >
-                  Remove Item
-                </StyledButton>
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </StyledTable>
-      <ContainerColumnBox sx={{ marginTop: '1rem' }}>
-        <StyledButton
-          startIcon={
-            placeOrderStatus === 'loading' ? (
-              <CircularProgress sx={{ color: 'white' }} />
-            ) : null
-          }
-          color="success"
-          variant="contained"
-          sx={{
-            padding: '1rem 0',
-            boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
-          }}
-          onClick={handlePlaceOrder}
-        >
-          Place order
-        </StyledButton>
-      </ContainerColumnBox>
+                  <StyledTableCell>{addedItem.itemname}</StyledTableCell>
+                  <StyledTableCell>{addedItem.itemquantity}</StyledTableCell>
+                  <StyledTableCell>
+                    <StyledButton
+                      variant="contained"
+                      color="primary"
+                      startIcon={<RemoveRounded sx={{ color: 'white' }} />}
+                      sx={{ padding: '0.5rem 0.9rem' }}
+                      onClick={() => {
+                        handleRemoveAddedItem(addedItem._id);
+                      }}
+                    >
+                      Remove Item
+                    </StyledButton>
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </StyledTable>
+          <ContainerRowBox
+            sx={{ marginTop: '1rem', justifyContent: 'space-between' }}
+          >
+            <StyledButton
+              startIcon={
+                saveOrderStatus === 'loading' ? (
+                  <CircularProgress sx={{ color: 'white' }} />
+                ) : null
+              }
+              color="info"
+              variant="contained"
+              sx={{
+                padding: '1rem 0',
+                boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
+              }}
+              onClick={handleOrder.bind(this, 'save')}
+            >
+              Save Order
+            </StyledButton>
+            <StyledButton
+              startIcon={
+                submitOrderStatus === 'loading' ? (
+                  <CircularProgress sx={{ color: 'white' }} />
+                ) : null
+              }
+              color="success"
+              variant="contained"
+              sx={{
+                padding: '1rem 0',
+                boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
+              }}
+              onClick={handleOrder.bind(this, 'submit')}
+            >
+              Submit order
+            </StyledButton>
+          </ContainerRowBox>
+        </>
+      )}
     </StyledPaper>
   );
 };

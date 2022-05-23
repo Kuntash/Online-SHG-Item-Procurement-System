@@ -42,6 +42,7 @@ export const login = createAsyncThunk(
       );
       if (response.status === 400) throw Error('An error occurred');
       const result = await response.json();
+      console.log(result);
       return { email: email, userType: result.usertype, token: result.token };
     } catch (error: any) {
       return rejectWithValue(error?.message);

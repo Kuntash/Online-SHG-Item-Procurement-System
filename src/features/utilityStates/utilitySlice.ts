@@ -15,11 +15,11 @@ const utilitySlice = createSlice({
   name: 'utility',
   initialState,
   reducers: {
-    handleCloseSnackbar: (state) => {
+    handleCloseSnackbar: (state: IUtilityStateProps) => {
       state.shouldSnackbarOpen = false;
     },
     handleOpenSnackbar: (
-      state,
+      state: IUtilityStateProps,
       action: {
         type: string;
         payload: {

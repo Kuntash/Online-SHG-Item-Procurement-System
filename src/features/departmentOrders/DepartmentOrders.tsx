@@ -190,7 +190,7 @@ const DepartmentOrders = () => {
           >
             <DepartmentOrderDetails orderId={selectedRow?.id} />
           </Grid>
-
+          
           <DepartmentBiddings orderId={selectedRow?.id} />
         </Grid>
       </StyledContainer>

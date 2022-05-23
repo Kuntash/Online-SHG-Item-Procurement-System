@@ -1,5 +1,6 @@
 import { Grid, TableBody, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { Location, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RootState } from '../../app/store';
 import {
@@ -16,29 +17,29 @@ import {
 } from '../../components/custom';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
 import {
-  fetchAllItems,
+  InstituteOrderItem,
   Item,
   PlaceOrderItem,
-  selectAllItems,
-} from './itemsSlice';
+  RouterStateType,
+} from '../../types/custom';
+import {
+  getSavedOrder,
+  selectSavedOrder,
+} from '../instituteOrders/instituteOrdersSlice';
+import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
+import { fetchAllItems, selectAllItems } from './itemsSlice';
 import PlaceOrderDetails from './PlaceOrderDetails';
 
-/*
-  [{
-    _id: string
-    itemname: string,
-    itemdescription: string,
-  }]
-
-  {
-
-  }
- */
 const PlaceOrder = () => {
   const dispatch = useAppDispatch();
+  const { state } = useLocation() as RouterStateType;
+  const userToken = useAppSelector((state: RootState) => state.auth.token);
+  const savedOrders = useAppSelector(selectSavedOrder);
   const items = useAppSelector(selectAllItems);
   const itemsStatus = useAppSelector((state: RootState) => state.items.status);
-
+  const hasSavedOrder = useAppSelector(
+    (state: RootState) => state.instituteOrders.hasSavedOrder
+  );
   const [orderItemsForm, setOrdersItemForm] = useState<{
     [key: string]: number | string;
   }>({});
@@ -62,8 +63,7 @@ const PlaceOrder = () => {
   };
 
   const handleAddItem = (item: Item): void => {
-    const { _id, itemdescription, itemname, itemtype, itemunit, itemprice } =
-      item;
+    const { _id, itemdescription, itemname, itemtype, itemunit } = item;
 
     if (isNaN(orderItemsForm?.[_id] as number)) {
       console.log('Enter a number please');
@@ -76,7 +76,6 @@ const PlaceOrder = () => {
     const obj: PlaceOrderItem = {
       _id,
       itemname,
-      itemprice,
       itemquantity: Number(orderItemsForm?.[_id]),
       itemtype,
       itemunit,
@@ -86,6 +85,35 @@ const PlaceOrder = () => {
   };
 
   useEffect(() => {
+    if (hasSavedOrder === 'idle') dispatch(getSavedOrder(userToken));
+    else if (hasSavedOrder === 'succeeded') {
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'You have some saved order',
+          snackbarType: 'info',
+        })
+      );
+      setAddedItemsList(
+        savedOrders.map((item, index) => ({
+          _id: item._id,
+          itemtype: item.itemtype,
+          itemname: item.itemname,
+          itemdescription: item.itemdescription,
+          itemunit: item.itemunit,
+          itemquantity: item.itemquantity,
+        }))
+      );
+      let orderItemsListTemp = {};
+      savedOrders.forEach((item, index) => {
+        orderItemsListTemp = {
+          ...orderItemsListTemp,
+          [item._id]: item.itemquantity,
+        };
+      });
+      setOrdersItemForm(orderItemsListTemp);
+    }
+  }, [hasSavedOrder, dispatch, userToken, savedOrders]);
+  useEffect(() => {
     if (itemsStatus === 'idle') {
       // TODO: Dispatch once the api is working
       console.log('Dispatching function to fetch all items');
@@ -93,6 +121,31 @@ const PlaceOrder = () => {
     }
   }, [itemsStatus, dispatch]);
 
+  useEffect(() => {
+    if (state) {
+      setAddedItemsList(
+        state.items.map(
+          (item) =>
+            ({
+              _id: item.itemid,
+              itemtype: item.itemtype,
+              itemname: item.itemname,
+              itemdescription: item.itemdescription,
+              itemunit: item.itemunit,
+              itemquantity: item.itemquantity,
+            } as PlaceOrderItem)
+        )
+      );
+      let orderItemsListTemp = {};
+      state.items.forEach((item: any) => {
+        orderItemsListTemp = {
+          ...orderItemsListTemp,
+          [item.itemid]: item.itemquantity,
+        };
+      });
+      setOrdersItemForm(orderItemsListTemp);
+    }
+  }, []);
   return (
     <StyledContainer sx={{ flexGrow: 1 }}>
       <Grid
@@ -151,8 +204,8 @@ const PlaceOrder = () => {
                             variant="contained"
                             color="success"
                             sx={{
-                              minWidth: '100px',
-                              padding: '0.5rem 0.9rem',
+                              // minWidth: '100px',
+                              // padding: '0.5rem 0.5rem',
                               boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
                             }}
                             onClick={() => {

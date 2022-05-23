@@ -1,12 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
+import { SHGProduct } from '../../types/custom';
 
-export interface SHGProduct {
-  shgproduct: string;
-  quantity: number;
-  unit: string;
-  _id: string;
-}
 export interface Bidder {
   shgId: string;
   shgname: string;

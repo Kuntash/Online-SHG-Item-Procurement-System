@@ -2,7 +2,7 @@ import { Alert, Box, Snackbar } from '@mui/material';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Dashboard from './components/dashboard/Dashboard';
-import ViewOrders from './features/instituteOrders/ViewOrders';
+import ViewOrders from './features/instituteOrders/InstituteOrders';
 import LandingPage from './components/landing-page';
 import PlaceOrder from './features/instituteItems/PlaceOrder';
 import DepartmentOrders from './features/departmentOrders/DepartmentOrders';

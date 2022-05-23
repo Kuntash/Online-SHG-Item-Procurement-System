@@ -15,27 +15,23 @@ import {
   StyledTableHead,
   StyledTableHeadCell,
   StyledTableRow,
+  StyledTextField,
 } from '../../components/custom';
 import { SHGProduct } from '../../types/custom';
 import { selectUser } from '../auth/authSlice';
-import {
-  approveBidByIds,
-  Bidder,
-  fetchDepartmentOrders,
-} from './departmentOrdersSlice';
-
-interface DepartmentBiddingDetailsProps {
+import { Bidder } from '../../types/custom';
+interface InstituteBiddingDetailsProps {
   productsBidded: SHGProduct[] | undefined;
   createdAt: string;
   bidInfo: Bidder;
   orderId: string;
 }
-const DepartmentBiddingDetails = ({
+const InstituteBiddingDetails = ({
   bidInfo,
   productsBidded,
   createdAt,
   orderId,
-}: DepartmentBiddingDetailsProps) => {
+}: InstituteBiddingDetailsProps) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const bidRef = useRef<HTMLDivElement | null>(null);
@@ -62,13 +58,6 @@ const DepartmentBiddingDetails = ({
         text: 'This bid has been cancelled',
       };
   }
-
-  const handleApproveBid = async (orderId: string, shgId: string) => {
-    await dispatch(
-      approveBidByIds({ orderId: orderId, shgId: shgId, token: user.token })
-    );
-    await dispatch(fetchDepartmentOrders(user.token));
-  };
   return (
     <StyledPaper ref={bidRef}>
       <ContainerRowBox
@@ -156,7 +145,11 @@ const DepartmentBiddingDetails = ({
           <StyledTableHead sx={{ fontSize: '0.875rem' }}>
             <TableRow>
               <StyledTableHeadCell>Item name</StyledTableHeadCell>
-              <StyledTableHeadCell>Item quantity</StyledTableHeadCell>
+              <StyledTableHeadCell>Max. quantity</StyledTableHeadCell>
+              <StyledTableHeadCell>Selected Quantity</StyledTableHeadCell>
+
+              <StyledTableHeadCell>Unit price</StyledTableHeadCell>
+              <StyledTableHeadCell>Total price</StyledTableHeadCell>
             </TableRow>
           </StyledTableHead>
           <TableBody>
@@ -167,14 +160,22 @@ const DepartmentBiddingDetails = ({
               >
                 <StyledTableCell>{product?.shgproduct}</StyledTableCell>
                 <StyledTableCell>
-                  {product?.quantity}
-                  {''}
-                  {product.unit}
+                  {product?.quantity} {product.unit}
                 </StyledTableCell>
+                <StyledTableCell>
+                  <StyledTextField
+                    type="number"
+                    sx={{ width: 'unset' }}
+                  />
+                </StyledTableCell>
+
+                <StyledTableCell>Rs. {product?.quantity}</StyledTableCell>
+                <StyledTableCell>Rs. {product?.totalprice }</StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
         </StyledTable>
+
         <ContainerColumnBox sx={{ marginTop: '1rem' }}>
           <StyledButton
             color="success"
@@ -185,7 +186,7 @@ const DepartmentBiddingDetails = ({
               boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
             }}
             onClick={() => {
-              handleApproveBid(orderId, bidInfo.shgId);
+              // handleApproveBid(orderId, bidInfo.shgId);
             }}
           >
             {ApproveButtonContent.text}
@@ -196,4 +197,4 @@ const DepartmentBiddingDetails = ({
   );
 };
 
-export default DepartmentBiddingDetails;
+export default InstituteBiddingDetails;
