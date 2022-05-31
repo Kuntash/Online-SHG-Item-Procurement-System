@@ -23,9 +23,7 @@ const InstituteBiddings = ({ orderId }: BiddingProps) => {
     if (orderId === undefined) return undefined;
     return selectInstituteOrderById(state, orderId);
   });
-
   const [selectedRow, setSelectedRow] = useState<number>(0);
-
   return (
     <>
       <Grid
@@ -92,6 +90,7 @@ const InstituteBiddings = ({ orderId }: BiddingProps) => {
           md={7}
         >
           <InstituteBiddingDetails
+            approvedBids={instituteOrder?.approvedbid}
             bidInfo={instituteOrder?.bid[selectedRow]}
             productsBidded={instituteOrder?.bid[selectedRow]?.products}
             createdAt={instituteOrder?.bid[selectedRow]?.createdAt}

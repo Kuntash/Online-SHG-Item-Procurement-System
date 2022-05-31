@@ -1,22 +1,78 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { InstituteOrder, PlaceOrderItem } from '../../types/custom';
+import {
+  ApproveBidProductListType,
+  InstituteOrder,
+  PlaceOrderItem,
+} from '../../types/custom';
 
 interface OrderState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   lockOrderStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
   hasSavedOrder: 'idle' | 'loading' | 'succeeded' | 'failed';
+  approveBidStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
   savedOrder: PlaceOrderItem[];
   orders: InstituteOrder[] | [];
 }
 
 const initialState: OrderState = {
   status: 'idle',
+  approveBidStatus: 'idle',
   lockOrderStatus: 'idle',
   hasSavedOrder: 'idle',
   savedOrder: [],
   orders: [],
 };
+
+export const approveBidByInstitute = createAsyncThunk(
+  'instituteOrders/approveBidByInstitute',
+  async (
+    {
+      token,
+      orderId,
+      shgId,
+      products,
+    }: {
+      token: string | undefined;
+      orderId: string;
+      shgId: string;
+      products: ApproveBidProductListType[];
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      console.log(token);
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${token}`);
+      headers.append('Content-type', 'application/json');
+      headers.append('Access-Control-Allow-Origin', '*');
+      const raw = JSON.stringify({
+        orderid: orderId,
+        shgId: shgId,
+        products,
+      });
+      const requestOptions: RequestInit = {
+        method: 'POST',
+        headers,
+        body: raw,
+        redirect: 'follow',
+      };
+
+      const response = await fetch(
+        'https://selfhelpgroup-backend.herokuapp.com/institute/approveorder',
+        requestOptions
+      );
+      const result = await response.json();
+      console.log(result);
+
+      if (response.status === 400)
+        throw new Error('An error occured while approving bid');
+      return result;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
 export const getSavedOrder = createAsyncThunk(
   'instituteOrders/getSavedOrder',
   async (token: undefined | string, { rejectWithValue }) => {
@@ -134,6 +190,16 @@ const instituteOrdersSlice = createSlice({
       })
       .addCase(getSavedOrder.rejected, (state, action) => {
         state.hasSavedOrder = 'failed';
+      })
+      .addCase(approveBidByInstitute.pending, (state, action) => {
+        state.approveBidStatus = 'loading';
+      })
+      .addCase(approveBidByInstitute.fulfilled, (state, action) => {
+        state.approveBidStatus = 'succeeded';
+        state.savedOrder = action.payload;
+      })
+      .addCase(approveBidByInstitute.rejected, (state, action) => {
+        state.approveBidStatus = 'failed';
       });
   },
 });

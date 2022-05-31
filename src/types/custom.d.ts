@@ -25,6 +25,18 @@ export interface SHGProduct {
   _id: string;
 }
 
+export interface ApprovedBidder {
+  shgId: string;
+  shgname: string;
+  shgcontact: string;
+  shglocation: string;
+  products: SHGProduct[];
+  delivered: boolean;
+  deliveryverified: boolean;
+  _id: string;
+  updatedAt: string;
+  createdAt: string;
+}
 export interface Bidder {
   shgId: string;
   shgname: string;
@@ -63,6 +75,7 @@ export interface InstituteOrder {
   _id: string;
   approvedfordisplay: boolean;
   bid: Bidder[];
+  approvedbid: ApprovedBidder[];
   createdAt: string;
   department: string;
   departmentid: string;
@@ -72,6 +85,11 @@ export interface InstituteOrder {
   items: InstituteOrderItem[];
 
   status: 'pending' | 'approved' | 'cancelled' | 'completed';
+}
+
+export interface ApproveBidProductListType {
+  productid: string;
+  quantity: number;
 }
 
 export interface RouterStateType extends Location {
