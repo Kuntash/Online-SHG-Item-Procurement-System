@@ -11,6 +11,9 @@ import { RootState } from './app/store';
 import { handleCloseSnackbar } from './features/utilityStates/utilitySlice';
 import AdminAllShg from './features/adminData/AdminAllShg';
 import AdminAllOrders from './features/adminData/AdminAllOrders';
+import AdminAllInstitutes from './features/adminData/AdminAllInstitutes';
+import AdminOrderDetails from './features/adminData/AdminOrderDetails';
+import AdminSingleBid from './features/adminData/AdminSingleBid';
 function App() {
   const snackbarInfo = useAppSelector((state: RootState) => state.utility);
   const dispatch = useAppDispatch();
@@ -18,12 +21,13 @@ function App() {
     <Box className="app">
       <Routes>
         {/* TODO: For root path, render the landing page and then embed login form inside of it */}
+        <Route path="/" />
         <Route
-          path="/"
+          index
           element={<LandingPage />}
         />
         <Route
-          path="/dashboard"
+          path="dashboard"
           element={<Dashboard />}
         >
           <Route path="institute">
@@ -61,16 +65,45 @@ function App() {
                 element={<AdminAllShg />}
               />
               <Route
-                path=":id"
+                path=":shgId"
                 element={<h1>Individual SHG</h1>}
               />
             </Route>
-            <Route path="department">
+            <Route path="bids">
+              <Route
+                path=":bidId"
+                element={<AdminSingleBid />}
+              />
+            </Route>
+            <Route path="view-all-orders">
+              <Route
+                index
+                element={<AdminAllOrders />}
+              />
+              <Route path=":orderId">
+                <Route
+                  index
+                  element={<AdminOrderDetails />}
+                />
+              </Route>
+            </Route>
+            <Route path="view-all-institutes">
+              <Route
+                index
+                element={<AdminAllInstitutes />}
+              />
+              <Route
+                path=":instituteId"
+                element={<h1>Individual Institute</h1>}
+              />
+            </Route>
+            {/* NOTE: The department routes are not needed as of now */}
+            {/* <Route path="department">
               <Route
                 path=":id"
                 element={<h1>Department</h1>}
               ></Route>
-            </Route>
+            </Route> */}
             {/* SHG List */}
             {/* Shg Individual profile */}
           </Route>

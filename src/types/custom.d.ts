@@ -98,3 +98,80 @@ export interface RouterStateType extends Location {
     id: string;
   };
 }
+
+export interface AdminOrderProduct {
+  itemid: string;
+  itemtype: 'loose' | 'packed';
+  itemname: string;
+  itemquantity: number;
+  approvedquantity: number;
+  itemunit: string;
+  itemprice: number;
+  itemdescription: string;
+  _id: string;
+}
+
+export interface AdminOrderBid {
+  shgId: string;
+  shgname: string;
+  shgcontact: string;
+  shglocation: string;
+  products: {
+    shgproduct: string;
+    quantity: number;
+    unit: string;
+    unitprice: number;
+    totalprice: number;
+    _id: string;
+  }[];
+  status: 'approved' | 'pending' | 'cancelled' | 'completed';
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface AdminOrderDataType {
+  _id: string;
+  items: AdminOrderProduct[];
+  bid: AdminOrderBid[];
+  approvedbid: AdminOrderBid[];
+  institutename: string;
+  instituteid: string;
+  department: string;
+  institutelocation: string;
+  status: 'approved' | 'pending' | 'cancelled' | 'completed';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminSHGProduct {
+  name: string;
+  type: 'loose' | 'packed';
+  quantity: number;
+  unit: string;
+  _id: string;
+}
+
+export interface AdminSHGOrder {
+  orderid: string;
+  institutename: string;
+  institutelocation: string;
+  department:
+    | 'education'
+    | 'healthcare'
+    | 'tribal welfare'
+    | 'social welfare'
+    | 'women and child development'
+    | 'ceo';
+  products: AdminInstituteOrderedProduct[];
+  delivered: boolean;
+}
+export interface AdminSHGDataType {
+  _id: string;
+  name: string;
+  contact: string;
+  location: string;
+  products: AdminSHGProduct[];
+  createdAt: string;
+  updatedAt: string;
+  orders: AdminSHGOrder[];
+}

@@ -102,6 +102,7 @@ const InstituteBiddingDetails = ({
       })
     );
   };
+
   const handleApproveBid = () => {
     // Fetch only those products with quantity more than zero
     const filteredProductsList = selectedProductsList?.filter(

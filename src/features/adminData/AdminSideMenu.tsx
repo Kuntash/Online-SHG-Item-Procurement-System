@@ -1,16 +1,16 @@
-import { LogoutRounded, TableViewRounded } from '@mui/icons-material';
+import {
+  AddShoppingCartRounded,
+  LogoutRounded,
+  SchoolRounded,
+  TableViewRounded,
+} from '@mui/icons-material';
 import { ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppDispatch } from '../../app/hooks';
 import { logout } from '../auth/authSlice';
 import { StyledList, StyledListItemButton } from '../../components/custom';
-import { RootState } from '../../app/store';
-import {
-  fetchDepartments,
-  selectAllDepartmentsByAdmin,
-} from './adminDataSlice';
-
+import { resetOnLogout } from './adminDataSlice';
 interface CeoSideMenuType {
   title: string;
   route: string;
@@ -25,38 +25,28 @@ const CeoSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
   const listRef = useRef<HTMLUListElement>(null);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const userToken = useAppSelector((state: RootState) => state.auth.token);
-  const departmentDataStatus = useAppSelector(
-    (state: RootState) => state.admin.departmentData.departmentDataStatus
-  );
-  const departmentList = useAppSelector(selectAllDepartmentsByAdmin);
   const [listItemSelectedIndex, setListItemSelectedIndex] = useState<number>(0);
-  const [ceoSideMenu, setCeoSideMenu] = useState<CeoSideMenuType[]>([]);
-
+  const ceoSideMenu: CeoSideMenuType[] = [
+    {
+      title: 'View all shgs',
+      route: 'view-all-shgs',
+      icon: <TableViewRounded />,
+    },
+    {
+      title: 'View all orders',
+      route: 'view-all-orders',
+      icon: <AddShoppingCartRounded />,
+    },
+    {
+      title: 'View all institutes',
+      route: 'view-all-institutes',
+      icon: <SchoolRounded />,
+    },
+  ];
   const handleRedirect = (route: string): void => {
-    console.log(route);
-    if (route === 'view-all-shgs') navigate(`admin/${route}`);
-    else navigate(`admin/department/${route}`);
+    navigate(`admin/${route}`);
   };
 
-  if (departmentDataStatus === 'idle') dispatch(fetchDepartments(userToken));
-
-  useEffect(() => {
-    if (departmentDataStatus === 'failed') navigate('/');
-    if (departmentDataStatus === 'succeeded')
-      setCeoSideMenu([
-        {
-          title: 'View all shgs',
-          route: 'view-all-shgs',
-          icon: <TableViewRounded />,
-        },
-        ...departmentList.map((department, index) => ({
-          title: department.department,
-          route: department._id,
-          icon: <TableViewRounded />,
-        })),
-      ]);
-  }, [departmentDataStatus, navigate, departmentList]);
   useEffect(() => {
     // Focus on View all orders on initial render
     (listRef.current?.children[1] as HTMLElement)?.focus();
@@ -98,8 +88,8 @@ const CeoSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
       <StyledListItemButton
         key={'logout'}
         onClick={() => {
+          dispatch(resetOnLogout());
           dispatch(logout());
-          handleRedirect('/');
         }}
       >
         <ListItemIcon>{<LogoutRounded />}</ListItemIcon>

@@ -33,7 +33,6 @@ const DepartmentSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
   };
 
   useEffect(() => {
-    // Focus on View all orders on initial render
     (listRef.current?.children[1] as HTMLElement)?.focus();
   }, []);
   const renderListItem: RenderListItem = (title, route, icon, index) => {
@@ -60,7 +59,7 @@ const DepartmentSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
           }}
         />
       </StyledListItemButton>
-  );
+    );
   };
   return (
     <StyledList

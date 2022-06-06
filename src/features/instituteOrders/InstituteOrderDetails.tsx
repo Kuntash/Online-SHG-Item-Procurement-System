@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import { parseISO, format } from 'date-fns';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';

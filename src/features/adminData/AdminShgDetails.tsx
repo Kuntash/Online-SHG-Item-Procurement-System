@@ -12,7 +12,7 @@ import {
   StyledTableRow,
 } from '../../components/custom';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
-import { AdminSHGDataType } from './adminDataSlice';
+import { AdminSHGDataType } from '../../types/custom';
 
 const AdminShgDetails = ({ shgData }: { shgData: AdminSHGDataType }) => {
   const navigate = useNavigate();

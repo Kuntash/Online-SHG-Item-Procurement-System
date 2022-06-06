@@ -224,7 +224,7 @@ export const StyledContainer = styled(Container)(({ theme }) => ({
     paddingRight: theme.spacing(1),
   },
   display: 'flex',
-  justifyContent: 'center',
+  // justifyContent: 'center',
   alignItems: 'center',
   flexDirection: 'column',
 }));

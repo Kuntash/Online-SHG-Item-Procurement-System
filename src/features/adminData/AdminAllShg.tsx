@@ -1,4 +1,3 @@
-import { ChevronRightRounded } from '@mui/icons-material';
 import { Grid, TableBody, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -14,11 +13,8 @@ import {
   StyledTableRow,
 } from '../../components/custom';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
-import {
-  AdminSHGDataType,
-  fetchAllShgData,
-  selectAllShgs,
-} from './adminDataSlice';
+import { AdminSHGDataType } from '../../types/custom';
+import { fetchAllShgData, selectAllShgs } from './adminDataSlice';
 import AdminShgDetails from './AdminShgDetails';
 
 const AdminAllShg = () => {

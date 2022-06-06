@@ -17,7 +17,7 @@ import {
 } from '../custom';
 import DepartmentSideMenu from './DepartmentSideMenu';
 import InstituteSideMenu from './InstituteSideMenu';
-import CeoSideMenu from '../../features/adminData/CeoSideMenu';
+import CeoSideMenu from '../../features/adminData/AdminSideMenu';
 const HideOnScroll = (props: { children: JSX.Element }) => {
   const trigger = useScrollTrigger();
   return (

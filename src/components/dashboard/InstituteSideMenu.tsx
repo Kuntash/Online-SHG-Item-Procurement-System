@@ -78,7 +78,6 @@ const InstituteSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
         key={'logout'}
         onClick={() => {
           dispatch(logout());
-          handleRedirect('/');
         }}
       >
         <ListItemIcon>{<LogoutRounded />}</ListItemIcon>

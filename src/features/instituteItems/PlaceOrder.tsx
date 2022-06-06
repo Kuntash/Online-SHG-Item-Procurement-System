@@ -1,6 +1,6 @@
 import { Grid, TableBody, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { Location, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RootState } from '../../app/store';
 import {
@@ -16,12 +16,7 @@ import {
   StyledTextField,
 } from '../../components/custom';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
-import {
-  InstituteOrderItem,
-  Item,
-  PlaceOrderItem,
-  RouterStateType,
-} from '../../types/custom';
+import { Item, PlaceOrderItem, RouterStateType } from '../../types/custom';
 import {
   getSavedOrder,
   selectSavedOrder,
@@ -145,7 +140,7 @@ const PlaceOrder = () => {
       });
       setOrdersItemForm(orderItemsListTemp);
     }
-  }, []);
+  }, [state]);
   return (
     <StyledContainer sx={{ flexGrow: 1 }}>
       <Grid

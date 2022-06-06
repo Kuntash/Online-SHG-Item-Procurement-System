@@ -79,7 +79,7 @@ const LoginForm = () => {
       setHelperTexts((prev) => ({ ...prev, password: 'Password is required' }));
     if (!inputPassword || !inputPassword) return;
 
-    await dispatch(login({ email: inputEmail, password: inputPassword }));
+    dispatch(login({ email: inputEmail, password: inputPassword }));
   };
   return (
     <StyledPaper sx={{ width: '90%' }}>

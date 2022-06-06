@@ -1,95 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
+import { AdminOrderDataType, AdminSHGDataType } from '../../types/custom';
 
-export interface AdminOrderProduct {
-  itemid: string;
-  itemtype: 'loose' | 'packed';
-  itemname: string;
-  itemquantity: number;
-  approvedquantity: number;
-  itemunit: string;
-  itemprice: number;
-  itemdescription: string;
-  _id: string;
-}
-
-export interface AdminOrderBid {
-  shgId: string;
-  shgname: string;
-  shgcontact: string;
-  shglocation: string;
-  products: {
-    shgproduct: string;
-    quantity: number;
-    unit: string;
-    unitprice: number;
-    totalprice: number;
-    _id: string;
-  }[];
-  status: 'approved' | 'pending' | 'cancelled' | 'completed';
-  _id: string;
-  createdAt: string;
-  updatedAt: string;
-}
-export interface AdminOrderDataType {
-  _id: string;
-  items: AdminOrderProduct[];
-  bid: AdminOrderBid[];
-  approvedbid: AdminOrderBid[];
-  institutename: string;
-  instituteid: string;
-  department: string;
-  institutelocation: string;
-  status: 'approved' | 'pending' | 'cancelled' | 'completed';
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface AdminInstituteOrderedProduct {
-  shgproduct: string;
-  quantity: number;
-  unit: string;
-  unitprice: number;
-  totalprice: number;
-  _id: string;
-}
-export interface AdminSHGProduct {
-  name: string;
-  type: 'loose' | 'packed';
-  quantity: number;
-  unit: string;
-  _id: string;
-}
-
-export interface AdminSHGOrder {
-  orderid: string;
-  institutename: string;
-  institutelocation: string;
-  department:
-    | 'education'
-    | 'healthcare'
-    | 'tribal welfare'
-    | 'social welfare'
-    | 'women and child development'
-    | 'ceo';
-  products: AdminInstituteOrderedProduct[];
-  delivered: boolean;
-}
-export interface AdminSHGDataType {
-  _id: string;
-  name: string;
-  contact: string;
-  location: string;
-  products: AdminSHGProduct[];
-  createdAt: string;
-  updatedAt: string;
-  orders: AdminSHGOrder[];
-}
-
-export interface AdminDepartmentDataType {
-  _id: string;
-  department: string;
-}
 export interface AdminDataType {
   shgData: {
     shgDataStatus: 'loading' | 'failed' | 'succeeded' | 'idle';
@@ -98,10 +10,6 @@ export interface AdminDataType {
   orderData: {
     orderDataStatus: 'loading' | 'failed' | 'succeeded' | 'idle';
     orderData: AdminOrderDataType[];
-  };
-  departmentData: {
-    departmentDataStatus: 'loading' | 'failed' | 'succeeded' | 'idle';
-    departmentData: AdminDepartmentDataType[];
   };
 }
 
@@ -114,19 +22,14 @@ const initialState: AdminDataType = {
     orderDataStatus: 'idle',
     orderData: [],
   },
-  departmentData: {
-    departmentData: [],
-    departmentDataStatus: 'idle',
-  },
 };
 
-export const fetchDepartments = createAsyncThunk(
-  'adminData/fetchDepartments',
+export const fetchAllAdminOrders = createAsyncThunk(
+  'adminData/fetchAllAdminOrders',
   async (token: string | undefined, { rejectWithValue }) => {
     try {
-      if (token === undefined) throw new Error('Token error');
+      if (token === undefined) throw new Error('Token is undefined');
       const headers = new Headers();
-
       headers.append('Authorization', `Bearer ${token}`);
       const requestOptions: RequestInit = {
         method: 'GET',
@@ -135,53 +38,15 @@ export const fetchDepartments = createAsyncThunk(
       };
 
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/ceo/getdepartments',
+        'https://selfhelpgroup-backend.herokuapp.com/ceo/getallorders',
         requestOptions
       );
-      console.log(response);
       if (response.status === 400)
-        throw new Error('Error while fetching all departments: admin');
-      const result: { departmentdata: AdminDepartmentDataType[] } =
+        throw new Error('Error while fetching all admin orders');
+      const result: { success: boolean; orders: AdminOrderDataType[] } =
         await response.json();
-      console.log(result);
-      return result.departmentdata;
-    } catch (err) {
-      console.log(err);
-      return rejectWithValue(err);
-    }
-  }
-);
-
-export const fetchOrderByDepartmentId = createAsyncThunk(
-  'adminData/fetchAllOrderData',
-  async (
-    { token, departmentId }: { token: string; departmentId: string },
-    { rejectWithValue }
-  ) => {
-    try {
-      if (token === undefined) throw new Error('Token error');
-      const headers = new Headers();
-
-      headers.append('Authorization', `Bearer ${token}`);
-      const requestOptions: RequestInit = {
-        method: 'GET',
-        headers,
-        redirect: 'follow',
-      };
-
-      const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/ceo/getordersbydepartment',
-        requestOptions
-      );
-      console.log(response);
-      if (response.status === 400)
-        throw new Error('Error while fetching all orders: admin');
-      const result: { totalOrders: number; orders: AdminOrderDataType[] } =
-        await response.json();
-      console.log(result);
       return result.orders;
     } catch (err) {
-      console.log(err);
       return rejectWithValue(err);
     }
   }
@@ -191,9 +56,9 @@ export const fetchAllShgData = createAsyncThunk(
   'adminData/fetchAllShgData',
   async (token: string | undefined, { rejectWithValue }) => {
     try {
-      if (token === undefined) throw new Error('Token error');
-      const headers = new Headers();
+      if (token === undefined) throw new Error('Token is undefined');
 
+      const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
       const requestOptions: RequestInit = {
         method: 'GET',
@@ -201,15 +66,15 @@ export const fetchAllShgData = createAsyncThunk(
         redirect: 'follow',
       };
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/department/getshgdata',
+        'https://selfhelpgroup-backend.herokuapp.com/ceo/getshgdata',
         requestOptions
       );
+      console.log(response);
       if (response.status === 400)
         throw new Error('Error occurred while fetching Shg Data');
 
       const result: { message: string; data: AdminSHGDataType[] } =
         await response.json();
-      console.log(result);
       return result.data;
     } catch (err) {
       return rejectWithValue(err);
@@ -219,7 +84,14 @@ export const fetchAllShgData = createAsyncThunk(
 const adminDataSlice = createSlice({
   name: 'adminData',
   initialState,
-  reducers: {},
+  reducers: {
+    resetOnLogout: (state: AdminDataType) => {
+      state.orderData.orderDataStatus = 'idle';
+      state.shgData.shgDataStatus = 'idle';
+      state.orderData.orderData = [];
+      state.shgData.shgData = [];
+    },
+  },
   extraReducers: (builders) => {
     builders
       .addCase(fetchAllShgData.pending, (state) => {
@@ -232,31 +104,22 @@ const adminDataSlice = createSlice({
       .addCase(fetchAllShgData.rejected, (state) => {
         state.shgData.shgDataStatus = 'failed';
       })
-      .addCase(fetchOrderByDepartmentId.pending, (state) => {
+      .addCase(fetchAllAdminOrders.pending, (state) => {
         state.orderData.orderDataStatus = 'loading';
       })
-      .addCase(fetchOrderByDepartmentId.fulfilled, (state, action) => {
+      .addCase(fetchAllAdminOrders.fulfilled, (state, action) => {
         state.orderData.orderDataStatus = 'succeeded';
         state.orderData.orderData = action.payload;
       })
-      .addCase(fetchOrderByDepartmentId.rejected, (state) => {
+      .addCase(fetchAllAdminOrders.rejected, (state) => {
         state.orderData.orderDataStatus = 'failed';
-      })
-      .addCase(fetchDepartments.pending, (state) => {
-        state.departmentData.departmentDataStatus = 'loading';
-      })
-      .addCase(fetchDepartments.fulfilled, (state, action) => {
-        state.departmentData.departmentDataStatus = 'succeeded';
-        state.departmentData.departmentData = action.payload;
-      })
-      .addCase(fetchDepartments.rejected, (state) => {
-        state.departmentData.departmentDataStatus = 'failed';
       });
   },
 });
 
-export const selectAllDepartmentsByAdmin = (state: RootState) =>
-  state.admin.departmentData.departmentData;
+export const {resetOnLogout} = adminDataSlice.actions;
+export const selectAdminOrderById = (state: RootState, id: string) =>
+  state.admin.orderData.orderData.find((order, index) => order._id === id);
 export const selectAllShgs = (state: RootState) => state.admin.shgData.shgData;
 export const selectShgById = (state: RootState, id: string) =>
   state.admin.shgData.shgData?.find((shg) => shg._id === id);
