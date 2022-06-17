@@ -2,6 +2,7 @@ import {
   AddShoppingCartRounded,
   LogoutRounded,
   TableViewRounded,
+  PersonAddRounded
 } from '@mui/icons-material';
 import { ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
@@ -36,6 +37,11 @@ const CeoSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
       route: 'view-all-orders',
       icon: <AddShoppingCartRounded />,
     },
+    {
+      title: 'Register SHG',
+      route: 'registershg',
+      icon: <PersonAddRounded />,
+    }
     // {
     //   title: 'View all institutes',
     //   route: 'view-all-institutes',

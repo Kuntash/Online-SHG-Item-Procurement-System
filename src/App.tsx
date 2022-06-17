@@ -15,6 +15,7 @@ import AdminAllInstitutes from './features/adminData/AdminAllInstitutes';
 import AdminOrderDetails from './features/adminData/AdminOrderDetails';
 import AdminSingleBid from './features/adminData/AdminSingleBid';
 import AdminShgDetails from './features/adminData/AdminShgDetails';
+import RegisterShg from './components/admin/RegisterSHG';
 function App() {
   const snackbarInfo = useAppSelector((state: RootState) => state.utility);
   const dispatch = useAppDispatch();
@@ -22,6 +23,7 @@ function App() {
     <Box className="app">
       <Routes>
         {/* TODO: For root path, render the landing page and then embed login form inside of it */}
+        
         <Route path="/" />
         <Route
           index
@@ -60,6 +62,7 @@ function App() {
             />
           </Route>
           <Route path="admin">
+        <Route path="registershg" element={<RegisterShg />} />
             <Route path="view-all-shgs">
               <Route
                 index
