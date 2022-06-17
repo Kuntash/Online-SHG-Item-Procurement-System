@@ -23,6 +23,7 @@ export const login = createAsyncThunk(
   async ({ email, password }: LoginParameter, { rejectWithValue }) => {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
+    headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
     const raw = JSON.stringify({
       email,
       password,
@@ -33,11 +34,12 @@ export const login = createAsyncThunk(
       headers,
       body: raw,
       redirect: 'follow',
+      credentials: 'include',
     };
 
     try {
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/department/login',
+        'http://localhost:5000/department/login',
         requestOptions
       );
       if (response.status === 400) throw Error('An error occurred');
@@ -49,6 +51,20 @@ export const login = createAsyncThunk(
     }
   }
 );
+export const getjwt = createAsyncThunk('auth/getjwt', async () => {
+  try {
+    const response = await fetch('http://localhost:5000/department/jwt', {
+      method: 'GET',
+      credentials: 'include',
+    });
+    if (response.status === 400) throw Error('An error occurred');
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    // return rejectWithValue(error?.message);
+  }
+});
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -58,6 +74,17 @@ export const authSlice = createSlice({
       state.email = undefined;
       state.token = undefined;
       state.userType = undefined;
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+
+      const requestOptions: RequestInit = {
+        method: 'GET',
+        headers,
+        redirect: 'follow',
+        credentials: 'include',
+      };
+      fetch('http://localhost:5000/department/logout', requestOptions);
     },
   },
   extraReducers: (builder) => {
@@ -71,6 +98,12 @@ export const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.email = action.payload.email;
         state.status = 'succeeded';
+        state.userType = action.payload.userType;
+        state.token = action.payload.token;
+      })
+      .addCase(getjwt.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.email = action.payload.email;
         state.userType = action.payload.userType;
         state.token = action.payload.token;
       });

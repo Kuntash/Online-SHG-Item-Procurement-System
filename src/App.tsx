@@ -1,5 +1,5 @@
 import { Alert, Box, Snackbar } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Dashboard from './components/dashboard/Dashboard';
 import ViewOrders from './features/instituteOrders/InstituteOrders';
@@ -15,9 +15,25 @@ import AdminAllInstitutes from './features/adminData/AdminAllInstitutes';
 import AdminOrderDetails from './features/adminData/AdminOrderDetails';
 import AdminSingleBid from './features/adminData/AdminSingleBid';
 import AdminShgDetails from './features/adminData/AdminShgDetails';
+import { getjwt, selectUser } from './features/auth/authSlice';
+const { useNavigate } = require('react-router-dom');
 function App() {
   const snackbarInfo = useAppSelector((state: RootState) => state.utility);
   const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user.status === 'idle') {
+      dispatch(getjwt());
+    }
+    if (user.status === 'succeeded') {
+      if (user.userType === 'department')
+        navigate('/dashboard/department/approve-orders');
+      if (user.userType === 'institute')
+        navigate('/dashboard/institute/all-orders');
+      if (user.userType === 'ceo') navigate('/dashboard/admin/view-all-shgs');
+    }
+  }, [user, dispatch, navigate]);
   return (
     <Box className="app">
       <Routes>

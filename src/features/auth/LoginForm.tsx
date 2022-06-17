@@ -101,9 +101,9 @@ const LoginForm = () => {
               value={inputEmail}
               onChange={(e) => setInputEmail(e.target.value)}
               sx={{ borderRadius: '0.8rem', width: '100%' }}
-              label="Email address"
+              label="Email address / Username"
               variant="outlined"
-              type="email"
+              type="text"
             />
           </FormControl>
           <FormControl sx={{ width: '100%', marginBottom: '20px' }}>
