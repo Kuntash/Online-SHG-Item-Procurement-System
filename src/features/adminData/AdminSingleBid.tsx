@@ -27,7 +27,7 @@ import {
 } from '../../components/custom';
 import { AdminOrderBid } from '../../types/custom';
 import { changeBidPriceOfAnOrder, fetchAllAdminOrders } from './adminDataSlice';
-
+import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
 interface StateType {
   orderId: string;
   bid: AdminOrderBid;
@@ -38,6 +38,9 @@ const AdminSingleBid = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
   const userToken = useAppSelector((state: RootState) => state.auth.token);
+  const bidchangestate = useAppSelector(
+    (state: RootState) => state.admin.bidChangeStatus
+  );
   const state = location.state as StateType;
   console.log(state);
   const { orderId, bid, bidType } = state;
@@ -71,6 +74,16 @@ const AdminSingleBid = () => {
       }))
     );
   }, [bid]);
+  useEffect(() => {
+    if (bidchangestate === 'succeeded') {
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Bid Modified successfully',
+          snackbarType: 'success',
+        })
+      );
+    }
+  }, [bidchangestate]);
   return (
     <StyledContainer sx={{ flexGrow: 1 }}>
       <Grid

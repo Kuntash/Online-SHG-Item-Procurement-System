@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
 interface User {
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  status: 'idle' | 'loading' | 'succeeded' | 'failed' | 'nocookie';
   userType?: 'ceo' | 'department' | 'institute';
   email: string | undefined;
   token: string | undefined;
@@ -23,7 +23,10 @@ export const login = createAsyncThunk(
   async ({ email, password }: LoginParameter, { rejectWithValue }) => {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+    headers.append(
+      'Access-Control-Allow-Origin',
+      'https://selfhelpgroup-backend.herokuapp.com'
+    );
     const raw = JSON.stringify({
       email,
       password,
@@ -39,7 +42,7 @@ export const login = createAsyncThunk(
 
     try {
       const response = await fetch(
-        'http://localhost:5000/department/login',
+        'https://selfhelpgroup-backend.herokuapp.com/department/login',
         requestOptions
       );
       if (response.status === 400) throw Error('An error occurred');
@@ -51,32 +54,37 @@ export const login = createAsyncThunk(
     }
   }
 );
-export const getjwt = createAsyncThunk('auth/getjwt', async () => {
-  try {
-    const response = await fetch('http://localhost:5000/department/jwt', {
-      method: 'GET',
-      credentials: 'include',
-    });
-    if (response.status === 400) throw Error('An error occurred');
-    const result = await response.json();
-    return result;
-  } catch (error: any) {
-    // return rejectWithValue(error?.message);
+export const getjwt = createAsyncThunk(
+  'auth/getjwt',
+  async (token: string | undefined, { rejectWithValue }) => {
+    try {
+      const response = await fetch(
+        'https://selfhelpgroup-backend.herokuapp.com/department/jwt',
+        {
+          method: 'GET',
+          credentials: 'include',
+        }
+      );
+      if (response.status === 400) throw Error('An error occurred');
+      const result = await response.json();
+      return result;
+    } catch (error: any) {
+      return rejectWithValue(error?.message);
+    }
   }
-});
+);
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
     logout: (state) => {
-      state.status = 'idle';
-      state.email = undefined;
-      state.token = undefined;
-      state.userType = undefined;
       const headers = new Headers();
       headers.append('Content-Type', 'application/json');
-      headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+      headers.append(
+        'Access-Control-Allow-Origin',
+        'https://selfhelpgroup-backend.herokuapp.com'
+      );
 
       const requestOptions: RequestInit = {
         method: 'GET',
@@ -84,7 +92,14 @@ export const authSlice = createSlice({
         redirect: 'follow',
         credentials: 'include',
       };
-      fetch('http://localhost:5000/department/logout', requestOptions);
+      fetch(
+        'https://selfhelpgroup-backend.herokuapp.com/department/logout',
+        requestOptions
+      );
+      state.status = 'nocookie';
+      state.email = undefined;
+      state.token = undefined;
+      state.userType = undefined;
     },
   },
   extraReducers: (builder) => {
@@ -100,6 +115,9 @@ export const authSlice = createSlice({
         state.status = 'succeeded';
         state.userType = action.payload.userType;
         state.token = action.payload.token;
+      })
+      .addCase(getjwt.rejected, (state, action) => {
+        state.status = 'nocookie';
       })
       .addCase(getjwt.fulfilled, (state, action) => {
         state.status = 'succeeded';

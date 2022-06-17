@@ -54,7 +54,7 @@ export const changeBidPriceOfAnOrder = createAsyncThunk(
         }),
       };
       const response = await fetch(
-        'http://localhost:5000/ceo/changebidprice',
+        'https://selfhelpgroup-backend.herokuapp.com/ceo/changebidprice',
         requestOptions
       );
       if (response.status === 400)
@@ -109,7 +109,6 @@ export const fetchAllShgData = createAsyncThunk(
         'https://selfhelpgroup-backend.herokuapp.com/ceo/getshgdata',
         requestOptions
       );
-      console.log(response);
       if (response.status === 400)
         throw new Error('Error occurred while fetching Shg Data');
 

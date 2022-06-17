@@ -41,7 +41,8 @@ const AdminAllShg = () => {
     navigate(`${shgId}`, {});
   };
   useEffect(() => {
-    if (shgDataStatus === 'idle') dispatch(fetchAllShgData(userToken));
+    if (shgDataStatus === 'idle' && userToken)
+      dispatch(fetchAllShgData(userToken));
   }, [dispatch, userToken, shgDataStatus]);
   return (
     <StyledContainer sx={{ flexGrow: 1 }}>

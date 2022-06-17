@@ -46,7 +46,11 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    if (user.status === 'idle' || user.status === 'failed') {
+    if (
+      user.status === 'idle' ||
+      user.status === 'failed' ||
+      user.status === 'nocookie'
+    ) {
       navigate('/');
     }
   }, [user.status, navigate]);
