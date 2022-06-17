@@ -1,7 +1,6 @@
 import {
   AddShoppingCartRounded,
   LogoutRounded,
-  SchoolRounded,
   TableViewRounded,
 } from '@mui/icons-material';
 import { ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
@@ -37,11 +36,11 @@ const CeoSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
       route: 'view-all-orders',
       icon: <AddShoppingCartRounded />,
     },
-    {
-      title: 'View all institutes',
-      route: 'view-all-institutes',
-      icon: <SchoolRounded />,
-    },
+    // {
+    //   title: 'View all institutes',
+    //   route: 'view-all-institutes',
+    //   icon: <SchoolRounded />,
+    // },
   ];
   const handleRedirect = (route: string): void => {
     navigate(`admin/${route}`);

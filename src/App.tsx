@@ -14,6 +14,7 @@ import AdminAllOrders from './features/adminData/AdminAllOrders';
 import AdminAllInstitutes from './features/adminData/AdminAllInstitutes';
 import AdminOrderDetails from './features/adminData/AdminOrderDetails';
 import AdminSingleBid from './features/adminData/AdminSingleBid';
+import AdminShgDetails from './features/adminData/AdminShgDetails';
 function App() {
   const snackbarInfo = useAppSelector((state: RootState) => state.utility);
   const dispatch = useAppDispatch();
@@ -66,7 +67,7 @@ function App() {
               />
               <Route
                 path=":shgId"
-                element={<h1>Individual SHG</h1>}
+                element={<AdminShgDetails />}
               />
             </Route>
             <Route path="bids">

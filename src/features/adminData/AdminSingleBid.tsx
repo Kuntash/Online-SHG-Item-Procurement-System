@@ -26,11 +26,12 @@ import {
   StyledTextField,
 } from '../../components/custom';
 import { AdminOrderBid } from '../../types/custom';
-import { fetchAllAdminOrders } from './adminDataSlice';
+import { changeBidPriceOfAnOrder, fetchAllAdminOrders } from './adminDataSlice';
 
 interface StateType {
   orderId: string;
   bid: AdminOrderBid;
+  bidType: 'approved' | 'pending' | 'cancelled';
 }
 
 const AdminSingleBid = () => {
@@ -38,10 +39,11 @@ const AdminSingleBid = () => {
   const dispatch = useAppDispatch();
   const userToken = useAppSelector((state: RootState) => state.auth.token);
   const state = location.state as StateType;
-  const { orderId, bid } = state;
+  console.log(state);
+  const { orderId, bid, bidType } = state;
   const theme = useTheme();
   const [productPriceList, setProductPriceList] = useState<
-    { productId: string; unitPrice: number }[]
+    { productid: string; unitprice: number }[]
   >([]);
 
   const handleProductPriceChange = (
@@ -53,8 +55,8 @@ const AdminSingleBid = () => {
       productPriceList.map((productPrice, index) => {
         if (index === currentIndex)
           return {
-            productId: productPrice.productId,
-            unitPrice: Number(e.target.value),
+            productid: productPrice.productid,
+            unitprice: Number(e.target.value),
           };
         return productPrice;
       })
@@ -64,8 +66,8 @@ const AdminSingleBid = () => {
   useEffect(() => {
     setProductPriceList(
       bid.products.map((product, index) => ({
-        productId: product._id,
-        unitPrice: product.unitprice,
+        productid: product._id,
+        unitprice: product.unitprice,
       }))
     );
   }, [bid]);
@@ -181,36 +183,50 @@ const AdminSingleBid = () => {
                       </StyledTableCell>
 
                       <StyledTableCell>
-                        Rs.
-                        <StyledTextField
-                          type="number"
-                          value={productPriceList[index].unitPrice}
-                          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                            handleProductPriceChange(e, index)
-                          }
-                        />
+                        {bidType === 'approved' && product.unitprice}
+                        {bidType === 'pending' && (
+                          <StyledTextField
+                            type="number"
+                            label="Rs."
+                            value={productPriceList[index].unitprice}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                              handleProductPriceChange(e, index)
+                            }
+                          />
+                        )}
                       </StyledTableCell>
                       <StyledTableCell>
-                        {product.quantity * productPriceList[index].unitPrice}
+                        {bidType === 'approved' && product.totalprice}
+                        {bidType === 'pending' &&
+                          product.quantity * productPriceList[index].unitprice}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
               </TableBody>
             </StyledTable>
             <ContainerRowBox sx={{ justifyContent: 'flex-end' }}>
-              <StyledButton
-                color="info"
-                variant="contained"
-                sx={{
-                  padding: '1rem',
-                  boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
-                }}
-                onClick={async () => {
-                  await dispatch(fetchAllAdminOrders(userToken));
-                }}
-              >
-                Update product price
-              </StyledButton>
+              {bidType === 'pending' && (
+                <StyledButton
+                  color="info"
+                  variant="contained"
+                  sx={{
+                    padding: '1rem',
+                    boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
+                  }}
+                  onClick={async () => {
+                    await dispatch(
+                      changeBidPriceOfAnOrder({
+                        token: userToken as string,
+                        bidId: bid._id,
+                        products: productPriceList,
+                      })
+                    );
+                    await dispatch(fetchAllAdminOrders(userToken));
+                  }}
+                >
+                  Update product price
+                </StyledButton>
+              )}
             </ContainerRowBox>
           </StyledPaper>
         </Grid>

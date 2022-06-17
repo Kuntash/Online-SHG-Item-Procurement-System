@@ -155,15 +155,13 @@ export interface AdminSHGOrder {
   orderid: string;
   institutename: string;
   institutelocation: string;
-  department:
-    | 'education'
-    | 'healthcare'
-    | 'tribal welfare'
-    | 'social welfare'
-    | 'women and child development'
-    | 'ceo';
+  department: string;
   products: AdminInstituteOrderedProduct[];
   delivered: boolean;
+  deliveryverified: boolean;
+  _id: string;
+  createdat: string;
+  updatedat: string;
 }
 export interface AdminSHGDataType {
   _id: string;
@@ -173,5 +171,28 @@ export interface AdminSHGDataType {
   products: AdminSHGProduct[];
   createdAt: string;
   updatedAt: string;
+  zone: {
+    zoneid: string;
+    zonename: string;
+    _id: string;
+  }[];
   orders: AdminSHGOrder[];
+  totalrevenue: number;
+  january: number;
+  february: number;
+  march: number;
+  april: number;
+  may: number;
+  june: number;
+  july: number;
+  august: number;
+  september: number;
+  october: number;
+  november: number;
+  december: number;
+}
+
+export interface AdminChangedPriceOfBid {
+  productid: string;
+  unitprice: number;
 }

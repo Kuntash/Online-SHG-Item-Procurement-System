@@ -52,9 +52,6 @@ const AdminAllOrders = () => {
     setOrdersToDisplay(adminAllOrders);
   }, [adminAllOrders]);
 
-  /*
-
-  */
   return (
     <StyledContainer sx={{ flexGrow: 1 }}>
       <Grid

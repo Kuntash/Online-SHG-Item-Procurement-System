@@ -1,7 +1,22 @@
-import { Alert, TableBody, TableRow, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { ChevronRightRounded } from '@mui/icons-material';
 import {
+  Alert,
+  Box,
+  Breadcrumbs,
+  Grid,
+  TableBody,
+  TableRow,
+  Typography,
+  useTheme,
+} from '@mui/material';
+import React, { useState } from 'react';
+import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../app/hooks';
+import { RootState } from '../../app/store';
+import {
+  StyledContainer,
   StyledPaper,
   StyledStatus,
   StyledTable,
@@ -12,131 +27,135 @@ import {
   StyledTableRow,
 } from '../../components/custom';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
-import { AdminSHGDataType } from '../../types/custom';
+import { selectShgById } from './adminDataSlice';
+import AdminShgOrdersTable from './AdminShgOrdersTable';
 
-const AdminShgDetails = ({ shgData }: { shgData: AdminSHGDataType }) => {
+const AdminShgDetails = () => {
+  const theme = useTheme();
   const navigate = useNavigate();
-  const [page, setPage] = useState<number>(0);
-  const rowsPerPage = 5;
-
-  const emptyRows = Math.max(
-    0,
-    (1 + page) * rowsPerPage - shgData?.orders.length
+  const { shgId } = useParams();
+  const currentShg = useAppSelector((state: RootState) =>
+    selectShgById(state, shgId as string)
   );
-
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => {
-    setPage(newPage);
-  };
-
-  const handleRedirect = (orderid: string) => {
-    navigate(orderid);
-  };
-  return (
-    <StyledPaper>
-      {shgData === undefined ? (
-        <Alert severity="info">
-          Select an SHG to get the list of approved orders
-        </Alert>
-      ) : (
-        <>
-          <Typography
-            variant="h2"
-            sx={{ marginBottom: '1rem' }}
+  if (currentShg === undefined)
+    return (
+      <StyledContainer sx={{ flexGrow: 1 }}>
+        <Grid container>
+          <Grid
+            item
+            xs={12}
+            md={12}
+            lg={12}
           >
-            Approved Orders
-          </Typography>
-          {shgData.orders.length === 0 ? (
-            <Alert severity="info">No approved orders</Alert>
-          ) : (
+            <Alert color="warning">No SHG exists with this id</Alert>
+          </Grid>
+        </Grid>
+      </StyledContainer>
+    );
+
+  return (
+    <StyledContainer sx={{ flexGrow: 1 }}>
+      <Grid
+        container
+        sx={{ rowGap: '1rem' }}
+      >
+        <Grid
+          item
+          xs={12}
+          md={12}
+          lg={12}
+        >
+          <Box sx={{ width: '100%', textAlign: 'left' }}>
+            <Breadcrumbs
+              color="primary"
+              separator={<ChevronRightRounded />}
+            >
+              <Typography color="primary">
+                <Link
+                  to="/dashboard/admin/view-all-shgs"
+                  style={{
+                    textDecoration: 'none',
+                    color: theme.palette.blackColor.main,
+                  }}
+                >
+                  All Shgs
+                </Link>
+              </Typography>
+              <Typography color={theme.palette.blackColor.main}>
+                <b>Shg id: #{currentShg._id}</b>
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          md={12}
+          lg={12}
+        >
+          <StyledPaper>
+            <Typography
+              variant="h2"
+              sx={{ marginBottom: '1rem' }}
+            >
+              SHG details
+            </Typography>
             <StyledTable>
               <StyledTableHead sx={{ fontSize: '1rem' }}>
                 <TableRow>
-                  <StyledTableHeadCell>Institute name</StyledTableHeadCell>
-                  <StyledTableHeadCell>Institute location</StyledTableHeadCell>
-                  <StyledTableHeadCell>Department</StyledTableHeadCell>
-                  <StyledTableHeadCell>Delivered</StyledTableHeadCell>
+                  <StyledTableHeadCell>SHG id</StyledTableHeadCell>
+                  <StyledTableHeadCell>SHG name</StyledTableHeadCell>
+                  <StyledTableHeadCell>SHG contact</StyledTableHeadCell>
+                  <StyledTableHeadCell>SHG location</StyledTableHeadCell>
+                  <StyledTableHeadCell>
+                    Total orders received
+                  </StyledTableHeadCell>
+                  <StyledTableHeadCell>Total revenue</StyledTableHeadCell>
                 </TableRow>
               </StyledTableHead>
               <TableBody>
-                {(rowsPerPage > 0
-                  ? shgData?.orders.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
-                  : shgData?.orders
-                )?.map((approvedOrder, index) => (
-                  <StyledTableRow
-                    onClick={() => {
-                      handleRedirect(approvedOrder.orderid);
-                    }}
-                    sx={{ fontSize: '0.875rem' }}
-                    key={index}
-                  >
-                    <StyledTableCell>
-                      {approvedOrder.institutename.length > 20
-                        ? `${approvedOrder.institutename.substring(0, 20)}...`
-                        : approvedOrder.institutename}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {approvedOrder.institutelocation}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {approvedOrder.department}
-                    </StyledTableCell>
-
-                    <StyledTableCell>
-                      {approvedOrder.delivered ? (
-                        <StyledStatus
-                          sx={{
-                            color: 'success.main',
-                            backgroundColor: 'success.light',
-                          }}
-                        >
-                          Yes
-                        </StyledStatus>
-                      ) : (
-                        <StyledStatus
-                          sx={{
-                            color: 'error.main',
-                            backgroundColor: 'error.light',
-                          }}
-                        >
-                          No
-                        </StyledStatus>
-                      )}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-                {emptyRows > 0 && (
-                  <StyledTableRow style={{ height: 53 * emptyRows }}>
-                    <StyledTableCell colSpan={5} />
-                  </StyledTableRow>
-                )}
-                <TableRow>
-                  <StyledTablePagination
-                    rowsPerPageOptions={[5]}
-                    SelectProps={{
-                      inputProps: {
-                        'aria-label': 'rows per page',
-                      },
-                      native: true,
-                    }}
-                    count={shgData?.orders.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    ActionsComponent={TablePaginationActions}
-                  />
-                </TableRow>
+                <StyledTableRow>
+                  <StyledTableCell>
+                    <b>{currentShg._id}</b>
+                  </StyledTableCell>
+                  <StyledTableCell>{currentShg.name}</StyledTableCell>
+                  <StyledTableCell>{currentShg.contact}</StyledTableCell>
+                  <StyledTableCell>{currentShg.location}</StyledTableCell>
+                  <StyledTableCell>
+                    <StyledStatus
+                      sx={{
+                        color: theme.palette.success.main,
+                        backgroundColor: theme.palette.success.light,
+                      }}
+                    >
+                      {currentShg.orders.length}
+                    </StyledStatus>
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <StyledStatus
+                      sx={{
+                        color: theme.palette.success.main,
+                        backgroundColor: theme.palette.success.light,
+                      }}
+                    >
+                      Rs. {currentShg.totalrevenue}
+                    </StyledStatus>
+                  </StyledTableCell>
+                </StyledTableRow>
               </TableBody>
             </StyledTable>
-          )}
-        </>
-      )}
-    </StyledPaper>
+          </StyledPaper>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          md={12}
+          lg={12}
+        >
+          <AdminShgOrdersTable orders={currentShg.orders} />
+        </Grid>
+      </Grid>
+    </StyledContainer>
   );
 };
 

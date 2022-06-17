@@ -83,6 +83,7 @@ const AdminOrderDetails = () => {
         >
           <AdminBiddingDetailsTable
             tableTitle="Approved bids"
+            bidType="approved"
             bids={order.approvedbid}
             orderId={order._id}
           />
@@ -94,6 +95,7 @@ const AdminOrderDetails = () => {
           lg={12}
         >
           <AdminBiddingDetailsTable
+            bidType="pending"
             tableTitle="Unapproved bids"
             bids={order.bid.filter((bid) => bid.status === 'pending')}
             orderId={order._id}

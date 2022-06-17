@@ -15,19 +15,24 @@ interface AdminBiddingDetailsTableProps {
   bids: AdminOrderBid[];
   orderId: string;
   tableTitle: string;
+  bidType: 'approved' | 'pending' | 'cancelled';
 }
 const AdminAllBiddingsTable = ({
   bids,
   orderId,
   tableTitle,
+  bidType,
 }: AdminBiddingDetailsTableProps) => {
+  console.log(bids);
   const navigate = useNavigate();
-  const handleRedirect = (currentBid: AdminOrderBid, orderId: string) => {
-    navigate(`../../../bids/${currentBid._id}`, {
+  const handleRedirect = (bid: AdminOrderBid, orderId: string) => {
+    console.log(bid);
+    navigate(`../../../bids/${bid._id}`, {
       replace: true,
       state: {
+        bidType,
         orderId,
-        bid: currentBid,
+        bid,
       },
     });
   };

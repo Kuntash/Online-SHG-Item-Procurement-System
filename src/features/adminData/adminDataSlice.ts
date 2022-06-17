@@ -1,6 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { AdminOrderDataType, AdminSHGDataType } from '../../types/custom';
+import {
+  AdminChangedPriceOfBid,
+  AdminOrderDataType,
+  AdminSHGDataType,
+} from '../../types/custom';
 
 export interface AdminDataType {
   shgData: {
@@ -11,6 +15,7 @@ export interface AdminDataType {
     orderDataStatus: 'loading' | 'failed' | 'succeeded' | 'idle';
     orderData: AdminOrderDataType[];
   };
+  bidChangeStatus: 'loading' | 'failed' | 'succeeded' | 'idle';
 }
 
 const initialState: AdminDataType = {
@@ -22,8 +27,42 @@ const initialState: AdminDataType = {
     orderDataStatus: 'idle',
     orderData: [],
   },
+  bidChangeStatus: 'idle',
 };
 
+export const changeBidPriceOfAnOrder = createAsyncThunk(
+  'adminData/changeBidPriceOfAnOrder',
+  async (
+    {
+      token,
+      bidId,
+      products,
+    }: { token: string; bidId: string; products: AdminChangedPriceOfBid[] },
+    { rejectWithValue }
+  ) => {
+    try {
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${token}`);
+      const requestOptions: RequestInit = {
+        method: 'POST',
+        headers,
+        redirect: 'follow',
+        body: JSON.stringify({
+          bidid: bidId,
+          products,
+        }),
+      };
+      const response = await fetch(
+        'https://selfhelpgroup-backend.herokuapp.com/ceo/changebidprice',
+        requestOptions
+      );
+      if (response.status === 400)
+        throw new Error('Error occurred while changing bids');
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
 export const fetchAllAdminOrders = createAsyncThunk(
   'adminData/fetchAllAdminOrders',
   async (token: string | undefined, { rejectWithValue }) => {
@@ -113,11 +152,20 @@ const adminDataSlice = createSlice({
       })
       .addCase(fetchAllAdminOrders.rejected, (state) => {
         state.orderData.orderDataStatus = 'failed';
+      })
+      .addCase(changeBidPriceOfAnOrder.pending, (state) => {
+        state.bidChangeStatus = 'loading';
+      })
+      .addCase(changeBidPriceOfAnOrder.fulfilled, (state) => {
+        state.bidChangeStatus = 'succeeded';
+      })
+      .addCase(changeBidPriceOfAnOrder.rejected, (state) => {
+        state.bidChangeStatus = 'failed';
       });
   },
 });
 
-export const {resetOnLogout} = adminDataSlice.actions;
+export const { resetOnLogout } = adminDataSlice.actions;
 export const selectAdminOrderById = (state: RootState, id: string) =>
   state.admin.orderData.orderData.find((order, index) => order._id === id);
 export const selectAllShgs = (state: RootState) => state.admin.shgData.shgData;

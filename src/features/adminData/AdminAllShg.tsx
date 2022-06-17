@@ -1,5 +1,6 @@
 import { Grid, TableBody, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RootState } from '../../app/store';
 import {
@@ -15,10 +16,9 @@ import {
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
 import { AdminSHGDataType } from '../../types/custom';
 import { fetchAllShgData, selectAllShgs } from './adminDataSlice';
-import AdminShgDetails from './AdminShgDetails';
-
 const AdminAllShg = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const userToken = useAppSelector((state: RootState) => state.auth.token);
   const shgDataStatus = useAppSelector(
     (state: RootState) => state.admin.shgData.shgDataStatus
@@ -26,11 +26,6 @@ const AdminAllShg = () => {
   const shgData = useAppSelector(
     selectAllShgs
   ) as unknown as AdminSHGDataType[];
-
-  const [selectedShg, setSelectedShg] = useState<
-    AdminSHGDataType | undefined
-  >();
-
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 5;
   const emptyRows = Math.max(0, (1 + page) * rowsPerPage - shgData?.length);
@@ -42,6 +37,9 @@ const AdminAllShg = () => {
     setPage(newPage);
   };
 
+  const handleRedirect = (shgId: string) => {
+    navigate(`${shgId}`, {});
+  };
   useEffect(() => {
     if (shgDataStatus === 'idle') dispatch(fetchAllShgData(userToken));
   }, [dispatch, userToken, shgDataStatus]);
@@ -54,7 +52,8 @@ const AdminAllShg = () => {
         <Grid
           item
           xs={12}
-          md={5}
+          md={12}
+          lg={12}
         >
           <StyledPaper>
             <Typography
@@ -67,9 +66,10 @@ const AdminAllShg = () => {
               <StyledTableHead sx={{ fontSize: '1rem' }}>
                 <TableRow>
                   {/* <StyledTableHeadCell>Order Id</StyledTableHeadCell> */}
-                  <StyledTableHeadCell>Name</StyledTableHeadCell>
-                  <StyledTableHeadCell>Contact</StyledTableHeadCell>
-                  <StyledTableHeadCell>Location</StyledTableHeadCell>
+                  <StyledTableHeadCell>Shg id</StyledTableHeadCell>
+                  <StyledTableHeadCell>Shg name</StyledTableHeadCell>
+                  <StyledTableHeadCell>Shg contact</StyledTableHeadCell>
+                  <StyledTableHeadCell>Shg location</StyledTableHeadCell>
                 </TableRow>
               </StyledTableHead>
               <TableBody>
@@ -83,12 +83,13 @@ const AdminAllShg = () => {
                   <StyledTableRow
                     sx={{ fontSize: '0.875rem' }}
                     key={shg._id}
-                    selected={selectedShg?._id === shg._id}
-                    // selected={selectedRow?.index === index}
                     onClick={() => {
-                      setSelectedShg(shg);
+                      handleRedirect(shg._id);
                     }}
                   >
+                    <StyledTableCell sx={{ marginTop: '1rem' }}>
+                      <b>{shg._id}</b>
+                    </StyledTableCell>
                     <StyledTableCell sx={{ marginTop: '1rem' }}>
                       {shg.name}
                     </StyledTableCell>
@@ -124,14 +125,6 @@ const AdminAllShg = () => {
               </TableBody>
             </StyledTable>
           </StyledPaper>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          md={7}
-        >
-          <AdminShgDetails shgData={selectedShg as AdminSHGDataType} />
-          {/* TODO: Show the detail of each Shgs */}
         </Grid>
       </Grid>
     </StyledContainer>
