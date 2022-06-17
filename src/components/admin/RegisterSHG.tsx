@@ -33,7 +33,12 @@ const RegisterShg = () => {
     location: '',
     contact: '',
   });
-
+  const handleContact=(cont:string)=>
+  {
+    const reg = /\d+$/;
+    if((cont.match(reg) || cont == '') || cont === '') setContact(cont);
+    return;
+  }
   useEffect(() => {
     if (status === 'loading')
       dispatch(
@@ -99,6 +104,8 @@ const register = async (data:HelperTextType) => {
       setHelperTexts((prev) => ({ ...prev, location: 'Location is required' }));
     else if (!contact)
       setHelperTexts((prev) => ({ ...prev, contact: 'Contact is required' }));
+    else if(contact.length !== 10)
+      setHelperTexts((prev) =>({...prev, contact: 'Contact length should be 10'}))
     else
     register({name,location,contact});
   };
@@ -118,7 +125,7 @@ const register = async (data:HelperTextType) => {
           <StyledTextField
             helperText={helperTexts.contact}
             value={contact}
-            onChange={(e) => setContact(e.target.value)}
+            onChange={(e) => handleContact(e.target.value)}
             sx={{ borderRadius: '0.8rem', width: '100%' }}
             label="Contact"
             variant="outlined"
