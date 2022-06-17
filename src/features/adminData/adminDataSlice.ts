@@ -43,6 +43,7 @@ export const changeBidPriceOfAnOrder = createAsyncThunk(
     try {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
+      headers.append('Content-Type', 'application/json');
       const requestOptions: RequestInit = {
         method: 'POST',
         headers,
@@ -53,7 +54,7 @@ export const changeBidPriceOfAnOrder = createAsyncThunk(
         }),
       };
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/ceo/changebidprice',
+        'http://localhost:5000/ceo/changebidprice',
         requestOptions
       );
       if (response.status === 400)
