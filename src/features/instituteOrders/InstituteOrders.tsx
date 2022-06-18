@@ -24,7 +24,7 @@ import InstituteOrderDetails from './InstituteOrderDetails';
 import InstituteBiddings from './InstituteBiddings';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
 import { InstituteOrder } from '../../types/custom';
-
+import Loading2 from '../../components/utility/Loading2';
 export interface FormattedOrdersType extends InstituteOrder {
   backgroundColor?: string;
   color?: string;
@@ -89,7 +89,7 @@ const InstituteOrders = () => {
       dispatch(fetchAllOrdersOfInstitute(user.token));
   }, [dispatch, user]);
 
-  if (ordersStatus === 'loading') return <h1>Loading</h1>;
+  if (ordersStatus === 'loading') return <Loading2 />;
   return (
     <>
       <StyledContainer sx={{ flexGrow: 1 }}>

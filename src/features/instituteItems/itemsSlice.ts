@@ -64,6 +64,7 @@ export const modifyOrder = createAsyncThunk(
     const formattedAddedItemsList = addedItemsList.map((addedItem, index) => ({
       itemid: addedItem._id,
       itemquantity: addedItem.itemquantity,
+      itemname: addedItem.itemname,
     }));
     try {
       const headers = new Headers();
@@ -104,9 +105,17 @@ export const saveOrder = createAsyncThunk(
     },
     { rejectWithValue }
   ) => {
+    console.log(addedItemsList);
     const formattedAddedItemsList = addedItemsList.map((addedItem, index) => ({
       itemid: addedItem._id,
       itemquantity: addedItem.itemquantity,
+      itemname: addedItem.itemname,
+      itemtype: addedItem.itemtype,
+      itemunit: addedItem.itemunit,
+      itemdescription:
+        addedItem.itemdescription === 'undefined'
+          ? ''
+          : addedItem.itemdescription,
     }));
     try {
       const headers = new Headers();
@@ -150,6 +159,7 @@ export const submitOrder = createAsyncThunk(
     const formattedAddedItemsList = addedItemsList.map((addedItem, index) => ({
       itemid: addedItem._id,
       itemquantity: addedItem.itemquantity,
+      itemdescription: addedItem.itemdescription,
     }));
 
     try {

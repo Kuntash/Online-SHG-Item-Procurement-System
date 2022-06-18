@@ -38,6 +38,9 @@ const PlaceOrder = () => {
   const [orderItemsForm, setOrdersItemForm] = useState<{
     [key: string]: number | string;
   }>({});
+  const [orderItemsFormdes, setOrdersItemFormdes] = useState<{
+    [key: string]: string;
+  }>({});
   const [addedItemsList, setAddedItemsList] = useState<PlaceOrderItem[]>([]);
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 5;
@@ -56,9 +59,17 @@ const PlaceOrder = () => {
       [e.target.name]: e.target.value,
     }));
   };
+  const handleOnFormChangedes = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    setOrdersItemFormdes((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   const handleAddItem = (item: Item): void => {
-    const { _id, itemdescription, itemname, itemtype, itemunit } = item;
+    const { _id, itemname, itemtype, itemunit } = item;
 
     if (isNaN(orderItemsForm?.[_id] as number)) {
       console.log('Enter a number please');
@@ -74,7 +85,7 @@ const PlaceOrder = () => {
       itemquantity: Number(orderItemsForm?.[_id]),
       itemtype,
       itemunit,
-      itemdescription,
+      itemdescription: String(orderItemsFormdes?.[_id]),
     };
     setAddedItemsList((prev) => [...prev, obj]);
   };
@@ -100,13 +111,19 @@ const PlaceOrder = () => {
         }))
       );
       let orderItemsListTemp = {};
+      let orderItemsListDesTemp = {};
       savedOrders.forEach((item, index) => {
         orderItemsListTemp = {
           ...orderItemsListTemp,
           [item._id]: item.itemquantity,
         };
+        orderItemsListDesTemp = {
+          ...orderItemsListDesTemp,
+          [item._id]: item.itemdescription,
+        };
       });
       setOrdersItemForm(orderItemsListTemp);
+      setOrdersItemFormdes(orderItemsListDesTemp);
     }
   }, [hasSavedOrder, dispatch, userToken, savedOrders]);
   useEffect(() => {
@@ -164,8 +181,9 @@ const PlaceOrder = () => {
               <StyledTableHead sx={{ fontSize: '1rem' }}>
                 <TableRow>
                   <StyledTableHeadCell>Item name</StyledTableHeadCell>
-                  <StyledTableHeadCell>Item type</StyledTableHeadCell>
+                  {/* <StyledTableHeadCell>Item type</StyledTableHeadCell> */}
                   <StyledTableHeadCell>Item quantity</StyledTableHeadCell>
+                  <StyledTableHeadCell>Description</StyledTableHeadCell>
                   <StyledTableHeadCell></StyledTableHeadCell>
                 </TableRow>
               </StyledTableHead>
@@ -178,9 +196,10 @@ const PlaceOrder = () => {
                       sx={{ fontSize: '0.875rem' }}
                     >
                       <StyledTableCell>{item.itemname}</StyledTableCell>
-                      <StyledTableCell>{item.itemtype}</StyledTableCell>
+                      {/* <StyledTableCell>{item.itemtype}</StyledTableCell> */}
                       <StyledTableCell>
                         <StyledTextField
+                          type={'number'}
                           sx={{ width: 'unset' }}
                           name={item._id}
                           value={
@@ -190,6 +209,19 @@ const PlaceOrder = () => {
                           }
                           label={`${item.itemname} की मात्रा (in ${item.itemunit})`}
                           onChange={handleOnFormChange}
+                        />
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        <StyledTextField
+                          sx={{ width: 'unset' }}
+                          name={item._id}
+                          value={
+                            orderItemsFormdes?.[item._id]
+                              ? orderItemsFormdes?.[item._id]
+                              : ''
+                          }
+                          label={`विवरण`}
+                          onChange={handleOnFormChangedes}
                         />
                       </StyledTableCell>
                       <StyledTableCell>
@@ -256,6 +288,7 @@ const PlaceOrder = () => {
         >
           <PlaceOrderDetails
             setOrdersItemForm={setOrdersItemForm}
+            setOrdersItemFormdes={setOrdersItemFormdes}
             addedItemsList={addedItemsList}
             setAddedItemsList={setAddedItemsList}
           />
