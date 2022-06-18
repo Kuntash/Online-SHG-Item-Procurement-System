@@ -80,7 +80,8 @@ const PlaceOrder = () => {
   };
 
   useEffect(() => {
-    if (hasSavedOrder === 'idle') dispatch(getSavedOrder(userToken));
+    if (hasSavedOrder === 'idle' && userToken)
+      dispatch(getSavedOrder(userToken));
     else if (hasSavedOrder === 'succeeded') {
       dispatch(
         handleOpenSnackbar({

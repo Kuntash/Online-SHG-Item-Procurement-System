@@ -71,7 +71,8 @@ const LoginForm = () => {
         })
       );
   }, [user.status, dispatch]);
-  const handleLogin = async () => {
+  const handleLogin = async (e: any) => {
+    e.preventDefault();
     if (!inputEmail)
       setHelperTexts((prev) => ({ ...prev, email: 'Email is required' }));
 
@@ -93,60 +94,65 @@ const LoginForm = () => {
             Enter your details below
           </Typography>
         </ContainerColumnBox>
-        <FormControl>
-          <StyledTextField
-            helperText={helperTexts.email}
-            value={inputEmail}
-            onChange={(e) => setInputEmail(e.target.value)}
-            sx={{ borderRadius: '0.8rem', width: '100%' }}
-            label="Email address"
-            variant="outlined"
-            type="email"
-          />
-        </FormControl>
-        <FormControl>
-          <StyledTextField
-            helperText={helperTexts.password}
-            value={inputPassword}
-            onChange={(e) => setInputPassword(e.target.value)}
-            label="Password"
-            sx={{ borderRadius: '0.8rem', width: '100%' }}
-            type={showPassword ? 'text' : 'password'}
-            variant="outlined"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    // onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? (
-                      <VisibilityOff color="secondary" />
-                    ) : (
-                      <Visibility color="secondary" />
-                    )}
-                  </IconButton>
-                </InputAdornment>
-              ),
+        <form onSubmit={(e) => handleLogin(e)}>
+          <FormControl sx={{ width: '100%', marginBottom: '20px' }}>
+            <StyledTextField
+              helperText={helperTexts.email}
+              value={inputEmail}
+              onChange={(e) => setInputEmail(e.target.value)}
+              sx={{ borderRadius: '0.8rem', width: '100%' }}
+              label="Email address / Username"
+              variant="outlined"
+              type="text"
+            />
+          </FormControl>
+          <FormControl sx={{ width: '100%', marginBottom: '20px' }}>
+            <StyledTextField
+              helperText={helperTexts.password}
+              value={inputPassword}
+              onChange={(e) => setInputPassword(e.target.value)}
+              label="Password"
+              sx={{ borderRadius: '0.8rem', width: '100%' }}
+              type={showPassword ? 'text' : 'password'}
+              variant="outlined"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      // onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? (
+                        <VisibilityOff color="secondary" />
+                      ) : (
+                        <Visibility color="secondary" />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </FormControl>
+          <StyledButton
+            startIcon={
+              user.status === 'loading' ? (
+                <CircularProgress sx={{ color: 'white' }} />
+              ) : null
+            }
+            variant="contained"
+            color="primary"
+            sx={{
+              padding: '0.75rem 1.2rem',
+              width: '100%',
+              marginBottom: '20px',
             }}
-          />
-        </FormControl>
-        <StyledButton
-          startIcon={
-            user.status === 'loading' ? (
-              <CircularProgress sx={{ color: 'white' }} />
-            ) : null
-          }
-          variant="contained"
-          color="primary"
-          sx={{ padding: '0.75rem 1.2rem' }}
-          type="submit"
-          onClick={handleLogin}
-        >
-          Login
-        </StyledButton>
+            type="submit"
+          >
+            Login
+          </StyledButton>
+        </form>
       </ContainerColumnBox>
     </StyledPaper>
   );

@@ -43,6 +43,7 @@ export const changeBidPriceOfAnOrder = createAsyncThunk(
     try {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
+      headers.append('Content-Type', 'application/json');
       const requestOptions: RequestInit = {
         method: 'POST',
         headers,
@@ -108,7 +109,6 @@ export const fetchAllShgData = createAsyncThunk(
         'https://selfhelpgroup-backend.herokuapp.com/ceo/getshgdata',
         requestOptions
       );
-      console.log(response);
       if (response.status === 400)
         throw new Error('Error occurred while fetching Shg Data');
 
