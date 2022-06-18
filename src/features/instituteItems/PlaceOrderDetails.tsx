@@ -29,9 +29,13 @@ const PlaceOrderDetails = ({
   addedItemsList,
   setAddedItemsList,
   setOrdersItemForm,
+  setOrdersItemFormdes,
 }: {
   setOrdersItemForm: React.Dispatch<
     React.SetStateAction<{ [key: string]: number | string }>
+  >;
+  setOrdersItemFormdes: React.Dispatch<
+    React.SetStateAction<{ [key: string]: string }>
   >;
   addedItemsList: PlaceOrderItem[];
   setAddedItemsList: React.Dispatch<React.SetStateAction<PlaceOrderItem[]>>;
@@ -49,6 +53,19 @@ const PlaceOrderDetails = ({
     setAddedItemsList((prev) => {
       return prev.filter((addedItem, index) => addedItem._id !== itemId);
     });
+    fetch(
+      'https://selfhelpgroup-backend.herokuapp.com/institute/deletesavedorder',
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          itemid: itemId,
+        }),
+      }
+    );
   };
 
   const handleOrder = async (type: 'save' | 'submit') => {
@@ -89,6 +106,7 @@ const PlaceOrderDetails = ({
 
     // NOTE: Resetting all the form inputs and items added after saveOrder or lockOrder is completed
     setOrdersItemForm({});
+    setOrdersItemFormdes({});
     setAddedItemsList([]);
   };
 
