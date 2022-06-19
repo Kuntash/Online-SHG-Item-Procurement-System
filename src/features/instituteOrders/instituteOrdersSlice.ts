@@ -10,7 +10,7 @@ interface OrderState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   lockOrderStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
   hasSavedOrder: 'idle' | 'loading' | 'succeeded' | 'failed';
-  approveBidStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
+  approveBidStatus: 'idle' | 'loading' | 'succeeded' | 'failed' | 'approved';
   savedOrder: PlaceOrderItem[];
   orders: InstituteOrder[] | [];
 }

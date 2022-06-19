@@ -24,7 +24,11 @@ import {
   SHGProduct,
 } from '../../types/custom';
 import { selectUser } from '../auth/authSlice';
-import { approveBidByInstitute } from './instituteOrdersSlice';
+import {
+  approveBidByInstitute,
+  fetchAllOrdersOfInstitute,
+} from './instituteOrdersSlice';
+import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
 interface InstituteBiddingDetailsProps {
   productsBidded: SHGProduct[];
   createdAt: string;
@@ -41,6 +45,7 @@ const InstituteBiddingDetails = ({
 }: InstituteBiddingDetailsProps) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
+  const approvebidstatus = useAppSelector((state) => state.instituteOrders);
   const bidRef = useRef<HTMLDivElement | null>(null);
   const [selectedProductsList, setSelectedProductsList] = useState<
     ApproveBidProductListType[]
@@ -63,6 +68,21 @@ const InstituteBiddingDetails = ({
     content: () => bidRef.current,
   });
   let ApproveButtonContent;
+  let verifyButtonContent;
+  switch (bidInfo.deliveryverified) {
+    case true:
+      verifyButtonContent = {
+        disabled: true,
+        text: 'Order Delivered',
+      };
+      break;
+    case false:
+      verifyButtonContent = {
+        disabled: false,
+        text: 'Verify Delivery',
+      };
+      break;
+  }
   switch (bidInfo.status) {
     case 'pending':
       ApproveButtonContent = {
@@ -117,7 +137,34 @@ const InstituteBiddingDetails = ({
       })
     );
   };
-
+  const handleVerifyDelivery = async (id: string) => {
+    console.log(id);
+    console.log(orderId);
+    const res = await fetch(
+      `https://selfhelpgroup-backend.herokuapp.com/institute/verifydelivery`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          orderid: orderId,
+          approvedbidid: id,
+        }),
+      }
+    );
+    const data = await res.json();
+    dispatch(
+      handleOpenSnackbar({
+        snackbarMessage: data.message,
+        snackbarType: 'success',
+      })
+    );
+    if (data.message === 'Order verified successfully') {
+      dispatch(fetchAllOrdersOfInstitute(user.token));
+    }
+  };
   const calculateTotalPrice = (): number => {
     let totalPrice = 0;
     if (bidInfo.status === 'approved') {
@@ -142,7 +189,16 @@ const InstituteBiddingDetails = ({
         quantity: 0,
       }))
     );
-  }, [productsBidded]);
+    if (approvebidstatus.approveBidStatus === 'failed') {
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Something went wrong',
+          snackbarType: 'error',
+        })
+      );
+    }
+  }, [productsBidded, approvebidstatus, dispatch]);
+  console.log(bidInfo);
   return (
     <StyledPaper ref={bidRef}>
       <ContainerRowBox
@@ -212,7 +268,9 @@ const InstituteBiddingDetails = ({
                 : 'warning.main',
           }}
         >
-          {bidInfo.status}
+          {bidInfo.delivered && bidInfo.deliveryverified
+            ? 'delivered'
+            : bidInfo.status}
         </StyledStatus>
       </ContainerRowBox>
       <ContainerColumnBox>
@@ -317,6 +375,29 @@ const InstituteBiddingDetails = ({
           >
             {ApproveButtonContent.text}
           </StyledButton>
+          {bidInfo.status === 'approved' && bidInfo.delivered === true ? (
+            <div>
+              Order Received
+              <ContainerColumnBox sx={{ marginTop: '1rem' }}>
+                <StyledButton
+                  color="success"
+                  variant="contained"
+                  disabled={verifyButtonContent.disabled}
+                  sx={{
+                    padding: '1rem 0',
+                    boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
+                  }}
+                  onClick={() => {
+                    handleVerifyDelivery(bidInfo._id);
+                  }}
+                >
+                  {verifyButtonContent.text}
+                </StyledButton>
+              </ContainerColumnBox>
+            </div>
+          ) : (
+            ''
+          )}
         </ContainerColumnBox>
       </ContainerColumnBox>
     </StyledPaper>

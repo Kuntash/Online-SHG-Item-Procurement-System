@@ -47,6 +47,8 @@ export interface Bidder {
   _id: string;
   createdAt: string;
   updatedAt: string;
+  delivered: boolean;
+  deliveryverified: boolean;
 }
 
 export interface Item {
@@ -62,6 +64,7 @@ export interface PlaceOrderItem extends Item {
 }
 
 export interface InstituteOrderItem {
+  approvedquantity: number;
   itemname: string;
   itemquantity: number;
   itemunit: string;
