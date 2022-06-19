@@ -147,7 +147,7 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
             <TableRow>
               <StyledTableHeadCell>Item name</StyledTableHeadCell>
               <StyledTableHeadCell>Item type</StyledTableHeadCell>
-              <StyledTableHeadCell>Item quantity</StyledTableHeadCell>
+              <StyledTableHeadCell>Approved/Item quantity</StyledTableHeadCell>
             </TableRow>
           </StyledTableHead>
           {/* TODO: Convert this to a list when the data changes from the api side */}
@@ -163,7 +163,7 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                     <StyledTableCell>{item.itemname}</StyledTableCell>
                     <StyledTableCell>{item.itemtype}</StyledTableCell>
                     <StyledTableCell>
-                      {item.itemquantity}
+                      {item.approvedquantity}/{item.itemquantity}
                       {''}
                       {item.itemtype === 'packed' && item.itemunit}
                     </StyledTableCell>

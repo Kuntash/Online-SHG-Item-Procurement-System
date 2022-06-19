@@ -159,7 +159,10 @@ export const submitOrder = createAsyncThunk(
     const formattedAddedItemsList = addedItemsList.map((addedItem, index) => ({
       itemid: addedItem._id,
       itemquantity: addedItem.itemquantity,
-      itemdescription: addedItem.itemdescription,
+      itemdescription:
+        addedItem.itemdescription === 'undefined'
+          ? ''
+          : addedItem.itemdescription,
     }));
 
     try {
