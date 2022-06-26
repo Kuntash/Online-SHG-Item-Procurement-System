@@ -211,7 +211,9 @@ const AdminSingleBid = () => {
                       <StyledTableCell>
                         {bidType === 'approved' && product.totalprice}
                         {bidType === 'pending' &&
-                          product.quantity * productPriceList[index].unitprice}
+                          (
+                            product.quantity * productPriceList[index].unitprice
+                          ).toFixed(2)}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}

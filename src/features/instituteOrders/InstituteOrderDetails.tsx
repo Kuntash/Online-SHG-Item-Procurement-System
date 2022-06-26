@@ -194,7 +194,12 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
         </StyledTable>
         <ContainerColumnBox>
           <StyledButton
-            disabled={orderDetail.status === 'approved' ? true : false}
+            disabled={
+              orderDetail.status === 'approved' ||
+              orderDetail.status === 'completed'
+                ? true
+                : false
+            }
             startIcon={
               lockOrderStatus === 'loading' ? (
                 <CircularProgress sx={{ color: 'white' }} />
@@ -214,7 +219,8 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
               await dispatch(fetchAllOrdersOfInstitute(userToken));
             }}
           >
-            {orderDetail.status === 'approved'
+            {orderDetail.status === 'approved' ||
+            orderDetail.status === 'completed'
               ? 'Order already locked'
               : 'Lock Order'}
           </StyledButton>

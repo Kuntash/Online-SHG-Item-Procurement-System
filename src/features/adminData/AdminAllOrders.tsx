@@ -1,4 +1,10 @@
-import { Grid, TableBody, TableRow, Typography } from '@mui/material';
+import {
+  Grid,
+  TableBody,
+  TableRow,
+  TextField,
+  Typography,
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -30,6 +36,9 @@ const AdminAllOrders = () => {
   const [ordersToDisplay, setOrdersToDisplay] = useState<AdminOrderDataType[]>(
     []
   );
+  const [filteredOrders, setFilteredOrders] = useState<AdminOrderDataType[]>(
+    []
+  );
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 5;
   const emptyRows = Math.max(
@@ -48,8 +57,21 @@ const AdminAllOrders = () => {
     navigate(`${orderId}`);
   };
   if (orderDataStatus === 'idle') dispatch(fetchAllAdminOrders(userToken));
+  const setsearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const search = e.target.value.toLowerCase();
+    const filteredOrders = ordersToDisplay.filter(
+      (order) =>
+        order._id.toLowerCase().includes(search.toLowerCase()) ||
+        order.status.toLowerCase().includes(search.toLowerCase()) ||
+        order.createdAt.toLowerCase().includes(search.toLowerCase()) ||
+        order.institutename.toLowerCase().includes(search.toLowerCase()) ||
+        order.institutelocation.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredOrders(filteredOrders);
+  };
   useEffect(() => {
     setOrdersToDisplay(adminAllOrders);
+    setFilteredOrders(adminAllOrders);
   }, [adminAllOrders]);
 
   return (
@@ -71,6 +93,14 @@ const AdminAllOrders = () => {
             >
               Orders
             </Typography>
+            <TextField
+              id="search"
+              label="Search"
+              variant="outlined"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setsearch(e)
+              }
+            ></TextField>
             <StyledTable>
               <StyledTableHead sx={{ fontSize: '1rem' }}>
                 <TableRow>
@@ -82,11 +112,11 @@ const AdminAllOrders = () => {
               </StyledTableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? ordersToDisplay.slice(
+                  ? filteredOrders.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
-                  : ordersToDisplay
+                  : filteredOrders
                 ).map((order, index: number) => (
                   <StyledTableRow
                     sx={{ fontSize: '0.875rem' }}
