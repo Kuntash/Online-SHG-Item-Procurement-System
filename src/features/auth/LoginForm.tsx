@@ -22,7 +22,7 @@ interface HelperTextType {
   email: string;
   password: string;
 }
-const LoginForm = () => {
+const LoginForm = React.forwardRef<HTMLInputElement>((prop,ref) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
@@ -83,18 +83,17 @@ const LoginForm = () => {
     dispatch(login({ email: inputEmail, password: inputPassword }));
   };
   return (
-    <StyledPaper sx={{ width: '90%' }}>
+    <StyledPaper sx={{ width: '90%',overflow:'hidden' }} ref={ref}>
       <ContainerColumnBox sx={{ rowGap: '1.5rem' }}>
-        <ContainerColumnBox sx={{ rowGap: '1rem', marginBottom: '1rem' }}>
+        <ContainerColumnBox sx={{ rowGap: '1rem', marginBottom: '1rem',backgroundColor:'#ff3030',padding:'2rem',color:'white' }}>
           <Typography variant="h2">Welcome</Typography>
           <Typography
             variant="body1"
-            color="secondary.dark"
           >
             Enter your details below
           </Typography>
         </ContainerColumnBox>
-        <form onSubmit={(e) => handleLogin(e)}>
+        <form onSubmit={(e) => handleLogin(e)} style={{margin:'auto 2rem'}}>
           <FormControl sx={{ width: '100%', marginBottom: '20px' }}>
             <StyledTextField
               helperText={helperTexts.email}
@@ -156,6 +155,6 @@ const LoginForm = () => {
       </ContainerColumnBox>
     </StyledPaper>
   );
-};
+});
 
 export default LoginForm;
