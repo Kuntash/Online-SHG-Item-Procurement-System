@@ -325,7 +325,9 @@ const InstituteBiddingDetails = ({
                   <StyledTableCell>Rs. {product?.unitprice}</StyledTableCell>
                   <StyledTableCell>
                     Rs.{' '}
-                    {product?.unitprice * selectedProductsList[index]?.quantity}
+                    {(
+                      product?.unitprice * selectedProductsList[index]?.quantity
+                    ).toFixed(2)}
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
@@ -341,7 +343,9 @@ const InstituteBiddingDetails = ({
                       {product?.quantity} {product.unit}
                     </StyledTableCell>
                     <StyledTableCell>Rs. {product?.unitprice}</StyledTableCell>
-                    <StyledTableCell>Rs. {product.totalprice}</StyledTableCell>
+                    <StyledTableCell>
+                      Rs. {product.totalprice.toFixed(2)}
+                    </StyledTableCell>
                   </StyledTableRow>
                 )
               )}
