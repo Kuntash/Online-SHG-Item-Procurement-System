@@ -10,7 +10,8 @@ interface OrderState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   lockOrderStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
   hasSavedOrder: 'idle' | 'loading' | 'succeeded' | 'failed';
-  approveBidStatus: 'idle' | 'loading' | 'succeeded' | 'failed' | 'approved';
+  orderdelivery: 'idle' | 'loading' | 'succeeded' | 'failed';
+  approveBidStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
   savedOrder: PlaceOrderItem[];
   orders: InstituteOrder[] | [];
 }
@@ -20,6 +21,7 @@ const initialState: OrderState = {
   approveBidStatus: 'idle',
   lockOrderStatus: 'idle',
   hasSavedOrder: 'idle',
+  orderdelivery: 'idle',
   savedOrder: [],
   orders: [],
 };
@@ -158,10 +160,50 @@ export const fetchAllOrdersOfInstitute = createAsyncThunk(
   }
 );
 
+export const orderdelivery = createAsyncThunk(
+  'instituteOrders/orderdelivery',
+  async (
+    {
+      token,
+      orderId,
+      id,
+    }: { token: string | undefined; orderId: string; id: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${token}`);
+      headers.append('Content-type', 'application/json');
+      headers.append('Access-Control-Allow-Origin', '*');
+      const raw = JSON.stringify({ orderid: orderId, approvedbidid: id });
+      const requestOptions: RequestInit = {
+        method: 'POST',
+        headers,
+        redirect: 'follow',
+        body: raw,
+      };
+      const response = await fetch(
+        'https://selfhelpgroup-backend.herokuapp.com/institute/verifydelivery',
+        requestOptions
+      );
+      if (response.status === 400) throw new Error('An error occurred');
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const instituteOrdersSlice = createSlice({
   name: 'instituteOrders',
   initialState,
-  reducers: {},
+  reducers: {
+    resetdelivery: (state) => {
+      state.orderdelivery = 'idle';
+    },
+    resetapproveBidStatus: (state) => {
+      state.approveBidStatus = 'idle';
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllOrdersOfInstitute.pending, (state, action) => {
@@ -200,6 +242,15 @@ const instituteOrdersSlice = createSlice({
       })
       .addCase(approveBidByInstitute.rejected, (state, action) => {
         state.approveBidStatus = 'failed';
+      })
+      .addCase(orderdelivery.pending, (state, action) => {
+        state.orderdelivery = 'loading';
+      })
+      .addCase(orderdelivery.fulfilled, (state, action) => {
+        state.orderdelivery = 'succeeded';
+      })
+      .addCase(orderdelivery.rejected, (state, action) => {
+        state.orderdelivery = 'failed';
       });
   },
 });
@@ -213,4 +264,6 @@ export const selectInstituteOrderById = (state: RootState, orderId: string) =>
   state.instituteOrders.orders.find(
     (order: InstituteOrder) => order._id === orderId
   );
+export const { resetdelivery, resetapproveBidStatus } =
+  instituteOrdersSlice.actions;
 export default instituteOrdersSlice.reducer;

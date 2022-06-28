@@ -27,6 +27,9 @@ import { selectUser } from '../auth/authSlice';
 import {
   approveBidByInstitute,
   fetchAllOrdersOfInstitute,
+  orderdelivery,
+  resetdelivery,
+  resetapproveBidStatus,
 } from './instituteOrdersSlice';
 import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
 interface InstituteBiddingDetailsProps {
@@ -45,7 +48,7 @@ const InstituteBiddingDetails = ({
 }: InstituteBiddingDetailsProps) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
-  const approvebidstatus = useAppSelector((state) => state.instituteOrders);
+  const instituteOrders = useAppSelector((state) => state.instituteOrders);
   const bidRef = useRef<HTMLDivElement | null>(null);
   const [selectedProductsList, setSelectedProductsList] = useState<
     ApproveBidProductListType[]
@@ -140,30 +143,13 @@ const InstituteBiddingDetails = ({
   const handleVerifyDelivery = async (id: string) => {
     console.log(id);
     console.log(orderId);
-    const res = await fetch(
-      `https://selfhelpgroup-backend.herokuapp.com/institute/verifydelivery`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({
-          orderid: orderId,
-          approvedbidid: id,
-        }),
-      }
-    );
-    const data = await res.json();
     dispatch(
-      handleOpenSnackbar({
-        snackbarMessage: data.message,
-        snackbarType: 'success',
+      orderdelivery({
+        token: user.token,
+        orderId: orderId,
+        id: id,
       })
     );
-    if (data.message === 'Order verified successfully') {
-      dispatch(fetchAllOrdersOfInstitute(user.token));
-    }
   };
   const calculateTotalPrice = (): number => {
     let totalPrice = 0;
@@ -189,7 +175,17 @@ const InstituteBiddingDetails = ({
         quantity: 0,
       }))
     );
-    if (approvebidstatus.approveBidStatus === 'failed') {
+    if (instituteOrders.approveBidStatus === 'succeeded') {
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Bid Approved Successfully',
+          snackbarType: 'success',
+        })
+      );
+      dispatch(fetchAllOrdersOfInstitute(user.token));
+      dispatch(resetapproveBidStatus());
+    }
+    if (instituteOrders.approveBidStatus === 'failed') {
       dispatch(
         handleOpenSnackbar({
           snackbarMessage: 'Something went wrong',
@@ -197,7 +193,17 @@ const InstituteBiddingDetails = ({
         })
       );
     }
-  }, [productsBidded, approvebidstatus, dispatch]);
+    if (instituteOrders.orderdelivery === 'succeeded') {
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Order verified successfully',
+          snackbarType: 'success',
+        })
+      );
+      dispatch(fetchAllOrdersOfInstitute(user.token));
+      dispatch(resetdelivery());
+    }
+  }, [productsBidded, instituteOrders, dispatch]);
   console.log(bidInfo);
   return (
     <StyledPaper ref={bidRef}>

@@ -18,6 +18,7 @@ import AdminSingleBid from './features/adminData/AdminSingleBid';
 import AdminShgDetails from './features/adminData/AdminShgDetails';
 import { getjwt, selectUser } from './features/auth/authSlice';
 import Loading from './components/utility/Loading';
+import ChangePassword from './components/admin/ChangePassword';
 const { useNavigate } = require('react-router-dom');
 function App() {
   const [checkcookie, setCheckcookie] = useState(true);
@@ -71,6 +72,10 @@ function App() {
               path="place-order"
               element={<PlaceOrder />}
             />
+            <Route
+              path="change-password"
+              element={<ChangePassword />}
+            />
           </Route>
           <Route path="department">
             <Route
@@ -87,6 +92,10 @@ function App() {
             />
           </Route>
           <Route path="admin">
+            <Route
+              path="change-password"
+              element={<ChangePassword />}
+            />
             <Route
               path="registershg"
               element={<RegisterShg />}
