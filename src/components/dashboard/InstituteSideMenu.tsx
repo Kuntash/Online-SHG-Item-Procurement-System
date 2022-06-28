@@ -3,6 +3,7 @@ import {
   LogoutRounded,
   TableViewRounded,
 } from '@mui/icons-material';
+import KeyIcon from '@mui/icons-material/Key';
 import { ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -35,6 +36,11 @@ const InstituteSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
       title: 'Place order',
       route: 'place-order',
       icon: <AddShoppingCartRounded />,
+    },
+    {
+      title: 'Change Password',
+      route: 'change-password',
+      icon: <KeyIcon />,
     },
   ];
   const handleRedirect = (route: string): void => {

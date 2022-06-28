@@ -17,12 +17,11 @@ import {
 } from '../../components/custom';
 import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
 import { login, selectUser } from './authSlice';
-
 interface HelperTextType {
   email: string;
   password: string;
 }
-const LoginForm = React.forwardRef<HTMLInputElement>((prop,ref) => {
+const LoginForm = React.forwardRef<HTMLInputElement>((prop, ref) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
@@ -80,20 +79,35 @@ const LoginForm = React.forwardRef<HTMLInputElement>((prop,ref) => {
       setHelperTexts((prev) => ({ ...prev, password: 'Password is required' }));
     if (!inputPassword || !inputPassword) return;
 
-    dispatch(login({ email: inputEmail, password: inputPassword }));
+    dispatch(
+      login({
+        email: inputEmail,
+        password: btoa(inputPassword),
+      })
+    );
   };
   return (
-    <StyledPaper sx={{ width: '90%',overflow:'hidden',padding:0 }} ref={ref}>
+    <StyledPaper
+      sx={{ width: '90%', overflow: 'hidden', padding: 0 }}
+      ref={ref}
+    >
       <ContainerColumnBox sx={{ rowGap: '1.5rem' }}>
-        <ContainerColumnBox sx={{ rowGap: '1rem', marginBottom: '1rem',backgroundColor:'#ff3030',padding:'2rem',color:'white' }}>
+        <ContainerColumnBox
+          sx={{
+            rowGap: '1rem',
+            marginBottom: '1rem',
+            backgroundColor: '#ff3030',
+            padding: '2rem',
+            color: 'white',
+          }}
+        >
           <Typography variant="h2">Welcome</Typography>
-          <Typography
-            variant="body1"
-          >
-            Enter your details below
-          </Typography>
+          <Typography variant="body1">Enter your details below</Typography>
         </ContainerColumnBox>
-        <form onSubmit={(e) => handleLogin(e)} style={{margin:'auto 2rem'}}>
+        <form
+          onSubmit={(e) => handleLogin(e)}
+          style={{ margin: 'auto 2rem' }}
+        >
           <FormControl sx={{ width: '100%', marginBottom: '20px' }}>
             <StyledTextField
               helperText={helperTexts.email}

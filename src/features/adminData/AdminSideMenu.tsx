@@ -2,8 +2,9 @@ import {
   AddShoppingCartRounded,
   LogoutRounded,
   TableViewRounded,
-  PersonAddRounded
+  PersonAddRounded,
 } from '@mui/icons-material';
+import KeyIcon from '@mui/icons-material/Key';
 import { ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -38,10 +39,15 @@ const CeoSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
       icon: <AddShoppingCartRounded />,
     },
     {
+      title: 'Change Password',
+      route: 'change-password',
+      icon: <KeyIcon />,
+    },
+    {
       title: 'Register SHG',
       route: 'registershg',
       icon: <PersonAddRounded />,
-    }
+    },
     // {
     //   title: 'View all institutes',
     //   route: 'view-all-institutes',

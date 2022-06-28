@@ -6,12 +6,13 @@ interface User {
   userType?: 'ceo' | 'department' | 'institute';
   email: string | undefined;
   token: string | undefined;
-  error?: string;
+  error?: string | undefined;
 }
 const initialState: User = {
   status: 'idle',
   email: undefined,
   token: undefined,
+  error: '',
 };
 interface LoginParameter {
   email: string;
@@ -45,11 +46,12 @@ export const login = createAsyncThunk(
         'https://selfhelpgroup-backend.herokuapp.com/department/login',
         requestOptions
       );
-      if (response.status === 400) throw Error('An error occurred');
       const result = await response.json();
-      console.log(result);
+      if (response.status === 400)
+        return rejectWithValue({ message: result.error });
       return { email: email, userType: result.usertype, token: result.token };
     } catch (error: any) {
+      console.log(error);
       return rejectWithValue(error?.message);
     }
   }
@@ -108,6 +110,7 @@ export const authSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(login.rejected, (state, action) => {
+        console.log(action);
         state.status = 'failed';
       })
       .addCase(login.fulfilled, (state, action) => {
