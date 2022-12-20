@@ -15,7 +15,7 @@ const LandingPage = () => {
   return (
     <>
       <Container sx={{
-      padding:"10px 5px",
+      padding:"10px 6px",
       // backgroundColor: 'rgb(200, 48, 48)',
       // color: 'white'
       }}>
@@ -45,7 +45,7 @@ const LandingPage = () => {
             color="primary"
             sx={{
               textAlign: 'center',
-              margin: '5px 10px',
+              margin: '4.5px 10px',
               fontWeight: 'bold',
               fontSize:{xs:'0.7rem',sm:"1rem"}
             }}
