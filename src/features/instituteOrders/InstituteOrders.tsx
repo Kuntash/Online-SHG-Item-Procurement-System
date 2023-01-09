@@ -184,7 +184,7 @@ const InstituteOrders = () => {
             <InstituteOrderDetails orderId={selectedRow.id} />
           </Grid>
 
-          <InstituteBiddings orderId={selectedRow.id} />
+          {/* <InstituteBiddings orderId={selectedRow.id} /> */}
         </Grid>
       </StyledContainer>
     </>

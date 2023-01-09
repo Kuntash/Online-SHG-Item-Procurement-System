@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { SHGProduct } from '../../types/custom';
 
+import { backendUrl } from '../../config';
+
 export interface Bidder {
   shgId: string;
   shgname: string;
@@ -81,7 +83,7 @@ export const approveBidByIds = createAsyncThunk(
       };
 
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/department/approveorder',
+        backendUrl+'department/approveorder',
         requestOptions
       );
       console.log(response);
@@ -122,7 +124,7 @@ export const approveOrderById = createAsyncThunk(
         }),
       };
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/department/approvefordisplay',
+        backendUrl+'department/approvefordisplay',
         requestOptions
       );
 
@@ -150,7 +152,7 @@ export const fetchDepartmentOrders = createAsyncThunk(
       };
 
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/order/department',
+        backendUrl+'order/department',
         requestOptions
       );
       if (response.status === 400)

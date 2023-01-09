@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
+import {backendUrl} from '../../config.js'
+
 interface User {
   status: 'idle' | 'loading' | 'succeeded' | 'failed' | 'nocookie';
   userType?: 'ceo' | 'department' | 'institute';
@@ -26,7 +28,7 @@ export const login = createAsyncThunk(
     headers.append('Content-Type', 'application/json');
     headers.append(
       'Access-Control-Allow-Origin',
-      'https://selfhelpgroup-backend.herokuapp.com'
+      backendUrl+''
     );
     const raw = JSON.stringify({
       email,
@@ -43,7 +45,7 @@ export const login = createAsyncThunk(
 
     try {
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/department/login',
+        backendUrl+'department/login',
         requestOptions
       );
       const result = await response.json();
@@ -61,7 +63,7 @@ export const getjwt = createAsyncThunk(
   async (token: string | undefined, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/department/jwt',
+        backendUrl+'department/jwt',
         {
           method: 'GET',
           credentials: 'include',
@@ -85,7 +87,7 @@ export const authSlice = createSlice({
       headers.append('Content-Type', 'application/json');
       headers.append(
         'Access-Control-Allow-Origin',
-        'https://selfhelpgroup-backend.herokuapp.com'
+        backendUrl+''
       );
 
       const requestOptions: RequestInit = {
@@ -95,7 +97,7 @@ export const authSlice = createSlice({
         credentials: 'include',
       };
       fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/department/logout',
+        backendUrl+'department/logout',
         requestOptions
       );
       state.status = 'nocookie';

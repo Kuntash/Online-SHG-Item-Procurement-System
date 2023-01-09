@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { Item, PlaceOrderItem } from '../../types/custom';
 
+import { backendUrl } from '../../config';
+
 export interface ItemsState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   submitOrderStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -12,6 +14,27 @@ export interface ItemsState {
     itemname?: string;
   }[];
   items: Item[];
+}
+
+export interface ISHG{
+  id:string;
+  name:string;
+  quantity:number;
+  location:string;
+  productid:string;
+  selectedquantity:number;
+  price:number;
+}
+
+export interface IItemList {
+itemname: string;
+itemid: string;
+itemunit?: string;
+totalquantity: number;
+totalPrices: number;
+itemType: string;
+itemDescription: string;
+products: ISHG[];
 }
 
 const initialState: ItemsState = {
@@ -34,7 +57,7 @@ export const fetchAllItems = createAsyncThunk(
         redirect: 'follow',
       };
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/order/getallitems',
+        backendUrl+'order/getallitems',
         requestOptions
       );
       if (response.status === 400) throw new Error('An error occurred');
@@ -80,7 +103,7 @@ export const modifyOrder = createAsyncThunk(
       };
 
       const response = await fetch(
-        `https://selfhelpgroup-backend.herokuapp.com/order/modifyorder/${orderId}`,
+        `${backendUrl}order/modifyorder/${orderId}`,
         requestOptions
       );
       if (response.status === 400)
@@ -131,7 +154,7 @@ export const saveOrder = createAsyncThunk(
       };
 
       const response = await fetch(
-        `https://selfhelpgroup-backend.herokuapp.com/institute/saveorder`,
+        backendUrl+'institute/saveorder',
         requestOptions
       );
       if (response.status === 400)
@@ -151,19 +174,15 @@ export const submitOrder = createAsyncThunk(
       addedItemsList,
       token,
     }: {
-      addedItemsList: PlaceOrderItem[];
+      addedItemsList: IItemList[];
       token: string | undefined;
     },
     { rejectWithValue }
   ) => {
-    const formattedAddedItemsList = addedItemsList.map((addedItem, index) => ({
-      itemid: addedItem._id,
-      itemquantity: addedItem.itemquantity,
-      itemdescription:
-        addedItem.itemdescription === 'undefined'
-          ? ''
-          : addedItem.itemdescription,
-    }));
+    const formattedAddedItemsList = addedItemsList.map((addedItem, index) => (addedItem.products.map(product=>({
+      productid:product.id,
+      itemquantity:product.selectedquantity,
+    }))));
 
     try {
       const headers = new Headers();
@@ -179,7 +198,7 @@ export const submitOrder = createAsyncThunk(
       };
 
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/order/postorder',
+        backendUrl+'order/postorder',
         requestOptions
       );
       if (response.status === 400)

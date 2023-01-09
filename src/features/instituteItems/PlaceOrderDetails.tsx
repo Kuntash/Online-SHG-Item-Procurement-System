@@ -25,6 +25,8 @@ import { selectUser } from '../auth/authSlice';
 import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
 import { modifyOrder, resetStatus, saveOrder, submitOrder } from './itemsSlice';
 
+import { backendUrl } from '../../config';
+
 const PlaceOrderDetails = ({
   addedItemsList,
   setAddedItemsList,
@@ -54,7 +56,7 @@ const PlaceOrderDetails = ({
       return prev.filter((addedItem, index) => addedItem._id !== itemId);
     });
     fetch(
-      'https://selfhelpgroup-backend.herokuapp.com/institute/deletesavedorder',
+      backendUrl+'institute/deletesavedorder',
       {
         method: 'DELETE',
         headers: {

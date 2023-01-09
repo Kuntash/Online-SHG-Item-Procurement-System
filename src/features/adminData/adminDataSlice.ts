@@ -6,6 +6,8 @@ import {
   AdminSHGDataType,
 } from '../../types/custom';
 
+import { backendUrl } from '../../config';
+
 export interface AdminDataType {
   shgData: {
     shgDataStatus: 'loading' | 'failed' | 'succeeded' | 'idle';
@@ -54,7 +56,7 @@ export const changeBidPriceOfAnOrder = createAsyncThunk(
         }),
       };
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/ceo/changebidprice',
+        backendUrl+'ceo/changebidprice',
         requestOptions
       );
       if (response.status === 400)
@@ -78,7 +80,7 @@ export const fetchAllAdminOrders = createAsyncThunk(
       };
 
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/ceo/getallorders',
+        backendUrl+'ceo/getallorders',
         requestOptions
       );
       if (response.status === 400)
@@ -106,7 +108,7 @@ export const fetchAllShgData = createAsyncThunk(
         redirect: 'follow',
       };
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/ceo/getshgdata',
+        backendUrl+'ceo/getshgdata',
         requestOptions
       );
       if (response.status === 400)

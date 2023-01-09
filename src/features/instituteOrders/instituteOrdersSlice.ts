@@ -6,6 +6,8 @@ import {
   PlaceOrderItem,
 } from '../../types/custom';
 
+import { backendUrl } from '../../config';
+
 interface OrderState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   lockOrderStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -61,7 +63,7 @@ export const approveBidByInstitute = createAsyncThunk(
       };
 
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/institute/approveorder',
+        backendUrl+'institute/approveorder',
         requestOptions
       );
       const result = await response.json();
@@ -89,7 +91,7 @@ export const getSavedOrder = createAsyncThunk(
         redirect: 'follow',
       };
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/institute/getsavedorder',
+        backendUrl+'institute/getsavedorder',
         requestOptions
       );
       if (response.status === 400)
@@ -122,7 +124,7 @@ export const lockOrderOfInstitute = createAsyncThunk(
       };
 
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/order/lock',
+        backendUrl+'order/lock',
         requestOptions
       );
       if (response.status === 400) throw new Error('Error while locking order');
@@ -146,7 +148,7 @@ export const fetchAllOrdersOfInstitute = createAsyncThunk(
         headers,
       };
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/order/institute',
+        backendUrl+'order/institute',
         requestOptions
       );
 
@@ -183,7 +185,7 @@ export const orderdelivery = createAsyncThunk(
         body: raw,
       };
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/institute/verifydelivery',
+        backendUrl+'institute/verifydelivery',
         requestOptions
       );
       if (response.status === 400) throw new Error('An error occurred');

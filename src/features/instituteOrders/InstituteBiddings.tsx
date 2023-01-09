@@ -23,6 +23,7 @@ const InstituteBiddings = ({ orderId }: BiddingProps) => {
     if (orderId === undefined) return undefined;
     return selectInstituteOrderById(state, orderId);
   });
+  console.log("order",instituteOrder)
   const [selectedRow, setSelectedRow] = useState<number>(0);
   return (
     <>
