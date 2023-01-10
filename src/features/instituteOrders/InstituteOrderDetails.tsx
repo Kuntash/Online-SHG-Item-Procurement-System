@@ -32,6 +32,7 @@ import {
   lockOrderOfInstitute,
   selectInstituteOrderById,
 } from './instituteOrdersSlice';
+import Checkbox from '@mui/material/Checkbox';
 const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -111,7 +112,7 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
           >
             {`at ${format(
               parseISO(orderDetail.createdAt),
-              'h:m a do MMM yyyy'
+              'hh:mm a do MMM yyyy'
             )}`}
           </Typography>
           <IconButton
@@ -121,14 +122,14 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
             <PrintRounded color="success" />
           </IconButton>
 
-          {orderDetail.status === 'pending' && (
+          {/* {orderDetail.status === 'pending' && (
             <IconButton
               color="info"
               onClick={handleRedirect.bind(this, 'place-order')}
             >
               <EditRounded color="info" />
             </IconButton>
-          )}
+          )} */}
         </ContainerRowBox>
       </ContainerRowBox>
       <ContainerColumnBox>
@@ -149,6 +150,7 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
               {/* <StyledTableHeadCell>Item type</StyledTableHeadCell> */}
               <StyledTableHeadCell>Item quantity</StyledTableHeadCell>
               <StyledTableHeadCell>Item Price</StyledTableHeadCell>
+              <StyledTableHeadCell>Received</StyledTableHeadCell>
             </TableRow>
           </StyledTableHead>
           {/* TODO: Convert this to a list when the data changes from the api side */}
@@ -164,7 +166,8 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                     <StyledTableCell>{item.itemname}</StyledTableCell>
                     {/* <StyledTableCell>{item.itemtype}</StyledTableCell> */}
                     <StyledTableCell>{item.itemquantity}</StyledTableCell>
-                    <StyledTableCell>{item.itemprice}</StyledTableCell>
+                    <StyledTableCell>&#x20b9;{item.itemprice}</StyledTableCell>
+                    <Checkbox defaultChecked={item.delivered} />
                   </StyledTableRow>
                 ))}
             {emptyRows > 0 && (
