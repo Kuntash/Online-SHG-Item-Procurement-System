@@ -55,19 +55,16 @@ const PlaceOrderDetails = ({
     setAddedItemsList((prev) => {
       return prev.filter((addedItem, index) => addedItem._id !== itemId);
     });
-    fetch(
-      backendUrl+'institute/deletesavedorder',
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({
-          itemid: itemId,
-        }),
-      }
-    );
+    fetch(backendUrl + 'institute/deletesavedorder', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({
+        itemid: itemId,
+      }),
+    });
   };
 
   const handleOrder = async (type: 'save' | 'submit') => {
@@ -116,7 +113,7 @@ const PlaceOrderDetails = ({
     await dispatch(saveOrder({ addedItemsList, token: user.token }));
   };
   const handleSubmitOrder = async () => {
-    await dispatch(submitOrder({ addedItemsList, token: user.token }));
+    // await dispatch(submitOrder({ addedItemsList, token: user.token }));
   };
 
   // NOTE: Reset the saveOrderStatus and submitOrderStatus on render to 'idle'

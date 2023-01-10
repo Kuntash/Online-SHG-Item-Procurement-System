@@ -1,1 +1,1 @@
-export const backendUrl = "http://13.234.242.252/"
+export const backendUrl = 'https://backend.cgshgmart.com/';

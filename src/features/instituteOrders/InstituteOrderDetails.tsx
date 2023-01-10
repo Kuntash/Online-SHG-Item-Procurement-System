@@ -146,8 +146,9 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
           <StyledTableHead sx={{ fontSize: '0.875rem' }}>
             <TableRow>
               <StyledTableHeadCell>Item name</StyledTableHeadCell>
-              <StyledTableHeadCell>Item type</StyledTableHeadCell>
-              <StyledTableHeadCell>Approved/Item quantity</StyledTableHeadCell>
+              {/* <StyledTableHeadCell>Item type</StyledTableHeadCell> */}
+              <StyledTableHeadCell>Item quantity</StyledTableHeadCell>
+              <StyledTableHeadCell>Item Price</StyledTableHeadCell>
             </TableRow>
           </StyledTableHead>
           {/* TODO: Convert this to a list when the data changes from the api side */}
@@ -161,12 +162,9 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                     key={index}
                   >
                     <StyledTableCell>{item.itemname}</StyledTableCell>
-                    <StyledTableCell>{item.itemtype}</StyledTableCell>
-                    <StyledTableCell>
-                      {item.approvedquantity}/{item.itemquantity}
-                      {''}
-                      {item.itemtype === 'packed' && item.itemunit}
-                    </StyledTableCell>
+                    {/* <StyledTableCell>{item.itemtype}</StyledTableCell> */}
+                    <StyledTableCell>{item.itemquantity}</StyledTableCell>
+                    <StyledTableCell>{item.itemprice}</StyledTableCell>
                   </StyledTableRow>
                 ))}
             {emptyRows > 0 && (
@@ -192,7 +190,7 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
             </TableRow>
           </TableBody>
         </StyledTable>
-        <ContainerColumnBox>
+        {/* <ContainerColumnBox>
           <StyledButton
             disabled={
               orderDetail.status === 'approved' ||
@@ -224,7 +222,7 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
               ? 'Order already locked'
               : 'Lock Order'}
           </StyledButton>
-        </ContainerColumnBox>
+        </ContainerColumnBox> */}
       </ContainerColumnBox>
     </StyledPaper>
   );
