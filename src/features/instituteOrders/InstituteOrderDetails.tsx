@@ -167,7 +167,7 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                     {/* <StyledTableCell>{item.itemtype}</StyledTableCell> */}
                     <StyledTableCell>{item.itemquantity}</StyledTableCell>
                     <StyledTableCell>&#x20b9;{item.itemprice}</StyledTableCell>
-                    <Checkbox defaultChecked={item.delivered} />
+                    <Checkbox />
                   </StyledTableRow>
                 ))}
             {emptyRows > 0 && (
