@@ -81,12 +81,12 @@ const AdminOrderDetails = () => {
           md={12}
           lg={12}
         >
-          <AdminBiddingDetailsTable
+          {/* <AdminBiddingDetailsTable
             tableTitle="Approved bids"
             bidType="approved"
             bids={order.approvedbid}
             orderId={order._id}
-          />
+          /> */}
         </Grid>
         <Grid
           item
@@ -94,12 +94,12 @@ const AdminOrderDetails = () => {
           md={12}
           lg={12}
         >
-          <AdminBiddingDetailsTable
+          {/* <AdminBiddingDetailsTable
             bidType="pending"
             tableTitle="Unapproved bids"
             bids={order.bid.filter((bid) => bid.status === 'pending')}
             orderId={order._id}
-          />
+          /> */}
         </Grid>
       </Grid>
     </StyledContainer>

@@ -72,6 +72,7 @@ export interface InstituteOrderItem {
   itemid: string;
   itemtype: 'loose' | 'packed';
   itemdescription: string;
+  delivered: boolean;
 }
 
 export interface InstituteOrder {

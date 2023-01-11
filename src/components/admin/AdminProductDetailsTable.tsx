@@ -30,7 +30,8 @@ const AdminProductDetailsTable = ({
             <StyledTableHeadCell>Product no.</StyledTableHeadCell>
             <StyledTableHeadCell>Product name</StyledTableHeadCell>
             <StyledTableHeadCell>Product description</StyledTableHeadCell>
-            <StyledTableHeadCell>Approved / Total quantity</StyledTableHeadCell>
+            <StyledTableHeadCell>Quantity</StyledTableHeadCell>
+            <StyledTableHeadCell>Price</StyledTableHeadCell>
             {/* <StyledTableHeadCell> </StyledTableHeadCell> */}
           </TableRow>
         </StyledTableHead>
@@ -41,9 +42,9 @@ const AdminProductDetailsTable = ({
               <StyledTableCell>{product.itemname}</StyledTableCell>
               <StyledTableCell>{product.itemdescription}</StyledTableCell>
               <StyledTableCell>
-                {product.approvedquantity} / {product.itemquantity}{' '}
-                {product.itemunit}
+                {product.itemquantity} {product.itemunit}
               </StyledTableCell>
+              <StyledTableCell>&#x20b9;{product.itemprice}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
