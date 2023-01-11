@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import { parseISO, format } from 'date-fns';
-import React, { useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -25,12 +25,14 @@ import {
   StyledButton,
 } from '../../components/custom';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
-import { InstituteOrder } from '../../types/custom';
+import { InstituteOrder, InstituteOrderItem } from '../../types/custom';
 import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
 import {
   fetchAllOrdersOfInstitute,
   lockOrderOfInstitute,
+  resetdelivery,
   selectInstituteOrderById,
+  updatedelivery,
 } from './instituteOrdersSlice';
 import Checkbox from '@mui/material/Checkbox';
 const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
@@ -40,6 +42,9 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
   const orderDetail = useAppSelector((state: RootState) =>
     selectInstituteOrderById(state, orderId)
   ) as InstituteOrder;
+  console.log(orderDetail)
+    const [updatedOrders,setUpdatedOrders] = useState<InstituteOrderItem[]>([]);
+    const updatedeliveryStatus = useAppSelector(state=>state.instituteOrders.updatedelivery)
   const lockOrderStatus = useAppSelector(
     (state: RootState) => state.instituteOrders.lockOrderStatus
   );
@@ -53,6 +58,10 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
     0,
     (1 + page) * rowsPerPage - orderDetail?.items?.length
   );
+
+  const handleUpdateDelivery = ()=>{
+    dispatch(updatedelivery({token:userToken,order:{...orderDetail,items:updatedOrders}}));
+  }
 
   const handleChangePage = (
     e: React.MouseEvent<HTMLButtonElement> | null,
@@ -93,6 +102,24 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
         })
       );
   };
+  
+  const handleUpdateDeliveryStatus=(e:ChangeEvent<HTMLInputElement>,item:InstituteOrderItem)=>{
+  if(e.target.checked === true) setUpdatedOrders([...updatedOrders,item]);
+  if(e.target.checked === false) setUpdatedOrders(updatedOrders.filter(i=>(item._id !== i._id)))
+  }
+
+
+  useEffect(()=>{
+      if(updatedeliveryStatus === 'succeeded') dispatch(handleOpenSnackbar({snackbarMessage:"Order delivery updated successfully",snackbarType:"success"}));
+      dispatch(resetdelivery())
+  },[updatedeliveryStatus])
+  const handleSubmitStatus = ()=>{
+    console.log(orderDetail)
+  }
+
+  useEffect(()=>{
+  setUpdatedOrders([]);
+  },[orderId])
   // Create a Style Component
   if (orderDetail === undefined) return <h1> Order Not found</h1>;
   return (
@@ -167,8 +194,10 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                     {/* <StyledTableCell>{item.itemtype}</StyledTableCell> */}
                     <StyledTableCell>{item.itemquantity}</StyledTableCell>
                     <StyledTableCell>&#x20b9;{item.itemprice}</StyledTableCell>
-                    <Checkbox />
-                  </StyledTableRow>
+                    {item.delivered?<Checkbox checked={true} disabled = {true} />:
+                    <Checkbox checked={updatedOrders.find(i=>i._id === item._id)!==undefined} onChange={(e)=>handleUpdateDeliveryStatus(e,item)} />
+                }
+                    </StyledTableRow>
                 ))}
             {emptyRows > 0 && (
               <StyledTableRow style={{ height: 53 * emptyRows }}>
@@ -193,6 +222,10 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
             </TableRow>
           </TableBody>
         </StyledTable>
+        <StyledButton 
+          variant='contained'
+          onClick={handleUpdateDelivery}
+        >Submit</StyledButton>
         {/* <ContainerColumnBox>
           <StyledButton
             disabled={

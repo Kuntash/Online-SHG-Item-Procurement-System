@@ -14,6 +14,7 @@ interface OrderState {
   hasSavedOrder: 'idle' | 'loading' | 'succeeded' | 'failed';
   orderdelivery: 'idle' | 'loading' | 'succeeded' | 'failed';
   approveBidStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
+  updatedelivery: 'idle' | 'loading' | 'succeeded' | 'failed';
   savedOrder: PlaceOrderItem[];
   orders: InstituteOrder[] | [];
 }
@@ -24,9 +25,11 @@ const initialState: OrderState = {
   lockOrderStatus: 'idle',
   hasSavedOrder: 'idle',
   orderdelivery: 'idle',
+  updatedelivery: 'idle',
   savedOrder: [],
   orders: [],
 };
+
 
 export const approveBidByInstitute = createAsyncThunk(
   'instituteOrders/approveBidByInstitute',
@@ -157,7 +160,7 @@ export const fetchAllOrdersOfInstitute = createAsyncThunk(
 
       if (response.status === 400) throw new Error('An error occurred');
       const result = await response.json();
-      console.log(result);
+      console.log("result",result);
       return result.orders;
     } catch (error: any) {
       return rejectWithValue(error?.message);
@@ -198,6 +201,45 @@ export const orderdelivery = createAsyncThunk(
   }
 );
 
+
+export const updatedelivery = createAsyncThunk(
+  'institute/updatedelivery',
+  async (
+    {
+      token,
+      order,
+    }: { token: string | undefined; order:InstituteOrder},
+    { rejectWithValue,dispatch }
+  ) => {
+    try {
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${token}`);
+      headers.append('Content-type', 'application/json');
+      headers.append('Access-Control-Allow-Origin', '*');
+      const formatted = {
+        orderid:order._id,
+        products:order.items.map(product=>({productid:product._id}))
+      } 
+      console.log("request",formatted)
+      const raw = JSON.stringify(formatted)
+      const requestOptions: RequestInit = {
+        method: 'POST',
+        headers,
+        redirect: 'follow',
+        body: raw,
+      };
+      const response = await fetch(
+        backendUrl+'institute/updatedelivery',
+        requestOptions
+      );
+      if (response.status === 400) throw new Error('An error occurred');
+      if (response.status === 200) dispatch(fetchAllOrdersOfInstitute(token))
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const instituteOrdersSlice = createSlice({
   name: 'instituteOrders',
   initialState,
@@ -208,6 +250,9 @@ const instituteOrdersSlice = createSlice({
     resetapproveBidStatus: (state) => {
       state.approveBidStatus = 'idle';
     },
+    resetupdatedeliver:(state)=>{
+      state.updatedelivery = 'idle'
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -256,6 +301,15 @@ const instituteOrdersSlice = createSlice({
       })
       .addCase(orderdelivery.rejected, (state, action) => {
         state.orderdelivery = 'failed';
+      })
+      .addCase(updatedelivery.pending, (state, action) => {
+        state.updatedelivery = 'loading';
+      })
+      .addCase(updatedelivery.fulfilled, (state, action) => {
+        state.updatedelivery = 'succeeded';
+      })
+      .addCase(updatedelivery.rejected, (state, action) => {
+        state.updatedelivery = 'failed';
       });
   },
 });

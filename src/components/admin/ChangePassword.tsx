@@ -5,6 +5,7 @@ import {
   StyledPaper,
   StyledTextField,
 } from '../custom';
+import { backendUrl } from '../../config';
 import {
   FormControl,
   Typography,
@@ -102,7 +103,7 @@ const ChangePassword = () => {
     setStatus('loading');
     try {
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/department/changepassword',
+        backendUrl+'department/changepassword',
         requestOptions
       );
       if (response.status !== 200) {
