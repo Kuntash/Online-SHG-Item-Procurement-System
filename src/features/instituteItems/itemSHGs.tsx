@@ -14,6 +14,8 @@ import { TableBody, TableRow, Typography } from '@mui/material';
 import { StyledButton, StyledPaper, StyledTable, StyledTableCell, StyledTableHead, StyledTableHeadCell, StyledTableRow, StyledTextField } from '../../components/custom';
 
 import { IItemList,ISHG } from './itemsSlice';
+import { RootState } from '../../app/store';
+import { useAppSelector } from '../../app/hooks';
 
 
 
@@ -33,7 +35,7 @@ export default function FormDialog(props:{
     const [productQuantities,setProductQuatities] = React.useState<{[key:string]:number}>({});
     const {open,setOpen,item} = props;
     const [shgs,setShgs] = React.useState<ISHG[] | null>(null)
-    const token = useSelector(selectUser).token;
+    const token = useAppSelector(selectUser).token;
 
   const handleClickOpen = () => {
     setOpen(true);

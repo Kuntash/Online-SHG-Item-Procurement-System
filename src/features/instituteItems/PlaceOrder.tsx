@@ -2,7 +2,7 @@ import { Autocomplete, Button, Dialog, DialogActions, DialogContentText, DialogT
 
 import DialogContent from '@mui/material/DialogContent';
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RootState } from '../../app/store';
 import {
@@ -26,14 +26,15 @@ import {
 } from '../instituteOrders/instituteOrdersSlice';
 import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
 import FormDialog from './itemSHGs';
-import { fetchAllItems, selectAllItems,submitOrder } from './itemsSlice';
-import PlaceOrderDetails from './PlaceOrderDetails';
+import { fetchAllItems, resetStatus, selectAllItems,submitOrder } from './itemsSlice';
+// import PlaceOrderDetails from './PlaceOrderDetails';
 import { IItemList,ISHG } from './itemsSlice';
 import { useSelector } from 'react-redux';
 import { backendUrl } from '../../config';
 
 const PlaceOrder = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { state } = useLocation() as RouterStateType;
   const userToken = useAppSelector((state: RootState) => state.auth.token);
   const savedOrders = useAppSelector(selectSavedOrder);
@@ -42,6 +43,7 @@ const PlaceOrder = () => {
   const hasSavedOrder = useAppSelector(
     (state: RootState) => state.instituteOrders.hasSavedOrder
   );
+  console.log("savedOrders",savedOrders)
   const [orderItemsForm, setOrdersItemForm] = useState<{
     [key: string]: number | string;
   }>({});
@@ -52,45 +54,16 @@ const PlaceOrder = () => {
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 5;
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - items.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - addedItemsList.length) : 0;
 
   const [selectedItem, setSelectedItem] = useState<IItemList | null>();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [displayOnly,setDisplayOnly] = useState(false);
-  // const submitOrderStatus = useSelector(state=>state.items.submitOrderStatus)
+  const submitOrderStatus = useAppSelector(state=>state.items.submitOrderStatus)
 
   const handleSubmitOrder = async()=>{
-    const formattedAddedItemsList = addedItemsList.map((addedItem, index) => (addedItem.products.map(product=>({
-      productid:product.productid,
-      itemquantity:product.selectedquantity,
-    })))).flat();
-    console.log(formattedAddedItemsList)
-    try {
-      const headers = new Headers();
-      headers.append('Authorization', `Bearer ${userToken}`);
-      headers.append('Content-type', 'application/json');
-      headers.append('Access-Control-Allow-Origin', '*');
-      const raw = JSON.stringify(formattedAddedItemsList);
-      const requestOptions: RequestInit = {
-        method: 'POST',
-        headers,
-        redirect: 'follow',
-        body: raw,
-      };
-
-      const response = await fetch(
-        backendUrl+'order/postorder',
-        requestOptions
-      );
-      if (response.status === 400)
-        throw new Error('An error occured while posting orders');
-      const result = await response.json();
-      console.log(result);
-      return result;
-    } catch (err) {
-      console.log(err)
-    }
+    dispatch(submitOrder({addedItemsList,token:userToken}));
   }
 
   const handleAddItem = (list: IItemList) => {
@@ -107,6 +80,28 @@ const PlaceOrder = () => {
   React.useEffect(()=>{
     console.log(addedItemsList);
   },[addedItemsList])
+
+
+
+  React.useEffect(()=>{
+    if(submitOrderStatus === 'loading') dispatch(handleOpenSnackbar({
+      snackbarMessage:"Submitting Order",
+      snackbarType:'info'
+    }))
+    if(submitOrderStatus === "failed") dispatch(handleOpenSnackbar({
+      snackbarMessage:"Failed to submit order",
+      snackbarType:'error'   
+     }))
+     if(submitOrderStatus === 'succeeded'){
+       dispatch(handleOpenSnackbar({
+       snackbarMessage:"Order Submitted Successfully",
+       snackbarType:'success'
+     }))
+     dispatch(resetStatus());
+     navigate('../all-orders');
+
+    }
+  },[submitOrderStatus])
 
   const handleChangePage = (
     e: React.MouseEvent<HTMLButtonElement> | null,
@@ -158,64 +153,34 @@ const PlaceOrder = () => {
     })
     return items.filter((item)=>!hash.has(item._id))
   }
-  // const handleAddItem = (item: Item): void => {
-  //   const { _id, itemname, itemtype, itemunit } = item;
 
-  //   if (isNaN(orderItemsForm?.[_id] as number)) {
-  //     console.log('Enter a number please');
-  //     return;
-  //   }
-  //   if (Number(orderItemsForm?.[_id]) === 0) {
-  //     // TODO: Call error,
-  //     return;
-  //   }
-  //   const obj: PlaceOrderItem = {
-  //     _id,
-  //     itemname,
-  //     itemquantity: Number(orderItemsForm?.[_id]),
-  //     itemtype,
-  //     itemunit,
-  //     itemdescription: String(orderItemsFormdes?.[_id]),
-  //   };
-  //   setAddedItemsList((prev) => [...prev, obj]);
-  // };
-
-  // useEffect(() => {
-  //   if (hasSavedOrder === 'idle' && userToken)
-  //     dispatch(getSavedOrder(userToken));
-  //   else if (hasSavedOrder === 'succeeded') {
-  //     dispatch(
-  //       handleOpenSnackbar({
-  //         snackbarMessage: 'You have some saved order',
-  //         snackbarType: 'info',
-  //       })
-  //     );
-  //     setAddedItemsList(
-  //       savedOrders.map((item, index) => ({
-  //         _id: item._id,
-  //         itemtype: item.itemtype,
-  //         itemname: item.itemname,
-  //         itemdescription: item.itemdescription,
-  //         itemunit: item.itemunit,
-  //         itemquantity: item.itemquantity,
-  //       }))
-  //     );
-  //     let orderItemsListTemp = {};
-  //     let orderItemsListDesTemp = {};
-  //     savedOrders.forEach((item, index) => {
-  //       orderItemsListTemp = {
-  //         ...orderItemsListTemp,
-  //         [item._id]: item.itemquantity,
-  //       };
-  //       orderItemsListDesTemp = {
-  //         ...orderItemsListDesTemp,
-  //         [item._id]: item.itemdescription,
-  //       };
-  //     });
-  //     setOrdersItemForm(orderItemsListTemp);
-  //     setOrdersItemFormdes(orderItemsListDesTemp);
-  //   }
-  // }, [hasSavedOrder, dispatch, userToken, savedOrders]);
+  useEffect(() => {
+    if (hasSavedOrder === 'idle' && userToken)
+      dispatch(getSavedOrder(userToken));
+    else if (hasSavedOrder === 'succeeded') {
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'You have some saved order',
+          snackbarType: 'info',
+        })
+      );
+      console.log(savedOrders)
+      let orderItemsListTemp = {};
+      let orderItemsListDesTemp = {};
+      savedOrders.forEach((item, index) => {
+        orderItemsListTemp = {
+          ...orderItemsListTemp,
+          [item._id]: item.itemquantity,
+        };
+        orderItemsListDesTemp = {
+          ...orderItemsListDesTemp,
+          [item._id]: item.itemdescription,
+        };
+      });
+      setOrdersItemForm(orderItemsListTemp);
+      setOrdersItemFormdes(orderItemsListDesTemp);
+    }
+  }, [hasSavedOrder, dispatch, userToken, savedOrders]);
   useEffect(() => {
     if (itemsStatus === 'idle') {
       // TODO: Dispatch once the api is working
@@ -261,13 +226,26 @@ const PlaceOrder = () => {
           xs={12}
           md={7}
         > */}
-          <StyledPaper>
+          <StyledPaper sx={{width:'100%'}}>
+            <StyledContainer sx={{
+              display:'flex',
+              justifyContent:'space-between',
+              flexFlow:"row",
+              alignItems:'center'
+            }}>
             <Typography
               variant="h2"
               sx={{ marginBottom: '1rem' }}
             >
               Select items to order
             </Typography>
+            <Typography
+              variant="body1"
+              sx={{ marginBottom: '1rem' }}
+            >
+              Total Order Price:{addedItemsList.reduce((total,item)=>item.products.reduce((total,product)=>(total+product.price*product.selectedquantity),0)+total,0)}
+            </Typography>
+            </StyledContainer>
             <StyledTable>
               <StyledTableHead sx={{ fontSize: '1rem' }}>
                 <TableRow>
@@ -351,8 +329,8 @@ const PlaceOrder = () => {
                   <StyledTableRow style={{ height: 53 * emptyRows }}>
                     <StyledTableCell colSpan={5} />
                   </StyledTableRow>
-                )} */}
-                {/* <TableRow>
+                )}
+                <TableRow>
                   <StyledTablePagination
                     rowsPerPageOptions={[5]}
                     SelectProps={{
@@ -368,9 +346,9 @@ const PlaceOrder = () => {
                     ActionsComponent={TablePaginationActions}
                   />
                 </TableRow> */}
-                {addedItemsList.map(item=><>
+                {addedItemsList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item,index)=><>
 
-                <StyledTableRow onClick={()=>handleDisplayDialog(item)}>
+                <StyledTableRow key={index} onClick={()=>handleDisplayDialog(item)}>
                   <StyledTableCell>
                     {item.itemname}
                   </StyledTableCell>
@@ -381,10 +359,36 @@ const PlaceOrder = () => {
                     {item.products.reduce((total,product)=>total+product.price*product.selectedquantity,0)}
                   </StyledTableCell>
                 </StyledTableRow></>)}
-                <StyledTableRow>
-                  <StyledTableCell>
-                    {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                    <Autocomplete
+                {emptyRows > 0 && (
+                  <StyledTableRow style={{ height: 53 * emptyRows }}>
+                    <StyledTableCell colSpan={5} />
+                  </StyledTableRow>
+                )}
+                <TableRow>
+                  <StyledTablePagination
+                    rowsPerPageOptions={[5]}
+                    SelectProps={{
+                      inputProps: {
+                        'aria-label': 'rows per page',
+                      },
+                      native: true,
+                    }}
+                    count={addedItemsList.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    ActionsComponent={TablePaginationActions}
+                  />
+                </TableRow>
+              </TableBody>
+            </StyledTable>
+            <StyledContainer sx={{
+              display:'flex',
+              flexFlow:'row',
+              justifyContent:'space-between',
+              alignItems:'center'
+            }}>
+            <Autocomplete
                       blurOnSelect
                       onChange={(e, value) => {
                         if (value === null) return
@@ -395,15 +399,12 @@ const PlaceOrder = () => {
                       sx={{ width: '200px' }}
                       renderInput={(params) => <TextField {...params} label="Items" />}
                     />
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    <StyledButton onClick={handleSubmitOrder}>
+                    <StyledButton
+                    variant='contained'
+                    onClick={handleSubmitOrder}>
                       Submit Order
                     </StyledButton>
-                  </StyledTableCell>
-                </StyledTableRow>
-              </TableBody>
-            </StyledTable>
+              </StyledContainer>
           </StyledPaper>
         {/* </Grid>
         <Grid

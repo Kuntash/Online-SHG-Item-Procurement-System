@@ -8,11 +8,7 @@ export interface ItemsState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   submitOrderStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
   saveOrderStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
-  savedOrders?: {
-    itemid: string;
-    itemquantity: number;
-    itemname?: string;
-  }[];
+  savedOrders?: IItemList[];
   items: Item[];
 }
 
@@ -123,23 +119,17 @@ export const saveOrder = createAsyncThunk(
       addedItemsList,
       token,
     }: {
-      addedItemsList: PlaceOrderItem[];
+      addedItemsList: IItemList[];
       token: string | undefined;
     },
     { rejectWithValue }
   ) => {
     console.log(addedItemsList);
-    const formattedAddedItemsList = addedItemsList.map((addedItem, index) => ({
-      itemid: addedItem._id,
-      itemquantity: addedItem.itemquantity,
-      itemname: addedItem.itemname,
-      itemtype: addedItem.itemtype,
-      itemunit: addedItem.itemunit,
-      itemdescription:
-        addedItem.itemdescription === 'undefined'
-          ? ''
-          : addedItem.itemdescription,
-    }));
+    const formattedAddedItemsList = addedItemsList.map((addedItem, index) => (addedItem.products.map(product=>({
+      productid:product.productid,
+      itemquantity:product.selectedquantity,
+    })))).flat();
+    console.log(formattedAddedItemsList)
     try {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
@@ -158,12 +148,12 @@ export const saveOrder = createAsyncThunk(
         requestOptions
       );
       if (response.status === 400)
-        throw new Error('An error occured while saving orders');
+        throw new Error('An error occured while posting orders');
       const result = await response.json();
       console.log(result);
       return result;
     } catch (err) {
-      return rejectWithValue(err);
+      rejectWithValue(err)
     }
   }
 );
@@ -180,10 +170,10 @@ export const submitOrder = createAsyncThunk(
     { rejectWithValue }
   ) => {
     const formattedAddedItemsList = addedItemsList.map((addedItem, index) => (addedItem.products.map(product=>({
-      productid:product.id,
+      productid:product.productid,
       itemquantity:product.selectedquantity,
-    }))));
-
+    })))).flat();
+    console.log(formattedAddedItemsList)
     try {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
@@ -207,7 +197,7 @@ export const submitOrder = createAsyncThunk(
       console.log(result);
       return result;
     } catch (err) {
-      return rejectWithValue(err);
+      rejectWithValue(err)
     }
   }
 );

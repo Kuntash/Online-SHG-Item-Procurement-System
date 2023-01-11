@@ -81,6 +81,7 @@ export const getSavedOrder = createAsyncThunk(
   'instituteOrders/getSavedOrder',
   async (token: undefined | string, { rejectWithValue }) => {
     try {
+      console.log("getting saved orders",token)
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
       headers.append('Content-type', 'application/json');
@@ -94,10 +95,12 @@ export const getSavedOrder = createAsyncThunk(
         backendUrl+'institute/getsavedorder',
         requestOptions
       );
+      console.log(response)
       if (response.status === 400)
         throw new Error('Error occurred while getting saved order');
       const result: { message: string; savedorders: PlaceOrderItem[] } =
         await response.json();
+        console.log(result.savedorders)
       return result.savedorders;
     } catch (err) {
       return rejectWithValue(err);

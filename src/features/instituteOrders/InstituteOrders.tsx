@@ -89,6 +89,8 @@ const InstituteOrders = () => {
       dispatch(fetchAllOrdersOfInstitute(user.token));
   }, [dispatch, user]);
 
+
+
   if (ordersStatus === 'loading') return <Loading2 />;
   return (
     <>
