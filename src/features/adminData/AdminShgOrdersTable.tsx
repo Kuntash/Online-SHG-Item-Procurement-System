@@ -41,10 +41,10 @@ const AdminShgOrdersTable = (props: Props) => {
         variant="h2"
         sx={{ marginBottom: '1rem' }}
       >
-        Approved Orders
+        Orders
       </Typography>
       {orders.length === 0 ? (
-        <Alert severity="info">No approved orders</Alert>
+        <Alert severity="info">No Orders</Alert>
       ) : (
         <StyledTable>
           <StyledTableHead sx={{ fontSize: '1rem' }}>
@@ -76,7 +76,7 @@ const AdminShgOrdersTable = (props: Props) => {
                     : approvedOrder.institutename}
                 </StyledTableCell>
                 <StyledTableCell>
-                  {approvedOrder.institutelocation}
+                  {approvedOrder.institutelocation.toUpperCase()}
                 </StyledTableCell>
                 <StyledTableCell>{approvedOrder.department}</StyledTableCell>
 

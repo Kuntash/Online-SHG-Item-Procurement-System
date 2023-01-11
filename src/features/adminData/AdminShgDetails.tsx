@@ -186,7 +186,9 @@ const AdminShgDetails = () => {
                   </StyledTableCell>
                   <StyledTableCell>{currentShg.name}</StyledTableCell>
                   <StyledTableCell>{currentShg.contact}</StyledTableCell>
-                  <StyledTableCell>{currentShg.location}</StyledTableCell>
+                  <StyledTableCell>
+                    {currentShg.location.toUpperCase()}
+                  </StyledTableCell>
                   <StyledTableCell>
                     <StyledStatus
                       sx={{

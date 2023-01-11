@@ -35,6 +35,7 @@ import {
   updatedelivery,
 } from './instituteOrdersSlice';
 import Checkbox from '@mui/material/Checkbox';
+import { Link } from 'react-router-dom';
 const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -42,9 +43,11 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
   const orderDetail = useAppSelector((state: RootState) =>
     selectInstituteOrderById(state, orderId)
   ) as InstituteOrder;
-  console.log(orderDetail)
-    const [updatedOrders,setUpdatedOrders] = useState<InstituteOrderItem[]>([]);
-    const updatedeliveryStatus = useAppSelector(state=>state.instituteOrders.updatedelivery)
+  console.log(orderDetail);
+  const [updatedOrders, setUpdatedOrders] = useState<InstituteOrderItem[]>([]);
+  const updatedeliveryStatus = useAppSelector(
+    (state) => state.instituteOrders.updatedelivery
+  );
   const lockOrderStatus = useAppSelector(
     (state: RootState) => state.instituteOrders.lockOrderStatus
   );
@@ -59,9 +62,14 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
     (1 + page) * rowsPerPage - orderDetail?.items?.length
   );
 
-  const handleUpdateDelivery = ()=>{
-    dispatch(updatedelivery({token:userToken,order:{...orderDetail,items:updatedOrders}}));
-  }
+  const handleUpdateDelivery = () => {
+    dispatch(
+      updatedelivery({
+        token: userToken,
+        order: { ...orderDetail, items: updatedOrders },
+      })
+    );
+  };
 
   const handleChangePage = (
     e: React.MouseEvent<HTMLButtonElement> | null,
@@ -102,24 +110,33 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
         })
       );
   };
-  
-  const handleUpdateDeliveryStatus=(e:ChangeEvent<HTMLInputElement>,item:InstituteOrderItem)=>{
-  if(e.target.checked === true) setUpdatedOrders([...updatedOrders,item]);
-  if(e.target.checked === false) setUpdatedOrders(updatedOrders.filter(i=>(item._id !== i._id)))
-  }
 
+  const handleUpdateDeliveryStatus = (
+    e: ChangeEvent<HTMLInputElement>,
+    item: InstituteOrderItem
+  ) => {
+    if (e.target.checked === true) setUpdatedOrders([...updatedOrders, item]);
+    if (e.target.checked === false)
+      setUpdatedOrders(updatedOrders.filter((i) => item._id !== i._id));
+  };
 
-  useEffect(()=>{
-      if(updatedeliveryStatus === 'succeeded') dispatch(handleOpenSnackbar({snackbarMessage:"Order delivery updated successfully",snackbarType:"success"}));
-      dispatch(resetdelivery())
-  },[updatedeliveryStatus])
-  const handleSubmitStatus = ()=>{
-    console.log(orderDetail)
-  }
+  useEffect(() => {
+    if (updatedeliveryStatus === 'succeeded')
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Order delivery updated successfully',
+          snackbarType: 'success',
+        })
+      );
+    dispatch(resetdelivery());
+  }, [updatedeliveryStatus]);
+  const handleSubmitStatus = () => {
+    console.log(orderDetail);
+  };
 
-  useEffect(()=>{
-  setUpdatedOrders([]);
-  },[orderId])
+  useEffect(() => {
+    setUpdatedOrders([]);
+  }, [orderId]);
   // Create a Style Component
   if (orderDetail === undefined) return <h1> Order Not found</h1>;
   return (
@@ -194,10 +211,21 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                     {/* <StyledTableCell>{item.itemtype}</StyledTableCell> */}
                     <StyledTableCell>{item.itemquantity}</StyledTableCell>
                     <StyledTableCell>&#x20b9;{item.itemprice}</StyledTableCell>
-                    {item.delivered?<Checkbox checked={true} disabled = {true} />:
-                    <Checkbox checked={updatedOrders.find(i=>i._id === item._id)!==undefined} onChange={(e)=>handleUpdateDeliveryStatus(e,item)} />
-                }
-                    </StyledTableRow>
+                    {item.delivered ? (
+                      <Checkbox
+                        checked={true}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Checkbox
+                        checked={
+                          updatedOrders.find((i) => i._id === item._id) !==
+                          undefined
+                        }
+                        onChange={(e) => handleUpdateDeliveryStatus(e, item)}
+                      />
+                    )}
+                  </StyledTableRow>
                 ))}
             {emptyRows > 0 && (
               <StyledTableRow style={{ height: 53 * emptyRows }}>
@@ -222,43 +250,47 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
             </TableRow>
           </TableBody>
         </StyledTable>
-        <StyledButton 
-          variant='contained'
+        <StyledButton
+          variant="contained"
           onClick={handleUpdateDelivery}
-        >Submit</StyledButton>
-        {/* <ContainerColumnBox>
+          sx={{
+            padding: '0.5rem 0',
+            boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
+            margin: '0.2rem 0',
+          }}
+        >
+          Submit
+        </StyledButton>
+        <ContainerColumnBox>
           <StyledButton
-            disabled={
-              orderDetail.status === 'approved' ||
-              orderDetail.status === 'completed'
-                ? true
-                : false
-            }
-            startIcon={
-              lockOrderStatus === 'loading' ? (
-                <CircularProgress sx={{ color: 'white' }} />
-              ) : null
-            }
+            // disabled={
+            //   orderDetail.status === 'approved' ||
+            //   orderDetail.status === 'completed'
+            //     ? true
+            //     : false
+            // }
+            // startIcon={
+            //   lockOrderStatus === 'loading' ? (
+            //     <CircularProgress sx={{ color: 'white' }} />
+            //   ) : null
+            // }
             color="info"
             variant="contained"
             sx={{
-              padding: '1rem 0',
+              padding: '0.5rem 0',
               boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
             }}
-            onClick={async () => {
-              await dispatch(
-                lockOrderOfInstitute({ token: userToken, orderId: orderId })
-              );
-              callSnackbar();
-              await dispatch(fetchAllOrdersOfInstitute(userToken));
-            }}
+            // onClick={async () => {
+            //   await dispatch(
+            //     lockOrderOfInstitute({ token: userToken, orderId: orderId })
+            //   );
+            //   callSnackbar();
+            //   await dispatch(fetchAllOrdersOfInstitute(userToken));
+            // }}
           >
-            {orderDetail.status === 'approved' ||
-            orderDetail.status === 'completed'
-              ? 'Order already locked'
-              : 'Lock Order'}
+            Generate Bill
           </StyledButton>
-        </ContainerColumnBox> */}
+        </ContainerColumnBox>
       </ContainerColumnBox>
     </StyledPaper>
   );

@@ -15,13 +15,20 @@ import {
 } from '../../components/custom';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
 import { AdminSHGDataType } from '../../types/custom';
-import { fetchAllShgData, selectAllShgs } from './adminDataSlice';
+import {
+  fetchAllShgData,
+  selectAllShgs,
+  fetchAllAdminOrders,
+} from './adminDataSlice';
 const AdminAllShg = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const userToken = useAppSelector((state: RootState) => state.auth.token);
   const shgDataStatus = useAppSelector(
     (state: RootState) => state.admin.shgData.shgDataStatus
+  );
+  const orderDataStatus = useAppSelector(
+    (state: RootState) => state.admin.orderData.orderDataStatus
   );
   const shgData = useAppSelector(
     selectAllShgs
@@ -43,7 +50,8 @@ const AdminAllShg = () => {
   useEffect(() => {
     if (shgDataStatus === 'idle' && userToken)
       dispatch(fetchAllShgData(userToken));
-  }, [dispatch, userToken, shgDataStatus]);
+    if (orderDataStatus === 'idle') dispatch(fetchAllAdminOrders(userToken));
+  }, [dispatch, userToken, shgDataStatus, orderDataStatus]);
   return (
     <StyledContainer sx={{ flexGrow: 1 }}>
       <Grid
@@ -98,7 +106,7 @@ const AdminAllShg = () => {
                       {shg.contact}
                     </StyledTableCell>
                     <StyledTableCell sx={{ marginTop: '1rem' }}>
-                      {shg.location}
+                      {shg.location.toUpperCase()}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}

@@ -61,7 +61,7 @@ const AdminOrderDetailsTable = ({
               {department}
             </StyledTableCell>
             <StyledTableCell sx={{ marginTop: '1rem' }}>
-              {instituteLocation}
+              {instituteLocation.toUpperCase()}
             </StyledTableCell>
             <StyledTableCell sx={{ marginTop: '1rem' }}>
               <StyledStatus
