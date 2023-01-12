@@ -19,6 +19,7 @@ import AdminShgDetails from './features/adminData/AdminShgDetails';
 import { getjwt, selectUser } from './features/auth/authSlice';
 import Loading from './components/utility/Loading';
 import ChangePassword from './components/admin/ChangePassword';
+import Bill from './features/instituteOrders/Bill';
 const { useNavigate } = require('react-router-dom');
 function App() {
   const [checkcookie, setCheckcookie] = useState(true);
@@ -67,6 +68,10 @@ function App() {
             <Route
               path="all-orders"
               element={<ViewOrders />}
+            />
+            <Route
+              path="generatebill/:orderId"
+              element={<Bill />}
             />
             <Route
               path="place-order"

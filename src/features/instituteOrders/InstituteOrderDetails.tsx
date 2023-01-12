@@ -274,6 +274,7 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
             //     <CircularProgress sx={{ color: 'white' }} />
             //   ) : null
             // }
+            onClick={()=>navigate(`../generatebill/${orderDetail._id}`)}
             color="info"
             variant="contained"
             sx={{
