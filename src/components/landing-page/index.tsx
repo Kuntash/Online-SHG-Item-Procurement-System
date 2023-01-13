@@ -15,6 +15,7 @@ import {
   StyledTextField,
 } from '../../components/custom';
 import { height } from '@mui/system';
+import CountUp from 'react-countup';
 const LandingPage = () => {
   const loginRef = useRef<HTMLInputElement>(null);
   const focusLogin = () => {
@@ -221,7 +222,10 @@ const LandingPage = () => {
               fontSize: '36px',
             }}
           >
-            150,000
+            <CountUp
+              start={80000}
+              end={150000}
+            />
           </h1>
           <p
             style={{
@@ -250,7 +254,10 @@ const LandingPage = () => {
               fontSize: '36px',
             }}
           >
-            87,000
+            <CountUp
+              start={20000}
+              end={87000}
+            />
           </h1>
           <p
             style={{
@@ -259,7 +266,7 @@ const LandingPage = () => {
               marginBottom: '2rem',
             }}
           >
-            TOTAL NUMBER O F GOTHAN
+            TOTAL NUMBER OF GOTHAN
           </p>
         </div>
         <div
@@ -279,7 +286,7 @@ const LandingPage = () => {
               fontSize: '36px',
             }}
           >
-            790+
+            <CountUp end={790} />+
           </h1>
           <p
             style={{
@@ -308,7 +315,7 @@ const LandingPage = () => {
               fontSize: '36px',
             }}
           >
-            29%
+            <CountUp end={29} />%
           </h1>
           <p
             style={{
@@ -390,7 +397,7 @@ const LandingPage = () => {
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'row',
-          height: '45vh',
+          height: '53vh',
           marginTop: '4rem',
           marginBottom: '8rem',
         }}

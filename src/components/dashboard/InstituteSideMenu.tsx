@@ -3,6 +3,7 @@ import {
   LogoutRounded,
   TableViewRounded,
 } from '@mui/icons-material';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import KeyIcon from '@mui/icons-material/Key';
 import { ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
@@ -36,6 +37,11 @@ const InstituteSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
       title: 'Place order',
       route: 'place-order',
       icon: <AddShoppingCartRounded />,
+    },
+    {
+      title: 'Order Delivery',
+      route: 'place-order',
+      icon: <LocalShippingIcon />,
     },
     {
       title: 'Change Password',
