@@ -82,7 +82,7 @@ const LandingPage = () => {
             <Button
               onClick={focusLogin}
               sx={{
-                borderRadius: '16px',
+                borderRadius: '12px',
                 cursor: 'pointer',
                 padding: '10px 34px',
                 backgroundColor: '#47BA47',
@@ -127,42 +127,21 @@ const LandingPage = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 margin: '0 4rem',
-                fontSize: '24px',
-                fontWeight: '400',
+                fontSize: '64px',
+                fontWeight: '500',
               }}
             >
-              Chhattisgarh Chief Minister Bhupesh Baghel announced waiving off
-              the overdue or unpaid loans worth Rs 12.77 crore of the women
-              Self-Help Groups (SHGs) so that they can avail fresh loans to
-              start new economic activities.
+              सेवा-जतन-सरोकार <br /> छत्तीसगढ़ सरकार
             </Box>
             <Box style={{ width: '50%' }}>
               <img
                 width="100%"
                 alt="cm"
                 object-fit="cover"
-                src="https://gumlet.assettype.com/freepressjournal/2020-10/05ad4dc5-93bf-43ab-83f0-9915fcd9baf7/741CD789_C517_4AD1_A738_8F20F9D273D8.jpeg?format=webp&w=400&dpr=2.6"
+                src="/cm-01.jpg"
               />
             </Box>
           </SwiperSlide>
-          {/* <SwiperSlide>
-            <img
-              width="100%"
-              alt="cm"
-              height="500px"
-              style={{ objectFit: 'cover' }}
-              src="/cm-01.jpg"
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img
-              max-height="80%"
-              width="100%"
-              alt="cm"
-              object-fit="cover"
-              src="https://cgstate.gov.in/ImageGallary-portlet/images/image0.jpg"
-            />
-          </SwiperSlide> */}
           <SwiperSlide
             style={{
               display: 'flex',
@@ -196,6 +175,55 @@ const LandingPage = () => {
               loan limit of SHGs is also raised from Rs one lakh to Rs 2 lakh.
             </Box>
           </SwiperSlide>
+          <SwiperSlide
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                height: '100%',
+                display: 'flex',
+                width: '50%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                margin: '0 4rem',
+                fontSize: '24px',
+                fontWeight: '400',
+              }}
+            >
+              Chhattisgarh Chief Minister Bhupesh Baghel announced waiving off
+              the overdue or unpaid loans worth Rs 12.77 crore of the women
+              Self-Help Groups (SHGs) so that they can avail fresh loans to
+              start new economic activities.
+            </Box>
+            <Box style={{ width: '50%' }}>
+              <img
+                width="100%"
+                alt="cm"
+                object-fit="cover"
+                src="https://gumlet.assettype.com/freepressjournal/2020-10/05ad4dc5-93bf-43ab-83f0-9915fcd9baf7/741CD789_C517_4AD1_A738_8F20F9D273D8.jpeg?format=webp&w=400&dpr=2.6"
+              />
+            </Box>
+          </SwiperSlide>
+          {/* <SwiperSlide
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Box style={{ width: '50%' }}>
+              <img
+                width="100%"
+                alt="cm"
+                object-fit="fill"
+                src="/1.jpg"
+              />
+            </Box>
+          </SwiperSlide> */}
         </Swiper>
       </Box>
       <div
