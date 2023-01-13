@@ -7,6 +7,14 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Container, Typography, Grid } from '@mui/material';
+import Announcement from '../../assets/announcement.svg';
+import {
+  ContainerColumnBox,
+  StyledButton,
+  StyledPaper,
+  StyledTextField,
+} from '../../components/custom';
+import { height } from '@mui/system';
 const LandingPage = () => {
   const loginRef = useRef<HTMLInputElement>(null);
   const focusLogin = () => {
@@ -93,8 +101,9 @@ const LandingPage = () => {
           </Grid>
         </Grid>
       </Container>
-      <Box>
+      <Box sx={{ margin: '0 3rem', border: '1px solid #9994' }}>
         <Swiper
+          style={{ padding: '1rem' }}
           spaceBetween={50}
           slidesPerView={1}
           loop={true}
@@ -103,16 +112,14 @@ const LandingPage = () => {
           pagination={{ clickable: true }}
           modules={[Autoplay, Navigation, Pagination]}
         >
-          <SwiperSlide>
+          {/* <SwiperSlide>
             <Grid
-              container
-              columns={{ xs: 1, sm: 2 }}
+              style={{display: 'flex', flexDirection: 'row',}}
             >
               <Grid item>
                 <img
                   width="100%"
                   alt="cm"
-                  height="500px"
                   object-fit="cover"
                   src="https://gumlet.assettype.com/freepressjournal/2020-10/05ad4dc5-93bf-43ab-83f0-9915fcd9baf7/741CD789_C517_4AD1_A738_8F20F9D273D8.jpeg?format=webp&w=400&dpr=2.6"
                 />
@@ -142,8 +149,8 @@ const LandingPage = () => {
                 </Box>
               </Grid>
             </Grid>
-          </SwiperSlide>
-          <SwiperSlide>
+          </SwiperSlide> */}
+          {/* <SwiperSlide>
             <img
               width="100%"
               alt="cm"
@@ -156,62 +163,164 @@ const LandingPage = () => {
             <img
               width="100%"
               alt="cm"
-              height="500px"
-              object-fit="cover"
+              object-fit="fill"
               src="https://cgstate.gov.in/ImageGallary-portlet/images/image0.jpg"
             />
-          </SwiperSlide>
-          <SwiperSlide>
-            <Grid
-              container
-              columns={{ xs: 1, sm: 2 }}
+          </SwiperSlide> */}
+          <SwiperSlide style={{ display: 'flex' }}>
+            <Box style={{ maxWidth: '50%' }}>
+              <img
+                width="100%"
+                alt="cm"
+                object-fit="cover"
+                src="https://cgstate.gov.in/documents/10179/1556f570-7dce-487f-8d08-90ffcf9e7034"
+              />
+            </Box>
+            <Box
+              sx={{
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#f5f5f5',
+              }}
             >
-              <Grid item>
-                <img
-                  width="100%"
-                  alt="cm"
-                  height="500px"
-                  object-fit="cover"
-                  src="https://cgstate.gov.in/documents/10179/1556f570-7dce-487f-8d08-90ffcf9e7034"
-                />
-              </Grid>
-              <Grid
-                item
-                xs={1}
-              >
-                <Box
-                  sx={{
-                    height: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#f5f5f5',
-                  }}
-                >
-                  <Typography
-                    variant="h5"
-                    sx={{ textAlign: 'center', margin: '35px' }}
-                  >
-                    Chhattisgarh Chief Minister Bhupesh Baghel decided to hike
-                    the budgetary sanction for loans provided to women groups by
-                    five times to Rs 10 crore from the present Rs 2 crore every
-                    year. The loan limit of SHGs is also raised from Rs one lakh
-                    to Rs two lakh
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
+              Chhattisgarh Chief Minister Bhupesh Baghel decided to hike the
+              budgetary sanction for loans provided to women groups by five
+              times to Rs 10 crore from the present Rs 2 crore every year. The
+              loan limit of SHGs is also raised from Rs one lakh to Rs two lakh
+            </Box>
           </SwiperSlide>
         </Swiper>
       </Box>
-      {/* <Grid
-        container
-        columns={{ xs: 1, sm: 2 }}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          backgroundColor: 'rgba(71, 186, 71,0.1)',
+          margin: '4rem 0',
+          borderRadius: '60px',
+        }}
       >
-        <Grid
-          item
-          xs={1}
-        > */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <h1
+            style={{
+              fontWeight: '500',
+              color: '#265A1F',
+              marginTop: '2rem',
+              marginBottom: '1rem',
+              fontSize: '36px',
+            }}
+          >
+            150,000
+          </h1>
+          <p
+            style={{
+              fontWeight: '500',
+              color: 'rgb(71, 186, 71)',
+              marginBottom: '2rem',
+            }}
+          >
+            TOTAL NUMBER OF SHGs
+          </p>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <h1
+            style={{
+              fontWeight: '500',
+              color: '#265A1F',
+              marginTop: '2rem',
+              marginBottom: '1rem',
+              fontSize: '36px',
+            }}
+          >
+            87,000
+          </h1>
+          <p
+            style={{
+              fontWeight: '500',
+              color: 'rgb(71, 186, 71)',
+              marginBottom: '2rem',
+            }}
+          >
+            TOTAL NUMBER O F GOTHAN
+          </p>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <h1
+            style={{
+              fontWeight: '500',
+              color: '#265A1F',
+              marginTop: '2rem',
+              marginBottom: '1rem',
+              fontSize: '36px',
+            }}
+          >
+            790+
+          </h1>
+          <p
+            style={{
+              fontWeight: '500',
+              color: 'rgb(71, 186, 71)',
+              marginBottom: '2rem',
+            }}
+          >
+            TOTAL ORDERS PLACED
+          </p>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <h1
+            style={{
+              fontWeight: '500',
+              color: '#265A1F',
+              marginTop: '2rem',
+              marginBottom: '1rem',
+              fontSize: '36px',
+            }}
+          >
+            29%
+          </h1>
+          <p
+            style={{
+              fontWeight: '500',
+              color: 'rgb(71, 186, 71)',
+              marginBottom: '2rem',
+            }}
+          >
+            NET ORDER INCREASE
+          </p>
+        </div>
+      </div>
       <Box
         sx={{
           padding: '5rem 0.5rem',
@@ -227,6 +336,7 @@ const LandingPage = () => {
           sx={{
             position: 'absolute',
             zIndex: '-1',
+            transform: 'translateY(-4rem)',
           }}
         >
           <svg
@@ -243,19 +353,27 @@ const LandingPage = () => {
             />
           </svg>
         </Box>
-          <Typography
-            color="primary"
-            sx={{textTransform: 'capitalize', 
+        <Typography
+          color="primary"
+          sx={{
+            textTransform: 'capitalize',
             fontWeight: '700',
             fontStyle: 'normal',
             fontSize: '36px',
-            lineHeight: 'normal', }}
-          >
-            <span style={{color:'#47BA47'}}>About</span> Self Help Group
-          </Typography>
+            lineHeight: 'normal',
+          }}
+        >
+          <span style={{ color: '#47BA47' }}>About</span> Self Help Group
+        </Typography>
         <Typography
-        color="primary"
-          sx={{ margin: '60px 72px', lineHeight: 'normal', fontWeight: '400', mixBlendMode: 'multiply', fontSize:"24px" }}
+          color="primary"
+          sx={{
+            margin: '60px 72px',
+            lineHeight: 'normal',
+            fontWeight: '400',
+            mixBlendMode: 'multiply',
+            fontSize: '24px',
+          }}
         >
           A self-help group is a financial intermediary committee usually
           composed of 12 to 25 local women between the ages of 18 and 50. Most
@@ -268,17 +386,60 @@ const LandingPage = () => {
       </Box>
       <Box
         sx={{
-          minHeight: '80vh',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          flexDirection: 'column',
+          flexDirection: 'row',
+          height: '45vh',
+          marginTop: '4rem',
+          marginBottom: '8rem',
         }}
       >
+        <StyledPaper
+          sx={{
+            width: '90%',
+            overflow: 'hidden',
+            padding: 0,
+            borderRadius: '48px',
+            height: '100%',
+            marginLeft: '4rem',
+          }}
+        >
+          <ContainerColumnBox sx={{ rowGap: '1.5rem' }}>
+            <ContainerColumnBox
+              sx={{
+                rowGap: '1rem',
+                marginBottom: '1rem',
+                backgroundColor: '#265A1F',
+                padding: '2rem',
+                color: 'white',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <img
+                src={Announcement}
+                style={{ width: '45px', marginRight: '1rem' }}
+              />
+              <Typography
+                variant="h2"
+                style={{ fontWeight: '600' }}
+              >
+                Announcements / Information
+              </Typography>
+            </ContainerColumnBox>
+          </ContainerColumnBox>
+        </StyledPaper>
+        <div
+          style={{
+            width: '4px',
+            backgroundColor: '#d9d9d9',
+            height: '450px',
+            margin: '0 4rem',
+          }}
+        ></div>
         <LoginForm ref={loginRef} />
       </Box>
-      {/* </Grid> */}
-      {/* </Grid> */}
       <Box
         sx={{
           backgroundColor: '#000000',
@@ -304,8 +465,9 @@ const LandingPage = () => {
           }}
         >
           <Typography variant="caption">
-            Developed By National Institute Of Technology, Raipur<br />
-            Copyright 2023 
+            Developed By National Institute Of Technology, Raipur
+            <br />
+            Copyright 2023
           </Typography>
         </Box>
       </Box>
