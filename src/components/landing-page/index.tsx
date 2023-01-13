@@ -24,7 +24,7 @@ const LandingPage = () => {
     <>
       <Container
         sx={{
-          padding: '10px 6px',
+          marginTop: '1rem',
         }}
       >
         <Grid
@@ -101,7 +101,7 @@ const LandingPage = () => {
           </Grid>
         </Grid>
       </Container>
-      <Box sx={{ margin: '0 3rem', border: '1px solid #9994' }}>
+      <Box sx={{ margin: '1rem 3rem', border: '1px solid #9994' }}>
         <Swiper
           style={{ padding: '1rem' }}
           spaceBetween={50}
@@ -112,44 +112,39 @@ const LandingPage = () => {
           pagination={{ clickable: true }}
           modules={[Autoplay, Navigation, Pagination]}
         >
-          {/* <SwiperSlide>
-            <Grid
-              style={{display: 'flex', flexDirection: 'row',}}
+          <SwiperSlide
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                height: '100%',
+                display: 'flex',
+                width: '50%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                margin: '0 4rem',
+                fontSize: '24px',
+                fontWeight: '400',
+              }}
             >
-              <Grid item>
-                <img
-                  width="100%"
-                  alt="cm"
-                  object-fit="cover"
-                  src="https://gumlet.assettype.com/freepressjournal/2020-10/05ad4dc5-93bf-43ab-83f0-9915fcd9baf7/741CD789_C517_4AD1_A738_8F20F9D273D8.jpeg?format=webp&w=400&dpr=2.6"
-                />
-              </Grid>
-              <Grid
-                item
-                xs={1}
-              >
-                <Box
-                  sx={{
-                    height: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#f5f5f5',
-                  }}
-                >
-                  <Typography
-                    variant="h5"
-                    sx={{ textAlign: 'center', margin: '35px' }}
-                  >
-                    Chhattisgarh Chief Minister Bhupesh Baghel announced waiving
-                    off the overdue or unpaid loans worth Rs 12.77 crore of the
-                    women Self-Help Groups (SHGs) so that they can avail fresh
-                    loans to start new economic activities.
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
-          </SwiperSlide> */}
+              Chhattisgarh Chief Minister Bhupesh Baghel announced waiving off
+              the overdue or unpaid loans worth Rs 12.77 crore of the women
+              Self-Help Groups (SHGs) so that they can avail fresh loans to
+              start new economic activities.
+            </Box>
+            <Box style={{ width: '50%' }}>
+              <img
+                width="100%"
+                alt="cm"
+                object-fit="cover"
+                src="https://gumlet.assettype.com/freepressjournal/2020-10/05ad4dc5-93bf-43ab-83f0-9915fcd9baf7/741CD789_C517_4AD1_A738_8F20F9D273D8.jpeg?format=webp&w=400&dpr=2.6"
+              />
+            </Box>
+          </SwiperSlide>
           {/* <SwiperSlide>
             <img
               width="100%"
@@ -161,14 +156,21 @@ const LandingPage = () => {
           </SwiperSlide>
           <SwiperSlide>
             <img
+              max-height="80%"
               width="100%"
               alt="cm"
-              object-fit="fill"
+              object-fit="cover"
               src="https://cgstate.gov.in/ImageGallary-portlet/images/image0.jpg"
             />
           </SwiperSlide> */}
-          <SwiperSlide style={{ display: 'flex' }}>
-            <Box style={{ maxWidth: '50%' }}>
+          <SwiperSlide
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Box style={{ width: '50%' }}>
               <img
                 width="100%"
                 alt="cm"
@@ -180,15 +182,18 @@ const LandingPage = () => {
               sx={{
                 height: '100%',
                 display: 'flex',
+                width: '50%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: '#f5f5f5',
+                margin: '0 4rem',
+                fontSize: '24px',
+                fontWeight: '400',
               }}
             >
               Chhattisgarh Chief Minister Bhupesh Baghel decided to hike the
               budgetary sanction for loans provided to women groups by five
               times to Rs 10 crore from the present Rs 2 crore every year. The
-              loan limit of SHGs is also raised from Rs one lakh to Rs two lakh
+              loan limit of SHGs is also raised from Rs one lakh to Rs 2 lakh.
             </Box>
           </SwiperSlide>
         </Swiper>
