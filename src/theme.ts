@@ -37,7 +37,7 @@ export const theme = createTheme({
       light: 'rgba(255, 72, 66, 0.16)',
     },
     primary: {
-      main: '#ff3030',
+      main: '#265A1F',
     },
     secondary: {
       main: '#919EAB',
@@ -56,6 +56,7 @@ export const theme = createTheme({
     },
   },
   typography: {
+    fontFamily: ['Inter','sans-serif'].join(','),
     h2: {
       fontSize: '1.5rem',
       fontWeight: 700,

@@ -62,7 +62,7 @@ export const ContainerRowBox = styled(Box)<BoxProps>(({ theme }) => ({
 
 export const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   borderRadius: theme.spacing(1),
-  boxShadow: '0 8px 16px 0 rgb(255 48 48 / 24%)',
+  boxShadow: '0 8px 16px 0 rgba(0, 0, 0, 0.25)',
   [theme.breakpoints.up('lg')]: {
     minWidth: theme.spacing(20),
   },

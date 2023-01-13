@@ -88,7 +88,12 @@ const LoginForm = React.forwardRef<HTMLInputElement>((prop, ref) => {
   };
   return (
     <StyledPaper
-      sx={{ width: '90%', overflow: 'hidden', padding: 0 }}
+      sx={{
+        width: '90%',
+        overflow: 'hidden',
+        padding: 0,
+        borderRadius: '48px',
+      }}
       ref={ref}
     >
       <ContainerColumnBox sx={{ rowGap: '1.5rem' }}>
@@ -96,13 +101,17 @@ const LoginForm = React.forwardRef<HTMLInputElement>((prop, ref) => {
           sx={{
             rowGap: '1rem',
             marginBottom: '1rem',
-            backgroundColor: '#ff3030',
+            backgroundColor: '#265A1F',
             padding: '2rem',
             color: 'white',
           }}
         >
-          <Typography variant="h2">Welcome</Typography>
-          <Typography variant="body1">Enter your details below</Typography>
+          <Typography
+            variant="h2"
+            style={{ fontWeight: '600' }}
+          >
+            Enter Your Login Credentials
+          </Typography>
         </ContainerColumnBox>
         <form
           onSubmit={(e) => handleLogin(e)}
@@ -160,10 +169,14 @@ const LoginForm = React.forwardRef<HTMLInputElement>((prop, ref) => {
               padding: '0.75rem 1.2rem',
               width: '100%',
               marginBottom: '20px',
+              borderRadius: '48px',
+              textTransform: 'none',
+              fontWeight: '700',
+              fontSize: '16px',
             }}
             type="submit"
           >
-            Login
+            Log in
           </StyledButton>
         </form>
       </ContainerColumnBox>
