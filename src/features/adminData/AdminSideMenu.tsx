@@ -12,6 +12,8 @@ import { useAppDispatch } from '../../app/hooks';
 import { logout } from '../auth/authSlice';
 import { StyledList, StyledListItemButton } from '../../components/custom';
 import { resetOnLogout } from './adminDataSlice';
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import CampaignIcon from '@mui/icons-material/Campaign';
 interface CeoSideMenuType {
   title: string;
   route: string;
@@ -47,6 +49,16 @@ const CeoSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
       title: 'Register SHG',
       route: 'registershg',
       icon: <PersonAddRounded />,
+    },
+    {
+      title: 'Add Location',
+      route: 'addlocation',
+      icon: <AddLocationAltIcon />,
+    },
+    {
+      title: 'New Announcement',
+      route: 'newannouncement',
+      icon: <CampaignIcon />,
     },
     // {
     //   title: 'View all institutes',

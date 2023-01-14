@@ -16,6 +16,7 @@ import {
   StyledTextField,
 } from '../../components/custom';
 import { height } from '@mui/system';
+import Marquee from 'react-marquee-master';
 import CountUp from 'react-countup';
 const LandingPage = () => {
   const [announcement, setAnnouncement] = useState<any>([]);
@@ -39,7 +40,24 @@ const LandingPage = () => {
   useEffect(() => {
     getdata();
   }, []);
-
+  const marqueelements = announcement.map((announcement: any, index: any) => (
+    <div key={index}>
+      <Typography
+        color="primary"
+        sx={{
+          margin: '60px 72px',
+          lineHeight: 'normal',
+          fontWeight: '400',
+          mixBlendMode: 'multiply',
+          fontSize: '24px',
+        }}
+      >
+        {announcement.title}
+        {' - '}
+        {format(parseISO(announcement.createdAt), 'do MMM yyyy')}
+      </Typography>
+    </div>
+  ));
   return (
     <>
       <Container
@@ -488,6 +506,8 @@ const LandingPage = () => {
               </Typography>
             </ContainerColumnBox>
           </ContainerColumnBox>
+          {/* <Marquee marqueeItems={marqueelements} />
+           */}
           {announcement.map((announcement: any, index: any) => (
             <div key={index}>
               <Typography

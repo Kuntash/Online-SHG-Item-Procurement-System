@@ -4,6 +4,8 @@ import {
   TableRow,
   TextField,
   Typography,
+  InputAdornment,
+  IconButton,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +25,10 @@ import {
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
 import { AdminOrderDataType } from '../../types/custom';
 import { fetchAllAdminOrders } from './adminDataSlice';
+import { StyledTextField } from '../../components/custom';
+import SearchIcon from '@mui/icons-material/Search';
 const AdminAllOrders = () => {
+  const [search, setsearch] = useState<any>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const userToken = useAppSelector((state: RootState) => state.auth.token);
@@ -57,8 +62,8 @@ const AdminAllOrders = () => {
     navigate(`${orderId}`);
   };
   if (orderDataStatus === 'idle') dispatch(fetchAllAdminOrders(userToken));
-  const setsearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const search = e.target.value.toLowerCase();
+  const filterorders = (e: any) => {
+    e.preventDefault();
     const filteredOrders = ordersToDisplay.filter(
       (order) =>
         order._id.toLowerCase().includes(search.toLowerCase()) ||
@@ -87,20 +92,46 @@ const AdminAllOrders = () => {
           lg={12}
         >
           <StyledPaper>
-            <Typography
-              variant="h2"
+            <Grid
+              container
+              spacing={2}
               sx={{ marginBottom: '1rem' }}
             >
-              Orders
-            </Typography>
-            <TextField
-              id="search"
-              label="Search"
-              variant="outlined"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setsearch(e)
-              }
-            ></TextField>
+              <Grid item>
+                <Typography
+                  variant="h2"
+                  sx={{ marginTop: '0.5rem' }}
+                >
+                  Orders
+                </Typography>
+              </Grid>
+              <Grid item>
+                <form onSubmit={(e) => filterorders(e)}>
+                  <StyledTextField
+                    // helperText={helperTexts.password}
+                    value={search}
+                    onChange={(e) => setsearch(e.target.value)}
+                    label="Search"
+                    sx={{ borderRadius: '0.8rem', width: '100%' }}
+                    variant="outlined"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={(e) => filterorders(e)}
+                            onMouseDown={(e) => filterorders(e)}
+                            edge="end"
+                          >
+                            <SearchIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </form>
+              </Grid>
+            </Grid>
             <StyledTable>
               <StyledTableHead sx={{ fontSize: '1rem' }}>
                 <TableRow>
@@ -130,7 +161,7 @@ const AdminAllOrders = () => {
                       {order.institutename}
                     </StyledTableCell>
                     <StyledTableCell sx={{ marginTop: '1rem' }}>
-                      {order.institutelocation}
+                      {order.institutelocation.toUpperCase()}
                     </StyledTableCell>
                     <StyledTableCell sx={{ marginTop: '1rem' }}>
                       <StyledStatus

@@ -262,35 +262,39 @@ const InstituteOrderDeliveryDetails = ({ orderId }: { orderId: string }) => {
           Submit
         </StyledButton>
         <ContainerColumnBox>
-          <StyledButton
-            // disabled={
-            //   orderDetail.status === 'approved' ||
-            //   orderDetail.status === 'completed'
-            //     ? true
-            //     : false
-            // }
-            // startIcon={
-            //   lockOrderStatus === 'loading' ? (
-            //     <CircularProgress sx={{ color: 'white' }} />
-            //   ) : null
-            // }
-            onClick={() => navigate(`../generatebill/${orderDetail._id}`)}
-            color="info"
-            variant="contained"
-            sx={{
-              padding: '0.5rem 0',
-              boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
-            }}
-            // onClick={async () => {
-            //   await dispatch(
-            //     lockOrderOfInstitute({ token: userToken, orderId: orderId })
-            //   );
-            //   callSnackbar();
-            //   await dispatch(fetchAllOrdersOfInstitute(userToken));
-            // }}
-          >
-            Generate Bill
-          </StyledButton>
+          {orderDetail.status !== 'pending' &&
+            orderDetail.status !== 'approved' &&
+            orderDetail.status !== 'cancelled' && (
+              <StyledButton
+                // disabled={
+                //   orderDetail.status === 'approved' ||
+                //   orderDetail.status === 'completed'
+                //     ? true
+                //     : false
+                // }
+                // startIcon={
+                //   lockOrderStatus === 'loading' ? (
+                //     <CircularProgress sx={{ color: 'white' }} />
+                //   ) : null
+                // }
+                onClick={() => navigate(`../generatebill/${orderDetail._id}`)}
+                color="info"
+                variant="contained"
+                sx={{
+                  padding: '0.5rem 0',
+                  boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
+                }}
+                // onClick={async () => {
+                //   await dispatch(
+                //     lockOrderOfInstitute({ token: userToken, orderId: orderId })
+                //   );
+                //   callSnackbar();
+                //   await dispatch(fetchAllOrdersOfInstitute(userToken));
+                // }}
+              >
+                Generate Bill
+              </StyledButton>
+            )}
         </ContainerColumnBox>
       </ContainerColumnBox>
     </StyledPaper>

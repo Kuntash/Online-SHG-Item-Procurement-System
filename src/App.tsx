@@ -21,6 +21,8 @@ import Loading from './components/utility/Loading';
 import ChangePassword from './components/admin/ChangePassword';
 import Bill from './features/instituteOrders/Bill';
 import InstituteOrdersDelivery from './features/instituteOrders/InstituteOrdersDelivery';
+import AddLocation from './components/admin/AddLocation';
+import NewAnnouncement from './components/admin/NewAnnouncement';
 const { useNavigate } = require('react-router-dom');
 function App() {
   const [checkcookie, setCheckcookie] = useState(true);
@@ -109,6 +111,14 @@ function App() {
             <Route
               path="registershg"
               element={<RegisterShg />}
+            />
+            <Route
+              path="addlocation"
+              element={<AddLocation />}
+            />
+            <Route
+              path="newannouncement"
+              element={<NewAnnouncement />}
             />
             <Route path="view-all-shgs">
               <Route

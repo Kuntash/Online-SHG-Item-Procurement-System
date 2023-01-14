@@ -1,4 +1,11 @@
-import { Grid, TableBody, TableRow, Typography } from '@mui/material';
+import {
+  Grid,
+  TableBody,
+  TableRow,
+  Typography,
+  InputAdornment,
+  IconButton,
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -20,7 +27,11 @@ import {
   selectAllShgs,
   fetchAllAdminOrders,
 } from './adminDataSlice';
+import { StyledTextField } from '../../components/custom';
+import SearchIcon from '@mui/icons-material/Search';
 const AdminAllShg = () => {
+  const [search, setsearch] = useState<any>();
+  const [filteredShgs, setFilteredShgs] = useState<AdminSHGDataType[]>([]);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const userToken = useAppSelector((state: RootState) => state.auth.token);
@@ -35,7 +46,10 @@ const AdminAllShg = () => {
   ) as unknown as AdminSHGDataType[];
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 5;
-  const emptyRows = Math.max(0, (1 + page) * rowsPerPage - shgData?.length);
+  const emptyRows = Math.max(
+    0,
+    (1 + page) * rowsPerPage - filteredShgs?.length
+  );
 
   const handleChangePage = (
     e: React.MouseEvent<HTMLButtonElement> | null,
@@ -51,7 +65,24 @@ const AdminAllShg = () => {
     if (shgDataStatus === 'idle' && userToken)
       dispatch(fetchAllShgData(userToken));
     if (orderDataStatus === 'idle') dispatch(fetchAllAdminOrders(userToken));
-  }, [dispatch, userToken, shgDataStatus, orderDataStatus]);
+    setFilteredShgs(shgData);
+  }, [dispatch, userToken, shgDataStatus, orderDataStatus, shgData]);
+  const filtershg = (e: any) => {
+    e.preventDefault();
+    if (search === '' || search === undefined) {
+      setFilteredShgs(shgData);
+      return;
+    }
+    const filteredShgs = shgData.filter(
+      (shg) =>
+        shg.name.toLowerCase().includes(search.toLowerCase()) ||
+        shg.contact.toLowerCase().includes(search.toLowerCase()) ||
+        shg.location.toLowerCase().includes(search.toLowerCase()) ||
+        shg._id.toString().toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredShgs(filteredShgs);
+  };
+
   return (
     <StyledContainer sx={{ flexGrow: 1 }}>
       <Grid
@@ -65,12 +96,46 @@ const AdminAllShg = () => {
           lg={12}
         >
           <StyledPaper>
-            <Typography
-              variant="h2"
+            <Grid
+              container
+              spacing={2}
               sx={{ marginBottom: '1rem' }}
             >
-              Self Help Group list
-            </Typography>
+              <Grid item>
+                <Typography
+                  variant="h2"
+                  sx={{ marginTop: '0.5rem' }}
+                >
+                  Self Help Groups List
+                </Typography>
+              </Grid>
+              <Grid item>
+                <form onSubmit={(e) => filtershg(e)}>
+                  <StyledTextField
+                    // helperText={helperTexts.password}
+                    value={search}
+                    onChange={(e) => setsearch(e.target.value)}
+                    label="Search"
+                    sx={{ borderRadius: '0.8rem', width: '100%' }}
+                    variant="outlined"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={(e) => filtershg(e)}
+                            onMouseDown={(e) => filtershg(e)}
+                            edge="end"
+                          >
+                            <SearchIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </form>
+              </Grid>
+            </Grid>
             <StyledTable>
               <StyledTableHead sx={{ fontSize: '1rem' }}>
                 <TableRow>
@@ -83,11 +148,11 @@ const AdminAllShg = () => {
               </StyledTableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? shgData.slice(
+                  ? filteredShgs.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
-                  : shgData
+                  : filteredShgs
                 ).map((shg, index: number) => (
                   <StyledTableRow
                     sx={{ fontSize: '0.875rem' }}
@@ -124,7 +189,7 @@ const AdminAllShg = () => {
                       },
                       native: true,
                     }}
-                    count={shgData.length}
+                    count={filteredShgs.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}

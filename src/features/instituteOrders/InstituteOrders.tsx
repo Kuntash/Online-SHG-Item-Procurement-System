@@ -159,28 +159,30 @@ const InstituteOrders = () => {
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <StyledTextField
-                    // helperText={helperTexts.password}
-                    value={search}
-                    onChange={(e) => setsearch(e.target.value)}
-                    label="Search"
-                    sx={{ borderRadius: '0.8rem', width: '100%' }}
-                    variant="outlined"
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={(e) => handlesearchfilter(e)}
-                            onMouseDown={(e) => handlesearchfilter(e)}
-                            edge="end"
-                          >
-                            <SearchIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
+                  <form onSubmit={(e) => handlesearchfilter(e)}>
+                    <StyledTextField
+                      // helperText={helperTexts.password}
+                      value={search}
+                      onChange={(e) => setsearch(e.target.value)}
+                      label="Search"
+                      sx={{ borderRadius: '0.8rem', width: '100%' }}
+                      variant="outlined"
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={(e) => handlesearchfilter(e)}
+                              onMouseDown={(e) => handlesearchfilter(e)}
+                              edge="end"
+                            >
+                              <SearchIcon />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </form>
                 </Grid>
               </Grid>
               <StyledTable>

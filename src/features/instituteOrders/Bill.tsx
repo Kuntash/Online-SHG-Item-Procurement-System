@@ -30,6 +30,9 @@ export interface IShgData {
   shgcontact: string;
   shglocation: string;
   shgaccountnumber: string;
+  shgbankname: string;
+  shgbranchname: string;
+  shgaccountname: string;
   shgifsc: string;
   items: {
     delivered: boolean;
@@ -148,7 +151,7 @@ const Bill = () => {
                           {shg.shgcontact}
                         </StyledTableCell>
                         <StyledTableCell sx={{ marginTop: '1rem' }}>
-                          {shg.shglocation}
+                          {shg.shglocation.toUpperCase()}
                         </StyledTableCell>
                         <StyledTableCell sx={{ marginTop: '1rem' }}>
                           {shg.shgaccountnumber}

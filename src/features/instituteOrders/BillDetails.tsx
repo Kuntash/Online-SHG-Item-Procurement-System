@@ -102,7 +102,20 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
                 </Typography>
               </StyledTableCell>
               <StyledTableCell>
-                <Typography>{shgData.shglocation}</Typography>
+                <Typography>{shgData.shglocation.toUpperCase()}</Typography>
+              </StyledTableCell>
+            </StyledTableRow>
+            <StyledTableRow>
+              <StyledTableCell>
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  Account Name :{' '}
+                </Typography>
+              </StyledTableCell>
+              <StyledTableCell>
+                <Typography>{shgData.shgaccountname}</Typography>
               </StyledTableCell>
             </StyledTableRow>
             <StyledTableRow>
@@ -129,6 +142,32 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
               </StyledTableCell>
               <StyledTableCell>
                 <Typography>{shgData.shgifsc.toUpperCase()}</Typography>
+              </StyledTableCell>
+            </StyledTableRow>
+            <StyledTableRow>
+              <StyledTableCell>
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  Bank Name :{' '}
+                </Typography>
+              </StyledTableCell>
+              <StyledTableCell>
+                <Typography>{shgData.shgbankname}</Typography>
+              </StyledTableCell>
+            </StyledTableRow>
+            <StyledTableRow>
+              <StyledTableCell>
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  Branch Name :{' '}
+                </Typography>
+              </StyledTableCell>
+              <StyledTableCell>
+                <Typography>{shgData.shgbranchname}</Typography>
               </StyledTableCell>
             </StyledTableRow>
           </TableBody>

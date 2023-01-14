@@ -22,6 +22,7 @@
     "react-chartjs-2": "^4.2.0",
     "react-countup": "^6.4.0",
     "react-dom": "^18.0.0",
+    "react-marquee-master": "^1.4.5",
     "react-redux": "^7.2.8",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",

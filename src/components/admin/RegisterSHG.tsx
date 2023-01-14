@@ -1,4 +1,11 @@
-import { FormControl, Typography, CircularProgress } from '@mui/material';
+import {
+  FormControl,
+  Typography,
+  CircularProgress,
+  Select,
+  MenuItem,
+  InputLabel,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
@@ -18,6 +25,7 @@ interface HelperTextType {
 }
 const RegisterShg = () => {
   const [status, setStatus] = useState('');
+  const [zones, setZones] = useState<string[]>([]);
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const [name, setName] = useState<string>('');
@@ -32,6 +40,22 @@ const RegisterShg = () => {
     const reg = /\d+$/;
     if (cont.match(reg) || cont == '' || cont === '') setContact(cont);
     return;
+  };
+  const getallzones = async () => {
+    const requestOptions: RequestInit = {
+      method: 'GET',
+      redirect: 'follow',
+    };
+    try {
+      const response = await fetch(
+        'https://backend.cgshgmart.com/shg/getallzones',
+        requestOptions
+      );
+      const result = await response.json();
+      setZones(result.zones);
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     if (status === 'loading')
@@ -58,6 +82,7 @@ const RegisterShg = () => {
     if (user.token) {
       dispatch(fetchAllShgData(user.token));
     }
+    getallzones();
   }, [status, dispatch]);
 
   const register = async (data: HelperTextType) => {
@@ -76,7 +101,7 @@ const RegisterShg = () => {
     setStatus('loading');
     try {
       const response = await fetch(
-        'https://selfhelpgroup-backend.herokuapp.com/shg/register',
+        'https://backend.cgshgmart.com/shg/register',
         requestOptions
       );
       if (response.status !== 200) {
@@ -143,15 +168,19 @@ const RegisterShg = () => {
           />
         </FormControl>
         <FormControl>
-          <StyledTextField
-            helperText={helperTexts.location}
+          <InputLabel id="location-label">Location</InputLabel>
+          <Select
+            labelId="location-label"
             value={location}
+            label="Age"
             onChange={(e) => setLocation(e.target.value)}
-            sx={{ borderRadius: '0.8rem', width: '100%' }}
-            label="Location"
-            variant="outlined"
-            type="text"
-          />
+          >
+            {zones.map((zone: any) => (
+              <MenuItem value={zone.zonename}>
+                {zone.zonename.toUpperCase()}
+              </MenuItem>
+            ))}
+          </Select>
         </FormControl>
         <StyledButton
           startIcon={
