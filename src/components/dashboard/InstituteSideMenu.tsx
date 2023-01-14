@@ -40,7 +40,7 @@ const InstituteSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
     },
     {
       title: 'Order Delivery',
-      route: 'place-order',
+      route: 'order-delivery',
       icon: <LocalShippingIcon />,
     },
     {

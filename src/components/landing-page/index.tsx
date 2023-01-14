@@ -1,5 +1,5 @@
 import { Box, Button, colors } from '@mui/material';
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import LoginForm from '../../features/auth/LoginForm';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper';
@@ -8,6 +8,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Container, Typography, Grid } from '@mui/material';
 import Announcement from '../../assets/announcement.svg';
+import { parseISO, format } from 'date-fns';
 import {
   ContainerColumnBox,
   StyledButton,
@@ -17,10 +18,28 @@ import {
 import { height } from '@mui/system';
 import CountUp from 'react-countup';
 const LandingPage = () => {
+  const [announcement, setAnnouncement] = useState<any>([]);
   const loginRef = useRef<HTMLInputElement>(null);
   const focusLogin = () => {
     loginRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+  const getdata = async () => {
+    const response = await fetch(
+      'https://backend.cgshgmart.com/ceo/getallannouncements',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    const data = await response.json();
+    setAnnouncement(data.announcements);
+  };
+  useEffect(() => {
+    getdata();
+  }, []);
+
   return (
     <>
       <Container
@@ -469,6 +488,24 @@ const LandingPage = () => {
               </Typography>
             </ContainerColumnBox>
           </ContainerColumnBox>
+          {announcement.map((announcement: any, index: any) => (
+            <div key={index}>
+              <Typography
+                color="primary"
+                sx={{
+                  margin: '60px 72px',
+                  lineHeight: 'normal',
+                  fontWeight: '400',
+                  mixBlendMode: 'multiply',
+                  fontSize: '24px',
+                }}
+              >
+                {announcement.title}
+                {' - '}
+                {format(parseISO(announcement.createdAt), 'do MMM yyyy')}
+              </Typography>
+            </div>
+          ))}
         </StyledPaper>
         <div
           style={{

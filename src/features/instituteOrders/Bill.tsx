@@ -44,7 +44,6 @@ export interface IShgData {
   }[];
 }
 
-
 const Bill = () => {
   const { orderId } = useParams();
   const [shgData, setShgData] = useState<IShgData[]>([]);
@@ -52,9 +51,7 @@ const Bill = () => {
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 5;
   const emptyRows =
-    page > 0
-      ? Math.max(0, (1 + page) * rowsPerPage - shgData.length)
-      : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shgData.length) : 0;
 
   const handleChangePage = (
     e: React.MouseEvent<HTMLButtonElement> | null,
@@ -62,7 +59,6 @@ const Bill = () => {
   ) => {
     setPage(newPage);
   };
-
 
   useEffect(() => {
     const getOrders = async () => {
@@ -83,15 +79,14 @@ const Bill = () => {
         if (response.status === 400)
           throw new Error('Error occurred while getting saved order');
         const result = await response.json();
-        setShgData(result.shgdata)
-        console.log(result)
+        setShgData(result.shgdata);
+        console.log(result);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
-    }
+    };
     if (user.status === 'succeeded') getOrders();
-  }, [user, orderId])
-
+  }, [user, orderId]);
 
   const [selectedRow, setSelectedRow] = useState<{
     index: number;
@@ -103,7 +98,6 @@ const Bill = () => {
   useEffect(() => {
     setSelectedRow({ index: 0, id: shgData[0]?.shgid });
   }, [shgData]);
-
 
   if (shgData.length === 0) return <Loading2 />;
   return (
@@ -160,7 +154,7 @@ const Bill = () => {
                           {shg.shgaccountnumber}
                         </StyledTableCell>
                         <StyledTableCell sx={{ marginTop: '1rem' }}>
-                          {shg.shgifsc}
+                          {shg.shgifsc.toUpperCase()}
                         </StyledTableCell>
                       </StyledTableRow>
                     ))}

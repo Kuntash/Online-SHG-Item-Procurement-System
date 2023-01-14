@@ -1,4 +1,18 @@
-import { Autocomplete, Button, Dialog, DialogActions, DialogContentText, DialogTitle, Grid, MenuItem, Select, TableBody, TableRow, TextField, Typography } from '@mui/material';
+import {
+  Autocomplete,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  MenuItem,
+  Select,
+  TableBody,
+  TableRow,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 import DialogContent from '@mui/material/DialogContent';
 import React, { useEffect, useState } from 'react';
@@ -26,9 +40,14 @@ import {
 } from '../instituteOrders/instituteOrdersSlice';
 import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
 import FormDialog from './itemSHGs';
-import { fetchAllItems, resetStatus, selectAllItems,submitOrder } from './itemsSlice';
+import {
+  fetchAllItems,
+  resetStatus,
+  selectAllItems,
+  submitOrder,
+} from './itemsSlice';
 // import PlaceOrderDetails from './PlaceOrderDetails';
-import { IItemList,ISHG } from './itemsSlice';
+import { IItemList, ISHG } from './itemsSlice';
 import { useSelector } from 'react-redux';
 import { backendUrl } from '../../config';
 
@@ -43,7 +62,7 @@ const PlaceOrder = () => {
   const hasSavedOrder = useAppSelector(
     (state: RootState) => state.instituteOrders.hasSavedOrder
   );
-  console.log("savedOrders",savedOrders)
+  console.log('savedOrders', savedOrders);
   const [orderItemsForm, setOrdersItemForm] = useState<{
     [key: string]: number | string;
   }>({});
@@ -54,54 +73,68 @@ const PlaceOrder = () => {
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 5;
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - addedItemsList.length) : 0;
+    page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - addedItemsList.length)
+      : 0;
 
   const [selectedItem, setSelectedItem] = useState<IItemList | null>();
 
   const [openDialog, setOpenDialog] = useState(false);
-  const [displayOnly,setDisplayOnly] = useState(false);
-  const submitOrderStatus = useAppSelector(state=>state.items.submitOrderStatus)
+  const [displayOnly, setDisplayOnly] = useState(false);
+  const submitOrderStatus = useAppSelector(
+    (state) => state.items.submitOrderStatus
+  );
 
-  const handleSubmitOrder = async()=>{
-    dispatch(submitOrder({addedItemsList,token:userToken}));
-  }
+  const handleSubmitOrder = async () => {
+    if (addedItemsList.length === 0) {
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Please Add Items',
+          snackbarType: 'error',
+        })
+      );
+      return;
+    }
+    dispatch(submitOrder({ addedItemsList, token: userToken }));
+  };
 
   const handleAddItem = (list: IItemList) => {
-    console.log(list)
-    if(list.products.length===0) return
-    setAddedItemsList(prev=>(
-      [
-        ...prev,
-        list
-      ]
-    ))
-  }
+    if (list.products.length === 0) return;
+    setAddedItemsList((prev) => [...prev, list]);
+    //remove items from the addedItemsList
+    console.log('list', list);
+  };
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     console.log(addedItemsList);
-  },[addedItemsList])
+  }, [addedItemsList]);
 
-
-
-  React.useEffect(()=>{
-    if(submitOrderStatus === 'loading') dispatch(handleOpenSnackbar({
-      snackbarMessage:"Submitting Order",
-      snackbarType:'info'
-    }))
-    if(submitOrderStatus === "failed") dispatch(handleOpenSnackbar({
-      snackbarMessage:"Failed to submit order",
-      snackbarType:'error'   
-     }))
-     if(submitOrderStatus === 'succeeded'){
-       dispatch(handleOpenSnackbar({
-       snackbarMessage:"Order Submitted Successfully",
-       snackbarType:'success'
-     }))
-     dispatch(resetStatus());
-     navigate('../all-orders');
-
+  React.useEffect(() => {
+    if (submitOrderStatus === 'loading')
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Submitting Order',
+          snackbarType: 'info',
+        })
+      );
+    if (submitOrderStatus === 'failed')
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Failed to submit order',
+          snackbarType: 'error',
+        })
+      );
+    if (submitOrderStatus === 'succeeded') {
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Order Submitted Successfully',
+          snackbarType: 'success',
+        })
+      );
+      dispatch(resetStatus());
+      navigate('../all-orders');
     }
-  },[submitOrderStatus])
+  }, [submitOrderStatus]);
 
   const handleChangePage = (
     e: React.MouseEvent<HTMLButtonElement> | null,
@@ -125,34 +158,33 @@ const PlaceOrder = () => {
   };
 
   const handleOpenDialog = (item: Item, flag: boolean) => {
-    setDisplayOnly(true)
-    setSelectedItem({ 
-      itemid: item._id, 
-      itemname: item.itemname, 
-      itemunit: item.itemunit, 
-      products: [], 
-      totalPrices: 0, 
+    setDisplayOnly(true);
+    setSelectedItem({
+      itemid: item._id,
+      itemname: item.itemname,
+      itemunit: item.itemunit,
+      products: [],
+      totalPrices: 0,
       totalquantity: 0,
-      itemDescription:item.itemdescription,
-      itemType:item.itemtype
+      itemDescription: item.itemdescription,
+      itemType: item.itemtype,
     });
     setOpenDialog(flag);
-  }
+  };
 
-  const handleDisplayDialog = (item:IItemList)=>{
+  const handleDisplayDialog = (item: IItemList) => {
     setDisplayOnly(false);
     setSelectedItem(item);
     setOpenDialog(true);
-  }
-  const getItems = ()=>{
-    
+  };
+  const getItems = () => {
     const hash = new Set<string>();
-    addedItemsList.forEach(item=>{
-      hash.add(item.itemid)
-      console.log(item.itemid)
-    })
-    return items.filter((item)=>!hash.has(item._id))
-  }
+    addedItemsList.forEach((item) => {
+      hash.add(item.itemid);
+      console.log(item.itemid);
+    });
+    return items.filter((item) => !hash.has(item._id));
+  };
 
   useEffect(() => {
     if (hasSavedOrder === 'idle' && userToken)
@@ -164,7 +196,7 @@ const PlaceOrder = () => {
           snackbarType: 'info',
         })
       );
-      console.log(savedOrders)
+      console.log(savedOrders);
       let orderItemsListTemp = {};
       let orderItemsListDesTemp = {};
       savedOrders.forEach((item, index) => {
@@ -187,8 +219,7 @@ const PlaceOrder = () => {
       console.log('Dispatching function to fetch all items');
       dispatch(fetchAllItems());
     }
-  }, [itemsStatus, dispatch]);
-
+  }, [itemsStatus, dispatch, addedItemsList]);
 
   // useEffect(() => {
   //   if (state) {
@@ -226,38 +257,49 @@ const PlaceOrder = () => {
           xs={12}
           md={7}
         > */}
-          <StyledPaper sx={{width:'100%'}}>
-            <StyledContainer sx={{
-              display:'flex',
-              justifyContent:'space-between',
-              flexFlow:"row",
-              alignItems:'center'
-            }}>
-            <Typography
-              variant="h2"
-              sx={{ marginBottom: '1rem' }}
-            >
-              Select items to order
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{ marginBottom: '1rem' }}
-            >
-              Total Order Price:{addedItemsList.reduce((total,item)=>item.products.reduce((total,product)=>(total+product.price*product.selectedquantity),0)+total,0)}
-            </Typography>
-            </StyledContainer>
-            <StyledTable>
-              <StyledTableHead sx={{ fontSize: '1rem' }}>
-                <TableRow>
-                  <StyledTableHeadCell>Item name</StyledTableHeadCell>
-                  {/* <StyledTableHeadCell>Item type</StyledTableHeadCell> */}
-                  <StyledTableHeadCell>Item quantity</StyledTableHeadCell>
-                  <StyledTableHeadCell>Total Price</StyledTableHeadCell>
-                  <StyledTableHeadCell></StyledTableHeadCell>
-                </TableRow>
-              </StyledTableHead>
-              <TableBody>
-                {/* {items
+      <StyledPaper sx={{ width: '100%' }}>
+        <StyledContainer
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexFlow: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <Typography
+            variant="h2"
+            sx={{ marginBottom: '1rem' }}
+          >
+            Select items to order
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{ marginBottom: '1rem' }}
+          >
+            Total Order Price:
+            {addedItemsList.reduce(
+              (total, item) =>
+                item.products.reduce(
+                  (total, product) =>
+                    total + product.price * product.selectedquantity,
+                  0
+                ) + total,
+              0
+            )}
+          </Typography>
+        </StyledContainer>
+        <StyledTable>
+          <StyledTableHead sx={{ fontSize: '1rem' }}>
+            <TableRow>
+              <StyledTableHeadCell>Item name</StyledTableHeadCell>
+              {/* <StyledTableHeadCell>Item type</StyledTableHeadCell> */}
+              <StyledTableHeadCell>Item quantity</StyledTableHeadCell>
+              <StyledTableHeadCell>Total Price</StyledTableHeadCell>
+              <StyledTableHeadCell></StyledTableHeadCell>
+            </TableRow>
+          </StyledTableHead>
+          <TableBody>
+            {/* {items
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => (
                     <StyledTableRow
@@ -265,8 +307,8 @@ const PlaceOrder = () => {
                       sx={{ fontSize: '0.875rem' }}
                     >
                       <StyledTableCell>{item.itemname}</StyledTableCell> */}
-                {/* <StyledTableCell>{item.itemtype}</StyledTableCell> */}
-                {/* <StyledTableCell>
+            {/* <StyledTableCell>{item.itemtype}</StyledTableCell> */}
+            {/* <StyledTableCell>
                         <StyledTextField
                           type={'number'}
                           sx={{ width: 'unset' }}
@@ -324,8 +366,8 @@ const PlaceOrder = () => {
                         )}
                       </StyledTableCell>
                     </StyledTableRow> */}
-                {/* ))} */}
-                {/* {emptyRows > 0 && (
+            {/* ))} */}
+            {/* {emptyRows > 0 && (
                   <StyledTableRow style={{ height: 53 * emptyRows }}>
                     <StyledTableCell colSpan={5} />
                   </StyledTableRow>
@@ -346,67 +388,87 @@ const PlaceOrder = () => {
                     ActionsComponent={TablePaginationActions}
                   />
                 </TableRow> */}
-                {addedItemsList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item,index)=><>
-
-                <StyledTableRow key={index} onClick={()=>handleDisplayDialog(item)}>
-                  <StyledTableCell>
-                    {item.itemname}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {item.products.reduce((total,product)=>(total+product.selectedquantity),0)}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {item.products.reduce((total,product)=>total+product.price*product.selectedquantity,0)}
-                  </StyledTableCell>
-                </StyledTableRow></>)}
-                {emptyRows > 0 && (
-                  <StyledTableRow style={{ height: 53 * emptyRows }}>
-                    <StyledTableCell colSpan={5} />
+            {addedItemsList
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((item, index) => (
+                <>
+                  <StyledTableRow
+                    key={index}
+                    onClick={() => handleDisplayDialog(item)}
+                  >
+                    <StyledTableCell>{item.itemname}</StyledTableCell>
+                    <StyledTableCell>
+                      {item.products.reduce(
+                        (total, product) => total + product.selectedquantity,
+                        0
+                      )}
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      {item.products.reduce(
+                        (total, product) =>
+                          total + product.price * product.selectedquantity,
+                        0
+                      )}
+                    </StyledTableCell>
                   </StyledTableRow>
-                )}
-                <TableRow>
-                  <StyledTablePagination
-                    rowsPerPageOptions={[5]}
-                    SelectProps={{
-                      inputProps: {
-                        'aria-label': 'rows per page',
-                      },
-                      native: true,
-                    }}
-                    count={addedItemsList.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    ActionsComponent={TablePaginationActions}
-                  />
-                </TableRow>
-              </TableBody>
-            </StyledTable>
-            <StyledContainer sx={{
-              display:'flex',
-              flexFlow:'row',
-              justifyContent:'space-between',
-              alignItems:'center'
-            }}>
-            <Autocomplete
-                      blurOnSelect
-                      onChange={(e, value) => {
-                        if (value === null) return
-                        handleOpenDialog(value, true)
-                      }}
-                      options={getItems()}
-                      getOptionLabel={option => option.itemname}
-                      sx={{ width: '200px' }}
-                      renderInput={(params) => <TextField {...params} label="Items" />}
-                    />
-                    <StyledButton
-                    variant='contained'
-                    onClick={handleSubmitOrder}>
-                      Submit Order
-                    </StyledButton>
-              </StyledContainer>
-          </StyledPaper>
-        {/* </Grid>
+                </>
+              ))}
+            {emptyRows > 0 && (
+              <StyledTableRow style={{ height: 53 * emptyRows }}>
+                <StyledTableCell colSpan={5} />
+              </StyledTableRow>
+            )}
+            <TableRow>
+              <StyledTablePagination
+                rowsPerPageOptions={[5]}
+                SelectProps={{
+                  inputProps: {
+                    'aria-label': 'rows per page',
+                  },
+                  native: true,
+                }}
+                count={addedItemsList.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableBody>
+        </StyledTable>
+        <StyledContainer
+          sx={{
+            display: 'flex',
+            flexFlow: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Autocomplete
+            blurOnSelect
+            onChange={(e, value) => {
+              if (value === null) return;
+              handleOpenDialog(value, true);
+            }}
+            options={getItems()}
+            getOptionLabel={(option) => option.itemname}
+            sx={{ width: '200px' }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Items"
+              />
+            )}
+          />
+          <StyledButton
+            variant="contained"
+            onClick={handleSubmitOrder}
+          >
+            Submit Order
+          </StyledButton>
+        </StyledContainer>
+      </StyledPaper>
+      {/* </Grid>
         <Grid
           item
           xs={12}
@@ -418,11 +480,19 @@ const PlaceOrder = () => {
             addedItemsList={addedItemsList}
             setAddedItemsList={setAddedItemsList}
           /> */}
-        {/* </Grid>
+      {/* </Grid>
       </Grid> */}
-      {selectedItem ?
-        <FormDialog open={openDialog} setOpen={setOpenDialog} item={selectedItem} handleAddItems={handleAddItem} displayOnly={displayOnly} />  : <></>
-      }
+      {selectedItem ? (
+        <FormDialog
+          open={openDialog}
+          setOpen={setOpenDialog}
+          item={selectedItem}
+          handleAddItems={handleAddItem}
+          displayOnly={displayOnly}
+        />
+      ) : (
+        <></>
+      )}
     </StyledContainer>
   );
 };

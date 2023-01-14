@@ -36,7 +36,7 @@ import {
 } from './instituteOrdersSlice';
 import Checkbox from '@mui/material/Checkbox';
 import { Link } from 'react-router-dom';
-const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
+const InstituteOrderDeliveryDetails = ({ orderId }: { orderId: string }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const userToken = useAppSelector((state: RootState) => state.auth.token);
@@ -149,7 +149,6 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
         }}
       >
         <Typography variant="h2">Order summary</Typography>
-
         <ContainerRowBox>
           <Typography
             sx={{ fontSize: '0.75rem' }}
@@ -186,16 +185,6 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
             marginBottom: '1rem',
           }}
         >
-          Order ID: {orderDetail._id}
-        </Typography>
-        <Typography
-          variant="body1"
-          sx={{
-            fontWeight: 600,
-            color: 'greyColor.main',
-            marginBottom: '1rem',
-          }}
-        >
           Item list
         </Typography>
         <StyledTable>
@@ -205,7 +194,7 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
               {/* <StyledTableHeadCell>Item type</StyledTableHeadCell> */}
               <StyledTableHeadCell>Item quantity</StyledTableHeadCell>
               <StyledTableHeadCell>Item Price</StyledTableHeadCell>
-              <StyledTableHeadCell>Price</StyledTableHeadCell>
+              <StyledTableHeadCell>Received</StyledTableHeadCell>
             </TableRow>
           </StyledTableHead>
           {/* TODO: Convert this to a list when the data changes from the api side */}
@@ -222,10 +211,20 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                     {/* <StyledTableCell>{item.itemtype}</StyledTableCell> */}
                     <StyledTableCell>{item.itemquantity}</StyledTableCell>
                     <StyledTableCell>&#x20b9;{item.itemprice}</StyledTableCell>
-                    <StyledTableCell>
-                      &#x20b9;
-                      {parseInt(item.itemprice) * item.itemquantity}
-                    </StyledTableCell>
+                    {item.delivered ? (
+                      <Checkbox
+                        checked={true}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Checkbox
+                        checked={
+                          updatedOrders.find((i) => i._id === item._id) !==
+                          undefined
+                        }
+                        onChange={(e) => handleUpdateDeliveryStatus(e, item)}
+                      />
+                    )}
                   </StyledTableRow>
                 ))}
             {emptyRows > 0 && (
@@ -233,14 +232,6 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                 <StyledTableCell colSpan={5} />
               </StyledTableRow>
             )}
-            <Typography>
-              Total Price: &#x20b9;
-              {orderDetail.items.reduce(
-                (acc, item) =>
-                  acc + parseInt(item.itemprice) * item.itemquantity,
-                0
-              )}
-            </Typography>
             <TableRow>
               <StyledTablePagination
                 rowsPerPageOptions={[5]}
@@ -259,9 +250,51 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
             </TableRow>
           </TableBody>
         </StyledTable>
+        <StyledButton
+          variant="contained"
+          onClick={handleUpdateDelivery}
+          sx={{
+            padding: '0.5rem 0',
+            boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
+            margin: '0.2rem 0',
+          }}
+        >
+          Submit
+        </StyledButton>
+        <ContainerColumnBox>
+          <StyledButton
+            // disabled={
+            //   orderDetail.status === 'approved' ||
+            //   orderDetail.status === 'completed'
+            //     ? true
+            //     : false
+            // }
+            // startIcon={
+            //   lockOrderStatus === 'loading' ? (
+            //     <CircularProgress sx={{ color: 'white' }} />
+            //   ) : null
+            // }
+            onClick={() => navigate(`../generatebill/${orderDetail._id}`)}
+            color="info"
+            variant="contained"
+            sx={{
+              padding: '0.5rem 0',
+              boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
+            }}
+            // onClick={async () => {
+            //   await dispatch(
+            //     lockOrderOfInstitute({ token: userToken, orderId: orderId })
+            //   );
+            //   callSnackbar();
+            //   await dispatch(fetchAllOrdersOfInstitute(userToken));
+            // }}
+          >
+            Generate Bill
+          </StyledButton>
+        </ContainerColumnBox>
       </ContainerColumnBox>
     </StyledPaper>
   );
 };
 
-export default InstituteOrderDetails;
+export default InstituteOrderDeliveryDetails;

@@ -27,7 +27,7 @@ import { RootState } from '../../app/store';
 import { parseISO, format } from 'date-fns';
 import { selectUser } from '../auth/authSlice';
 import { ChevronRightRounded } from '@mui/icons-material';
-import InstituteOrderDetails from './InstituteOrderDetails';
+import InstituteOrderDeliveryDetails from './InstituteOrderDeliveryDetails';
 import InstituteBiddings from './InstituteBiddings';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
 import { InstituteOrder } from '../../types/custom';
@@ -40,7 +40,7 @@ export interface FormattedOrdersType extends InstituteOrder {
   orderDate?: string;
 }
 
-const InstituteOrders = () => {
+const InstituteOrdersDelivery = () => {
   const dispatch = useAppDispatch();
   const orders = useAppSelector(selectAllInstituteOrders);
   const user = useAppSelector(selectUser);
@@ -112,7 +112,7 @@ const InstituteOrders = () => {
   );
   useEffect(() => {
     setSelectedRow({ index: 0, id: filteredOrders[0]?._id });
-  }, [orders, filteredOrders]);
+  }, [orders, formattedOrders]);
   useEffect(() => {
     if (user.status === 'succeeded')
       dispatch(fetchAllOrdersOfInstitute(user.token));
@@ -193,7 +193,7 @@ const InstituteOrders = () => {
                   </TableRow>
                 </StyledTableHead>
                 <TableBody>
-                  {filteredOrders
+                  {formattedOrders
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((order: any, index: number) => (
                       <StyledTableRow
@@ -239,7 +239,7 @@ const InstituteOrders = () => {
                         },
                         native: true,
                       }}
-                      count={filteredOrders.length}
+                      count={formattedOrders.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       onPageChange={handleChangePage}
@@ -255,7 +255,7 @@ const InstituteOrders = () => {
             xs={12}
             md={5}
           >
-            <InstituteOrderDetails orderId={selectedRow.id} />
+            <InstituteOrderDeliveryDetails orderId={selectedRow.id} />
           </Grid>
 
           {/* <InstituteBiddings orderId={selectedRow.id} /> */}
@@ -265,4 +265,4 @@ const InstituteOrders = () => {
   );
 };
 
-export default InstituteOrders;
+export default InstituteOrdersDelivery;

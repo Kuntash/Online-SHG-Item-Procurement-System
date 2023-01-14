@@ -12,25 +12,25 @@ export interface ItemsState {
   items: Item[];
 }
 
-export interface ISHG{
-  id:string;
-  name:string;
-  quantity:number;
-  location:string;
-  productid:string;
-  selectedquantity:number;
-  price:number;
+export interface ISHG {
+  id: string;
+  name: string;
+  quantity: number;
+  location: string;
+  productid: string;
+  selectedquantity: number;
+  price: number;
 }
 
 export interface IItemList {
-itemname: string;
-itemid: string;
-itemunit?: string;
-totalquantity: number;
-totalPrices: number;
-itemType: string;
-itemDescription: string;
-products: ISHG[];
+  itemname: string;
+  itemid: string;
+  itemunit?: string;
+  totalquantity: number;
+  totalPrices: number;
+  itemType: string;
+  itemDescription: string;
+  products: ISHG[];
 }
 
 const initialState: ItemsState = {
@@ -53,7 +53,7 @@ export const fetchAllItems = createAsyncThunk(
         redirect: 'follow',
       };
       const response = await fetch(
-        backendUrl+'order/getallitems',
+        backendUrl + 'order/getallitems',
         requestOptions
       );
       if (response.status === 400) throw new Error('An error occurred');
@@ -125,11 +125,15 @@ export const saveOrder = createAsyncThunk(
     { rejectWithValue }
   ) => {
     console.log(addedItemsList);
-    const formattedAddedItemsList = addedItemsList.map((addedItem, index) => (addedItem.products.map(product=>({
-      productid:product.productid,
-      itemquantity:product.selectedquantity,
-    })))).flat();
-    console.log(formattedAddedItemsList)
+    const formattedAddedItemsList = addedItemsList
+      .map((addedItem, index) =>
+        addedItem.products.map((product) => ({
+          productid: product.productid,
+          itemquantity: product.selectedquantity,
+        }))
+      )
+      .flat();
+    console.log(formattedAddedItemsList);
     try {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
@@ -144,7 +148,7 @@ export const saveOrder = createAsyncThunk(
       };
 
       const response = await fetch(
-        backendUrl+'institute/saveorder',
+        backendUrl + 'institute/saveorder',
         requestOptions
       );
       if (response.status === 400)
@@ -153,7 +157,7 @@ export const saveOrder = createAsyncThunk(
       console.log(result);
       return result;
     } catch (err) {
-      rejectWithValue(err)
+      rejectWithValue(err);
     }
   }
 );
@@ -169,11 +173,15 @@ export const submitOrder = createAsyncThunk(
     },
     { rejectWithValue }
   ) => {
-    const formattedAddedItemsList = addedItemsList.map((addedItem, index) => (addedItem.products.map(product=>({
-      productid:product.productid,
-      itemquantity:product.selectedquantity,
-    })))).flat();
-    console.log(formattedAddedItemsList)
+    const formattedAddedItemsList = addedItemsList
+      .map((addedItem, index) =>
+        addedItem.products.map((product) => ({
+          productid: product.productid,
+          itemquantity: product.selectedquantity,
+        }))
+      )
+      .flat();
+    console.log(formattedAddedItemsList);
     try {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
@@ -188,16 +196,18 @@ export const submitOrder = createAsyncThunk(
       };
 
       const response = await fetch(
-        backendUrl+'order/postorder',
+        backendUrl + 'order/postorder',
         requestOptions
       );
+      console.log(response);
       if (response.status === 400)
         throw new Error('An error occured while posting orders');
       const result = await response.json();
       console.log(result);
       return result;
     } catch (err) {
-      rejectWithValue(err)
+      console.log('hi', err);
+      rejectWithValue(err);
     }
   }
 );

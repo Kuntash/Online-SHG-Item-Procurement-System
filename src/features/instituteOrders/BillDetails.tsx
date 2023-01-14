@@ -61,22 +61,32 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
           >
             <PrintRounded color="success" />
           </IconButton>
-
         </ContainerRowBox>
       </ContainerRowBox>
       <ContainerRowBox>
         <Table>
           <TableBody>
             <StyledTableRow>
-              <StyledTableCell><Typography variant='body1' sx={{ fontWeight: 'bold' }} >Name : </Typography>
+              <StyledTableCell>
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  Name :{' '}
+                </Typography>
               </StyledTableCell>
               <StyledTableCell>
                 <Typography>{shgData.shgname}</Typography>
               </StyledTableCell>
             </StyledTableRow>
             <StyledTableRow>
-              <StyledTableCell><Typography variant='body1' sx={{ fontWeight: 'bold' }} >Contact : </Typography>
-
+              <StyledTableCell>
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  Contact :{' '}
+                </Typography>
               </StyledTableCell>
               <StyledTableCell>
                 <Typography>{shgData.shgcontact}</Typography>
@@ -84,16 +94,25 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
             </StyledTableRow>
             <StyledTableRow>
               <StyledTableCell>
-                <Typography variant='body1' sx={{ fontWeight: 'bold' }} >Location : </Typography>
-
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  Location :{' '}
+                </Typography>
               </StyledTableCell>
               <StyledTableCell>
                 <Typography>{shgData.shglocation}</Typography>
               </StyledTableCell>
             </StyledTableRow>
             <StyledTableRow>
-              <StyledTableCell><Typography variant='body1' sx={{ fontWeight: 'bold' }} >Account Number : </Typography>
-
+              <StyledTableCell>
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  Account Number :{' '}
+                </Typography>
               </StyledTableCell>
               <StyledTableCell>
                 <Typography>{shgData.shgaccountnumber}</Typography>
@@ -101,11 +120,15 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
             </StyledTableRow>
             <StyledTableRow>
               <StyledTableCell>
-                <Typography variant='body1' sx={{ fontWeight: 'bold' }} >IFSC : </Typography>
-
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  IFSC :{' '}
+                </Typography>
               </StyledTableCell>
               <StyledTableCell>
-                <Typography>{shgData.shgifsc}</Typography>
+                <Typography>{shgData.shgifsc.toUpperCase()}</Typography>
               </StyledTableCell>
             </StyledTableRow>
           </TableBody>
@@ -119,8 +142,7 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
         }}
       >
         <Typography variant="h2">Order summary</Typography>
-        <ContainerRowBox>
-        </ContainerRowBox>
+        <ContainerRowBox></ContainerRowBox>
       </ContainerRowBox>
       <ContainerColumnBox>
         <Typography

@@ -20,6 +20,7 @@ import { getjwt, selectUser } from './features/auth/authSlice';
 import Loading from './components/utility/Loading';
 import ChangePassword from './components/admin/ChangePassword';
 import Bill from './features/instituteOrders/Bill';
+import InstituteOrdersDelivery from './features/instituteOrders/InstituteOrdersDelivery';
 const { useNavigate } = require('react-router-dom');
 function App() {
   const [checkcookie, setCheckcookie] = useState(true);
@@ -76,6 +77,10 @@ function App() {
             <Route
               path="place-order"
               element={<PlaceOrder />}
+            />
+            <Route
+              path="order-delivery"
+              element={<InstituteOrdersDelivery />}
             />
             <Route
               path="change-password"
