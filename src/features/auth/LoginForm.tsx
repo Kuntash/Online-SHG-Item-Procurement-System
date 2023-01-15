@@ -94,7 +94,7 @@ const LoginForm = React.forwardRef<HTMLInputElement>((prop, ref) => {
         padding: 0,
         borderRadius: '48px',
         height: '100%',
-        marginRight: '4rem',
+        marginRight: '2rem',
       }}
       ref={ref}
     >

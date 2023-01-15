@@ -3,6 +3,7 @@ import {
   LogoutRounded,
   TableViewRounded,
   PersonAddRounded,
+  SummarizeRounded
 } from '@mui/icons-material';
 import KeyIcon from '@mui/icons-material/Key';
 import { ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
@@ -39,6 +40,11 @@ const CeoSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
       title: 'View all orders',
       route: 'view-all-orders',
       icon: <AddShoppingCartRounded />,
+    },
+    {
+      title: 'Generate Report',
+      route: 'generate-report',
+      icon: <SummarizeRounded />,
     },
     {
       title: 'Change Password',

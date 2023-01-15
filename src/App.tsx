@@ -23,6 +23,7 @@ import Bill from './features/instituteOrders/Bill';
 import InstituteOrdersDelivery from './features/instituteOrders/InstituteOrdersDelivery';
 import AddLocation from './components/admin/AddLocation';
 import NewAnnouncement from './components/admin/NewAnnouncement';
+import AdminGenerateBill from './components/admin/AdminGenerateBill';
 const { useNavigate } = require('react-router-dom');
 function App() {
   const [checkcookie, setCheckcookie] = useState(true);
@@ -104,6 +105,11 @@ function App() {
             />
           </Route>
           <Route path="admin">
+            
+          <Route
+              path="generate-report"
+              element={<AdminGenerateBill />}
+            />
             <Route
               path="change-password"
               element={<ChangePassword />}

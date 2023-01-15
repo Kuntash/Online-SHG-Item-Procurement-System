@@ -79,7 +79,6 @@ const LandingPage = () => {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              gap: '1rem',
             }}
           >
             <Box component="span">
@@ -116,7 +115,7 @@ const LandingPage = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item>
+          {/* <Grid item>
             <Button
               onClick={focusLogin}
               sx={{
@@ -136,12 +135,12 @@ const LandingPage = () => {
                 Log in
               </Typography>
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
-      <Box sx={{ margin: '1rem 3rem', border: '1px solid #9994' }}>
+      <Box sx={{ margin: '0.5rem 1.5rem', border: '1px solid #9994' }}>
         <Swiper
-          style={{ padding: '1rem' }}
+          // style={{ padding: '1rem' }}
           spaceBetween={50}
           slidesPerView={1}
           loop={true}
@@ -271,7 +270,8 @@ const LandingPage = () => {
           justifyContent: 'space-around',
           alignItems: 'center',
           backgroundColor: 'rgba(71, 186, 71,0.1)',
-          margin: '4rem 0',
+          // margin: '4rem 0',
+          margin: '0.5rem 0',
           borderRadius: '60px',
         }}
       >
@@ -400,7 +400,7 @@ const LandingPage = () => {
       </div>
       <Box
         sx={{
-          padding: '5rem 0.5rem',
+          padding: '1.5rem 0.5rem',
           display: 'flex',
           justifyContent: 'center',
           flexDirection: 'column',
@@ -436,7 +436,7 @@ const LandingPage = () => {
             textTransform: 'capitalize',
             fontWeight: '700',
             fontStyle: 'normal',
-            fontSize: '36px',
+            fontSize: '28px',
             lineHeight: 'normal',
           }}
         >
@@ -445,7 +445,7 @@ const LandingPage = () => {
         <Typography
           color="primary"
           sx={{
-            margin: '60px 72px',
+            margin: '20px 22px',
             lineHeight: 'normal',
             fontWeight: '400',
             mixBlendMode: 'multiply',
@@ -468,8 +468,8 @@ const LandingPage = () => {
           alignItems: 'center',
           flexDirection: 'row',
           height: '53vh',
-          marginTop: '4rem',
-          marginBottom: '8rem',
+          marginTop: '1rem',
+          marginBottom: '2rem',
         }}
       >
         <StyledPaper
@@ -482,13 +482,13 @@ const LandingPage = () => {
             marginLeft: '4rem',
           }}
         >
-          <ContainerColumnBox sx={{ rowGap: '1.5rem' }}>
+          <ContainerColumnBox sx={{ rowGap: '1rem' }}>
             <ContainerColumnBox
               sx={{
-                rowGap: '1rem',
-                marginBottom: '1rem',
+                // rowGap: '1rem',
+                // marginBottom: '1rem',
                 backgroundColor: '#265A1F',
-                padding: '2rem',
+                padding: '1.5rem',
                 color: 'white',
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -513,7 +513,7 @@ const LandingPage = () => {
               <Typography
                 color="primary"
                 sx={{
-                  margin: '60px 72px',
+                  margin: '30px 44px',
                   lineHeight: 'normal',
                   fontWeight: '400',
                   mixBlendMode: 'multiply',

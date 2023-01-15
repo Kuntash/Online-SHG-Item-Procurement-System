@@ -177,6 +177,17 @@ const InstituteOrderDeliveryDetails = ({ orderId }: { orderId: string }) => {
         </ContainerRowBox>
       </ContainerRowBox>
       <ContainerColumnBox>
+        
+      <Typography
+          variant="body1"
+          sx={{
+            fontWeight: 600,
+            color: 'greyColor.main',
+            marginBottom: '1rem',
+          }}
+        >
+          Order Id: {orderDetail._id}
+        </Typography>
         <Typography
           variant="body1"
           sx={{

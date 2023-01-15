@@ -18,6 +18,7 @@ import Loading2 from '../../components/utility/Loading2';
 import { useParams } from 'react-router';
 import { backendUrl } from '../../config';
 import BillDetails from './BillDetails';
+import PrintBill from './PrintBill';
 export interface FormattedOrdersType extends InstituteOrder {
   backgroundColor?: string;
   color?: string;
@@ -83,7 +84,7 @@ const Bill = () => {
           throw new Error('Error occurred while getting saved order');
         const result = await response.json();
         setShgData(result.shgdata);
-        console.log(result);
+        console.log("order details",result);
       } catch (err) {
         console.log(err);
       }
@@ -195,6 +196,7 @@ const Bill = () => {
           </Grid>
         </Grid>
       </StyledContainer>
+      {/* <PrintBill shgData={shgData[selectedRow.index]} /> */}
     </>
   );
 };

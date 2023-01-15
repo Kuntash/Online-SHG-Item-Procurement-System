@@ -8,10 +8,7 @@ import {
 } from '@mui/material';
 import { parseISO, format } from 'date-fns';
 import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { RootState } from '../../app/store';
 import {
   StyledPaper,
   ContainerColumnBox,
@@ -25,8 +22,7 @@ import {
 } from '../../components/custom';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
 import { IShgData } from './Bill';
-const BillDetails = ({ shgData }: { shgData: IShgData }) => {
-  console.log(shgData)
+const PrintBill = ({ shgData }: { shgData: IShgData }) => {
   const orderDetailRef = useRef<HTMLDivElement | null>(null);
   const handlePrint = useReactToPrint({
     content: () => orderDetailRef.current,
@@ -66,20 +62,7 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
       </ContainerRowBox>
       <ContainerRowBox>
         <Table>
-          <TableBody>
-            <StyledTableRow>
-              <StyledTableCell>
-                <Typography
-                  variant="body1"
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  Institute Name :{' '}
-                </Typography>
-              </StyledTableCell>
-              <StyledTableCell>
-                {/* <Typography>{shgData.}</Typography> */}
-              </StyledTableCell>
-            </StyledTableRow>
+          <TableBody sx={{rowGap:0}}>
             <StyledTableRow>
               <StyledTableCell>
                 <Typography
@@ -268,4 +251,4 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
   );
 };
 
-export default BillDetails;
+export default PrintBill;
