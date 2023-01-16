@@ -75,8 +75,8 @@ const Dashboard = () => {
             }}
           >
             <ContainerColumnBox sx={{paddingLeft:'40px'}}>
-              <Typography color='black' sx={{textTransform:'capitalize'}}>{user.email}</Typography>
-              <Typography color='gray' sx={{textTransform:'capitalize'}}>{user.department} Department</Typography>
+              {user.email?<Typography color='black' sx={{textTransform:'capitalize'}}>{user.email}</Typography>:""}
+              {user.department?<Typography color='gray' sx={{textTransform:'capitalize'}}>{user.department} Department</Typography>:""}
             </ContainerColumnBox>
             <IconButton color="secondary">
               <NotificationsRounded sx={{ color: 'greyColor.main' }} />

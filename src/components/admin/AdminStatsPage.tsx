@@ -20,12 +20,12 @@ import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import ShoppingBagRoundedIcon from '@mui/icons-material/ShoppingBagRounded';
 import CountUp from 'react-countup';
 const Icons =[
-    <PersonRoundedIcon />,
-    <ShoppingBagRoundedIcon />,
-    <InventoryRoundedIcon />,
-    <ShowChartRoundedIcon />,
-    <ShoppingCart />,
-    <AccessTimeRoundedIcon />,
+    <PersonRoundedIcon sx={{fontSize:'4rem'}}  />,
+    <ShoppingBagRoundedIcon sx={{fontSize:'4rem'}}/>,
+    <InventoryRoundedIcon sx={{fontSize:'4rem'}}/>,
+    <ShowChartRoundedIcon sx={{fontSize:'4rem'}}/>,
+    <ShoppingCart sx={{fontSize:'4rem'}}/>,
+    <AccessTimeRoundedIcon sx={{fontSize:'4rem'}}/>,
 ];
     
 
@@ -68,14 +68,10 @@ const Icons =[
       getStats();
     },[])
 
-    useEffect(() => {
-        console.log("stats",keys,values);
-    },[keys,values]);
-  
     return (
     <>
     <Typography variant='h2' sx={{margin:'1rem'}}>Dashboard</Typography>
-    <Grid container columns={3}>
+    <Grid container gap='1rem' columns={3}>
         {status === 'success'?keys.map((s,i)=>{
         if(i===0) return <></>
         return <Grid item><StatCard key={i} title={s} count={values[i]} i={i} /></Grid>
@@ -91,16 +87,16 @@ const Icons =[
     console.log(title,count,i)
 
     return (
-        <StyledPaper sx={{ width: '200px',aspectRatio:'1.3 / 1', margin: 'auto' }}>
+        <StyledPaper sx={{ width: '300px',aspectRatio:'1.3 / 1', margin: 'auto' }}>
           <ContainerColumnBox sx={{justifyContent:'center',height:'100%'}}>
-          <ContainerRowBox justifyContent='flex-end'><Typography variant='caption'>{title}</Typography></ContainerRowBox>
+          <ContainerRowBox justifyContent='flex-end'><Typography variant='body1' sx={{textTransform:'capitalize'}}>{title}</Typography></ContainerRowBox>
           <ContainerRowBox sx={{height:"100%",alignItems:"center",justifyContent:'space-between'}}>
-              {Icons[i-1]}
-              <Typography variant="h2" color='primary'>
+              <Typography color='primary'>{Icons[i-1]}</Typography>
+              <Typography variant="h1" color='primary'>
             <CountUp
               start={count*30}
               end={count}
-              duration={0.6}
+              duration={1}
             /></Typography>
           </ContainerRowBox>
           <ContainerRowBox></ContainerRowBox>

@@ -33,7 +33,9 @@ export interface IShgData {
   shgaccountnumber: string;
   shgbankname: string;
   shgbranchname: string;
+  department: string;
   shgaccountname: string;
+  institutename: string;
   shgifsc: string;
   institutename: string;
   department: string;
