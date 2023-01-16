@@ -25,6 +25,8 @@ import AddLocation from './components/admin/AddLocation';
 import NewAnnouncement from './components/admin/NewAnnouncement';
 import AdminGenerateBill from './components/admin/AdminGenerateBill';
 import AdminStatsPage from './components/admin/AdminStatsPage';
+import AddItem from './components/admin/AddItem';
+import AddAdmin from './components/admin/AddAdmin';
 const { useNavigate } = require('react-router-dom');
 function App() {
   const [checkcookie, setCheckcookie] = useState(true);
@@ -106,8 +108,11 @@ function App() {
             />
           </Route>
           <Route path="admin">
-          <Route path='home' element={<AdminStatsPage />} />
-          <Route
+            <Route
+              path="home"
+              element={<AdminStatsPage />}
+            />
+            <Route
               path="generate-report"
               element={<AdminGenerateBill />}
             />
@@ -126,6 +131,14 @@ function App() {
             <Route
               path="newannouncement"
               element={<NewAnnouncement />}
+            />
+            <Route
+              path="additem"
+              element={<AddItem />}
+            />
+            <Route
+              path="addadmin"
+              element={<AddAdmin />}
             />
             <Route path="view-all-shgs">
               <Route

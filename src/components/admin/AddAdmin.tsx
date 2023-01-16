@@ -5,6 +5,8 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  InputAdornment,
+  IconButton,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -17,24 +19,36 @@ import {
 import { handleOpenSnackbar } from '../../features/utilityStates/utilitySlice';
 import { selectUser } from '../../features/auth/authSlice';
 import { fetchAllShgData } from '../../features/adminData/adminDataSlice';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 interface HelperTextType {
+  username: string;
+  password: string;
+  department: string;
   contact: string;
   name: string;
   location: string;
 }
-const RegisterShg = () => {
+const AddAdmin = () => {
   const [status, setStatus] = useState('');
   const [zones, setZones] = useState<string[]>([]);
+  const [departments, setDepartments] = useState<string[]>([]);
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const [name, setName] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [location, setLocation] = useState<string>('');
+  const [department, setDepartment] = useState<string>('');
   const [contact, setContact] = useState<string>('');
+  const [showPassword2, setShowPassword2] = useState<boolean>(false);
   const [helperTexts, setHelperTexts] = useState<HelperTextType>({
     name: '',
     location: '',
     contact: '',
+    username: '',
+    password: '',
+    department: '',
   });
   const handleContact = (cont: string) => {
     const reg = /\d+$/;
@@ -57,6 +71,26 @@ const RegisterShg = () => {
       console.log(err);
     }
   };
+  const getalldepartments = async () => {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('authorization', `Bearer ${user.token}`);
+    const requestOptions: RequestInit = {
+      headers: headers,
+      method: 'GET',
+      redirect: 'follow',
+    };
+    try {
+      const response = await fetch(
+        'https://backend.cgshgmart.com/ceo/getdepartments',
+        requestOptions
+      );
+      const result = await response.json();
+      setDepartments(result.departmentdata);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     if (status === 'loading')
       dispatch(
@@ -75,7 +109,7 @@ const RegisterShg = () => {
     if (status === 'succeeded')
       dispatch(
         handleOpenSnackbar({
-          snackbarMessage: 'SHG Registered Successfully',
+          snackbarMessage: 'Admin Registered Successfully',
           snackbarType: 'success',
         })
       );
@@ -83,6 +117,7 @@ const RegisterShg = () => {
       dispatch(fetchAllShgData(user.token));
     }
     getallzones();
+    getalldepartments();
   }, [status, dispatch]);
 
   const register = async (data: HelperTextType) => {
@@ -101,7 +136,7 @@ const RegisterShg = () => {
     setStatus('loading');
     try {
       const response = await fetch(
-        'https://backend.cgshgmart.com/shg/register',
+        'https://backend.cgshgmart.com/institute/register',
         requestOptions
       );
       if (response.status !== 200) {
@@ -112,6 +147,9 @@ const RegisterShg = () => {
       setName('');
       setLocation('');
       setContact('');
+      setUsername('');
+      setPassword('');
+      setDepartment('');
       return;
     } catch (error: any) {
       setStatus('failed');
@@ -131,20 +169,93 @@ const RegisterShg = () => {
         ...prev,
         contact: 'Contact length should be 10',
       }));
-    else register({ name, location, contact });
+    else if (!username)
+      setHelperTexts((prev) => ({ ...prev, username: 'Username is required' }));
+    else if (!password)
+      setHelperTexts((prev) => ({ ...prev, password: 'Password is required' }));
+    else if (!department)
+      setHelperTexts((prev) => ({
+        ...prev,
+        department: 'Department is required',
+      }));
+    else {
+      const data = {
+        name,
+        location,
+        contact,
+        username,
+        password,
+        department,
+      };
+      register(data);
+    }
+  };
+  const handleClickShowPassword2 = () => {
+    setShowPassword2(!showPassword2);
   };
   return (
     <StyledPaper sx={{ width: '60%', margin: 'auto' }}>
       <ContainerColumnBox sx={{ rowGap: '1.5rem' }}>
         <ContainerColumnBox sx={{ rowGap: '1rem', marginBottom: '1rem' }}>
-          <Typography variant="h2">Register New Shg</Typography>
+          <Typography variant="h2">Register New Admin</Typography>
           <Typography
             variant="body1"
             color="secondary.dark"
           >
-            Enter SHG details below
+            Enter Admin details below
           </Typography>
         </ContainerColumnBox>
+        <FormControl>
+          <StyledTextField
+            helperText={helperTexts.name}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            sx={{ borderRadius: '0.8rem', width: '100%' }}
+            label="Name"
+            variant="outlined"
+            type="text"
+          />
+        </FormControl>
+        <FormControl>
+          <StyledTextField
+            helperText={helperTexts.username}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            sx={{ borderRadius: '0.8rem', width: '100%' }}
+            label="Username"
+            variant="outlined"
+            type="text"
+          />
+        </FormControl>
+        <FormControl sx={{ width: '100%', margin: '10px 0' }}>
+          <StyledTextField
+            helperText={helperTexts.password}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            sx={{ borderRadius: '0.8rem', width: '100%' }}
+            label="Password"
+            variant="outlined"
+            type={showPassword2 ? 'text' : 'password'}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword2}
+                    // onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword2 ? (
+                      <VisibilityOff color="secondary" />
+                    ) : (
+                      <Visibility color="secondary" />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </FormControl>
         <FormControl>
           <StyledTextField
             helperText={helperTexts.contact}
@@ -156,17 +267,7 @@ const RegisterShg = () => {
             type="text"
           />
         </FormControl>
-        <FormControl>
-          <StyledTextField
-            helperText={helperTexts.name}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            sx={{ borderRadius: '0.8rem', width: '100%' }}
-            label="SHG Name"
-            variant="outlined"
-            type="text"
-          />
-        </FormControl>
+
         <FormControl>
           <InputLabel id="location-label">Location</InputLabel>
           <Select
@@ -175,9 +276,24 @@ const RegisterShg = () => {
             label="Location"
             onChange={(e) => setLocation(e.target.value)}
           >
-            {zones.map((zone: any) => (
+            {zones?.map((zone: any) => (
               <MenuItem value={zone.zonename}>
                 {zone.zonename.toUpperCase()}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl>
+          <InputLabel id="department-label">Department</InputLabel>
+          <Select
+            labelId="department-label"
+            value={department}
+            label="Department"
+            onChange={(e) => setDepartment(e.target.value)}
+          >
+            {departments?.map((department: any) => (
+              <MenuItem value={department.department}>
+                {department.department.toUpperCase()}
               </MenuItem>
             ))}
           </Select>
@@ -201,4 +317,4 @@ const RegisterShg = () => {
   );
 };
 
-export default RegisterShg;
+export default AddAdmin;

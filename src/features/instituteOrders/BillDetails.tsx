@@ -26,7 +26,7 @@ import {
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
 import { IShgData } from './Bill';
 const BillDetails = ({ shgData }: { shgData: IShgData }) => {
-  console.log(shgData)
+  console.log(shgData);
   const orderDetailRef = useRef<HTMLDivElement | null>(null);
   const handlePrint = useReactToPrint({
     content: () => orderDetailRef.current,
@@ -77,7 +77,20 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
                 </Typography>
               </StyledTableCell>
               <StyledTableCell>
-                {/* <Typography>{shgData.}</Typography> */}
+                <Typography>{shgData.institutename}</Typography>
+              </StyledTableCell>
+            </StyledTableRow>
+            <StyledTableRow>
+              <StyledTableCell>
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  Department :{' '}
+                </Typography>
+              </StyledTableCell>
+              <StyledTableCell>
+                <Typography>{shgData.department}</Typography>
               </StyledTableCell>
             </StyledTableRow>
             <StyledTableRow>

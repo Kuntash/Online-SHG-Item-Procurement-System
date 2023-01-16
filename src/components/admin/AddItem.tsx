@@ -19,28 +19,20 @@ import { selectUser } from '../../features/auth/authSlice';
 import { fetchAllShgData } from '../../features/adminData/adminDataSlice';
 
 interface HelperTextType {
-  contact: string;
-  name: string;
-  location: string;
+  itemname: string;
+  itemunit: string;
 }
-const RegisterShg = () => {
+const AddItem = () => {
   const [status, setStatus] = useState('');
   const [zones, setZones] = useState<string[]>([]);
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
-  const [name, setName] = useState<string>('');
-  const [location, setLocation] = useState<string>('');
-  const [contact, setContact] = useState<string>('');
+  const [itemname, setItemName] = useState<string>('');
+  const [itemunit, setItemUnit] = useState<string>('');
   const [helperTexts, setHelperTexts] = useState<HelperTextType>({
-    name: '',
-    location: '',
-    contact: '',
+    itemname: '',
+    itemunit: '',
   });
-  const handleContact = (cont: string) => {
-    const reg = /\d+$/;
-    if (cont.match(reg) || cont == '' || cont === '') setContact(cont);
-    return;
-  };
   const getallzones = async () => {
     const requestOptions: RequestInit = {
       method: 'GET',
@@ -68,14 +60,14 @@ const RegisterShg = () => {
     if (status === 'failed')
       dispatch(
         handleOpenSnackbar({
-          snackbarMessage: 'Error while Registering ,Please try again',
+          snackbarMessage: 'Error while Adding Item ,Please try again',
           snackbarType: 'error',
         })
       );
     if (status === 'succeeded')
       dispatch(
         handleOpenSnackbar({
-          snackbarMessage: 'SHG Registered Successfully',
+          snackbarMessage: 'Item Added Successfully',
           snackbarType: 'success',
         })
       );
@@ -101,7 +93,7 @@ const RegisterShg = () => {
     setStatus('loading');
     try {
       const response = await fetch(
-        'https://backend.cgshgmart.com/shg/register',
+        'https://backend.cgshgmart.com/order/additem',
         requestOptions
       );
       if (response.status !== 200) {
@@ -109,9 +101,8 @@ const RegisterShg = () => {
         throw Error('An error occurred');
       }
       setStatus('succeeded');
-      setName('');
-      setLocation('');
-      setContact('');
+      setItemName('');
+      setItemUnit('');
       return;
     } catch (error: any) {
       setStatus('failed');
@@ -120,66 +111,56 @@ const RegisterShg = () => {
   };
 
   const handleRegister = async () => {
-    if (!name)
-      setHelperTexts((prev) => ({ ...prev, name: 'SHG Name is required' }));
-    else if (!location)
-      setHelperTexts((prev) => ({ ...prev, location: 'Location is required' }));
-    else if (!contact)
-      setHelperTexts((prev) => ({ ...prev, contact: 'Contact is required' }));
-    else if (contact.length !== 10)
+    if (!itemname)
+      setHelperTexts((prev) => ({ ...prev, name: 'Item Name is required' }));
+    else if (!itemunit)
       setHelperTexts((prev) => ({
         ...prev,
-        contact: 'Contact length should be 10',
+        location: 'Item unit is required',
       }));
-    else register({ name, location, contact });
+    else register({ itemname, itemunit });
   };
   return (
     <StyledPaper sx={{ width: '60%', margin: 'auto' }}>
       <ContainerColumnBox sx={{ rowGap: '1.5rem' }}>
         <ContainerColumnBox sx={{ rowGap: '1rem', marginBottom: '1rem' }}>
-          <Typography variant="h2">Register New Shg</Typography>
+          <Typography variant="h2">Add New Item</Typography>
           <Typography
             variant="body1"
             color="secondary.dark"
           >
-            Enter SHG details below
+            कृपया प्रोडक्ट का नाम हिंदी में टाइप करने के लिए{' '}
+            <a
+              href="https://www.google.com/inputtools/try/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              गूगल इनपुट टूल्स
+            </a>{' '}
+            का प्रयोग करे
           </Typography>
         </ContainerColumnBox>
         <FormControl>
           <StyledTextField
-            helperText={helperTexts.contact}
-            value={contact}
-            onChange={(e) => handleContact(e.target.value)}
+            helperText={helperTexts.itemname}
+            value={itemname}
+            onChange={(e) => setItemName(e.target.value)}
             sx={{ borderRadius: '0.8rem', width: '100%' }}
-            label="Contact"
+            label="Item Name"
             variant="outlined"
             type="text"
           />
         </FormControl>
         <FormControl>
-          <StyledTextField
-            helperText={helperTexts.name}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            sx={{ borderRadius: '0.8rem', width: '100%' }}
-            label="SHG Name"
-            variant="outlined"
-            type="text"
-          />
-        </FormControl>
-        <FormControl>
-          <InputLabel id="location-label">Location</InputLabel>
+          <InputLabel id="itemunit-label">Item Unit</InputLabel>
           <Select
-            labelId="location-label"
-            value={location}
-            label="Location"
-            onChange={(e) => setLocation(e.target.value)}
+            labelId="itemunit-label"
+            value={itemunit}
+            label="Item Unit"
+            onChange={(e) => setItemUnit(e.target.value)}
           >
-            {zones.map((zone: any) => (
-              <MenuItem value={zone.zonename}>
-                {zone.zonename.toUpperCase()}
-              </MenuItem>
-            ))}
+            <MenuItem value={'Kg'}>Kg</MenuItem>
+            <MenuItem value={'Dozen'}>Dozen</MenuItem>
           </Select>
         </FormControl>
         <StyledButton
@@ -194,11 +175,11 @@ const RegisterShg = () => {
           type="submit"
           onClick={handleRegister}
         >
-          Register
+          Add
         </StyledButton>
       </ContainerColumnBox>
     </StyledPaper>
   );
 };
 
-export default RegisterShg;
+export default AddItem;

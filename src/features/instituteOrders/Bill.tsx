@@ -35,6 +35,8 @@ export interface IShgData {
   shgbranchname: string;
   shgaccountname: string;
   shgifsc: string;
+  institutename: string;
+  department: string;
   items: {
     delivered: boolean;
     deliverydate: string;
@@ -84,7 +86,7 @@ const Bill = () => {
           throw new Error('Error occurred while getting saved order');
         const result = await response.json();
         setShgData(result.shgdata);
-        console.log("order details",result);
+        console.log('order details', result);
       } catch (err) {
         console.log(err);
       }

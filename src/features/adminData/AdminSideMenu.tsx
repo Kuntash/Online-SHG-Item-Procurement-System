@@ -4,7 +4,7 @@ import {
   TableViewRounded,
   PersonAddRounded,
   SummarizeRounded,
-  HomeMaxRounded
+  HomeMaxRounded,
 } from '@mui/icons-material';
 import KeyIcon from '@mui/icons-material/Key';
 import { ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
@@ -16,6 +16,8 @@ import { StyledList, StyledListItemButton } from '../../components/custom';
 import { resetOnLogout } from './adminDataSlice';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import CampaignIcon from '@mui/icons-material/Campaign';
+import AddIcon from '@mui/icons-material/Add';
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 interface CeoSideMenuType {
   title: string;
   route: string;
@@ -33,9 +35,9 @@ const CeoSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
   const [listItemSelectedIndex, setListItemSelectedIndex] = useState<number>(0);
   const ceoSideMenu: CeoSideMenuType[] = [
     {
-      title:"Dashboard",
-      route:'home',
-      icon: <HomeMaxRounded />
+      title: 'Dashboard',
+      route: 'home',
+      icon: <HomeMaxRounded />,
     },
     {
       title: 'View all shgs',
@@ -71,6 +73,16 @@ const CeoSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
       title: 'New Announcement',
       route: 'newannouncement',
       icon: <CampaignIcon />,
+    },
+    {
+      title: 'Add Item',
+      route: 'additem',
+      icon: <AddIcon />,
+    },
+    {
+      title: 'Add Admin',
+      route: 'addadmin',
+      icon: <SupervisorAccountIcon />,
     },
     // {
     //   title: 'View all institutes',

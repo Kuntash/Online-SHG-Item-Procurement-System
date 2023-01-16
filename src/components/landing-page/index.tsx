@@ -16,10 +16,10 @@ import {
   StyledTextField,
 } from '../../components/custom';
 import { height } from '@mui/system';
-import Marquee from 'react-marquee-master';
 import CountUp from 'react-countup';
 const LandingPage = () => {
   const [announcement, setAnnouncement] = useState<any>([]);
+  const [top, setTop] = useState<number>(0);
   const loginRef = useRef<HTMLInputElement>(null);
   const focusLogin = () => {
     loginRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -38,26 +38,20 @@ const LandingPage = () => {
     setAnnouncement(data.announcements);
   };
   useEffect(() => {
-    getdata();
+    if (announcement.length === 0) {
+      getdata();
+    }
   }, []);
-  const marqueelements = announcement.map((announcement: any, index: any) => (
-    <div key={index}>
-      <Typography
-        color="primary"
-        sx={{
-          margin: '60px 72px',
-          lineHeight: 'normal',
-          fontWeight: '400',
-          mixBlendMode: 'multiply',
-          fontSize: '24px',
-        }}
-      >
-        {announcement.title}
-        {' - '}
-        {format(parseISO(announcement.createdAt), 'do MMM yyyy')}
-      </Typography>
-    </div>
-  ));
+  const setTopdata = () => {
+    setTop(top - 1);
+  };
+  useEffect(() => {
+    setTopdata();
+    if (top === -200) {
+      setTop(300);
+    }
+  }, [top]);
+
   return (
     <>
       <Container
@@ -492,6 +486,7 @@ const LandingPage = () => {
                 color: 'white',
                 flexDirection: 'row',
                 alignItems: 'center',
+                zIndex: '999',
               }}
             >
               <img
@@ -506,33 +501,33 @@ const LandingPage = () => {
               </Typography>
             </ContainerColumnBox>
           </ContainerColumnBox>
-          {/* <Marquee marqueeItems={marqueelements} />
-           */}
-          {announcement.map((announcement: any, index: any) => (
-            <div key={index}>
-              <Typography
-                color="primary"
-                sx={{
-                  margin: '30px 44px',
-                  lineHeight: 'normal',
-                  fontWeight: '400',
-                  mixBlendMode: 'multiply',
-                  fontSize: '24px',
-                }}
-              >
-                {announcement.title}
-                {' - '}
-                {format(parseISO(announcement.createdAt), 'do MMM yyyy')}
-              </Typography>
-            </div>
-          ))}
+          <div style={{ marginTop: `${top}px` }}>
+            {announcement.map((announcement: any, index: any) => (
+              <div key={index}>
+                <Typography
+                  color="primary"
+                  sx={{
+                    margin: '30px 44px',
+                    lineHeight: 'normal',
+                    fontWeight: '400',
+                    mixBlendMode: 'multiply',
+                    fontSize: '24px',
+                  }}
+                >
+                  {announcement.title}
+                  {' - '}
+                  {format(parseISO(announcement.createdAt), 'do MMM yyyy')}
+                </Typography>
+              </div>
+            ))}
+          </div>
         </StyledPaper>
         <div
           style={{
             width: '4px',
             backgroundColor: '#d9d9d9',
-            height: '450px',
-            margin: '0 4rem',
+            height: '380px',
+            margin: '1rem 4rem',
           }}
         ></div>
         <LoginForm ref={loginRef} />
@@ -543,7 +538,7 @@ const LandingPage = () => {
           color: 'white',
         }}
       >
-        <Box
+        {/* <Box
           sx={{
             width: '100%',
             backgroundColor: '#ffffff40',
@@ -554,7 +549,7 @@ const LandingPage = () => {
           <Typography variant="body1">
             About Us / Contact Us / Feedback
           </Typography>
-        </Box>
+        </Box> */}
         <Box
           sx={{
             padding: '30px',
