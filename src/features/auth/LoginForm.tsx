@@ -43,7 +43,7 @@ const LoginForm = React.forwardRef<HTMLInputElement>((prop, ref) => {
         navigate('/dashboard/department/approve-orders');
       if (user.userType === 'institute')
         navigate('/dashboard/institute/all-orders');
-      if (user.userType === 'ceo') navigate('/dashboard/admin/view-all-shgs');
+      if (user.userType === 'ceo') navigate('/dashboard/admin/home');
     }
   }, [user, navigate]);
 

@@ -87,6 +87,7 @@ export const fetchAllAdminOrders = createAsyncThunk(
         throw new Error('Error while fetching all admin orders');
       const result: { success: boolean; orders: AdminOrderDataType[] } =
         await response.json();
+        console.log("admin order details",result)
       return result.orders;
     } catch (err) {
       return rejectWithValue(err);

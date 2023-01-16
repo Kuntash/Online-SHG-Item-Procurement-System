@@ -24,6 +24,7 @@ import InstituteOrdersDelivery from './features/instituteOrders/InstituteOrdersD
 import AddLocation from './components/admin/AddLocation';
 import NewAnnouncement from './components/admin/NewAnnouncement';
 import AdminGenerateBill from './components/admin/AdminGenerateBill';
+import AdminStatsPage from './components/admin/AdminStatsPage';
 const { useNavigate } = require('react-router-dom');
 function App() {
   const [checkcookie, setCheckcookie] = useState(true);
@@ -105,7 +106,7 @@ function App() {
             />
           </Route>
           <Route path="admin">
-            
+          <Route path='home' element={<AdminStatsPage />} />
           <Route
               path="generate-report"
               element={<AdminGenerateBill />}

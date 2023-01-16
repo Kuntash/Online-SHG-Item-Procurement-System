@@ -67,6 +67,7 @@ const AdminOrderDetails = () => {
             orderStatus={order.status}
             orderedAt={format(new Date(order.createdAt), 'PPpp')}
             orderedBy={order.institutename}
+            items={order.items}
           />
         </Grid>
         <Grid

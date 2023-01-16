@@ -23,6 +23,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { format, parseISO } from 'date-fns';
 import { CalendarPickerView } from '@mui/x-date-pickers/CalendarPicker';
+import Loading from '../utility/Loading';
+import { flexbox } from '@mui/system';
+import Loading2 from '../utility/Loading2';
 
 
 
@@ -485,12 +488,17 @@ const AdminGenerateBill = () => {
 
   return (
     <StyledPaper>
+      <StyledContainer sx={{display:'flex',justifyContent:'space-between',width:'100%',flexDirection:'row'}}>
+        <StyledContainer sx={{display:'flex',alignItems:'flex-start'}}>
       <Typography
-        variant="h2"
-        sx={{ marginBottom: '1rem' }}
-      >
+        variant="h2">
         Generate Report
       </Typography>
+      </StyledContainer>
+      <StyledContainer sx={{opacity:status==='loading'?1:0}}>
+        <Loading2 />
+      </StyledContainer>
+      </StyledContainer>
       <ContainerRowBox justifyContent='start' gap='1rem'>
       <FormControl>
         <FormLabel id="generateby">Generate by</FormLabel>

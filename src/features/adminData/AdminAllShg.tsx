@@ -136,6 +136,10 @@ const AdminAllShg = () => {
                 </form>
               </Grid>
             </Grid>
+              <StyledContainer sx={{alignItems:'flex-end',width:'100%'}}>
+                <Typography
+                  variant="subtitle2" sx={{fontWeight:'bold'}}>Total SHGs: {shgData.length}</Typography>
+                </StyledContainer>
             <StyledTable>
               <StyledTableHead sx={{ fontSize: '1rem' }}>
                 <TableRow>

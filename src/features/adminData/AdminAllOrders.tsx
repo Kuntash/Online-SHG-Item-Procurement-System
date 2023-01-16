@@ -132,6 +132,10 @@ const AdminAllOrders = () => {
                 </form>
               </Grid>
             </Grid>
+              <StyledContainer sx={{alignItems:'flex-end',width:'100%'}}>
+                <Typography
+                  variant="subtitle2" sx={{fontWeight:'bold'}}>Total Orders: {ordersToDisplay.length}</Typography>
+                </StyledContainer>
             <StyledTable>
               <StyledTableHead sx={{ fontSize: '1rem' }}>
                 <TableRow>

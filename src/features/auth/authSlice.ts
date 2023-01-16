@@ -9,12 +9,14 @@ interface User {
   email: string | undefined;
   token: string | undefined;
   error?: string | undefined;
+  department: string | undefined;
 }
 const initialState: User = {
   status: 'idle',
   email: undefined,
   token: undefined,
   error: '',
+  department:''
 };
 interface LoginParameter {
   email: string;
@@ -49,9 +51,10 @@ export const login = createAsyncThunk(
         requestOptions
       );
       const result = await response.json();
+      console.log("user",result)
       if (response.status === 400)
         return rejectWithValue({ message: result.error });
-      return { email: email, userType: result.usertype, token: result.token };
+      return { email: email, userType: result.usertype, token: result.token,department:result.department };
     } catch (error: any) {
       console.log(error);
       return rejectWithValue(error?.message);
@@ -104,6 +107,7 @@ export const authSlice = createSlice({
       state.email = undefined;
       state.token = undefined;
       state.userType = undefined;
+      state.department = undefined;
     },
   },
   extraReducers: (builder) => {
@@ -120,6 +124,7 @@ export const authSlice = createSlice({
         state.status = 'succeeded';
         state.userType = action.payload.userType;
         state.token = action.payload.token;
+        state.department = action.payload.department;
       })
       .addCase(getjwt.rejected, (state, action) => {
         state.status = 'nocookie';

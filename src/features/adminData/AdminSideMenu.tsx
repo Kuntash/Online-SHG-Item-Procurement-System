@@ -3,7 +3,8 @@ import {
   LogoutRounded,
   TableViewRounded,
   PersonAddRounded,
-  SummarizeRounded
+  SummarizeRounded,
+  HomeMaxRounded
 } from '@mui/icons-material';
 import KeyIcon from '@mui/icons-material/Key';
 import { ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
@@ -31,6 +32,11 @@ const CeoSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
   const dispatch = useAppDispatch();
   const [listItemSelectedIndex, setListItemSelectedIndex] = useState<number>(0);
   const ceoSideMenu: CeoSideMenuType[] = [
+    {
+      title:"Dashboard",
+      route:'home',
+      icon: <HomeMaxRounded />
+    },
     {
       title: 'View all shgs',
       route: 'view-all-shgs',

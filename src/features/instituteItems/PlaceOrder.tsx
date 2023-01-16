@@ -445,7 +445,7 @@ const PlaceOrder = () => {
           }}
         >
           <Autocomplete
-            blurOnSelect
+            clearOnBlur
             onChange={(e, value) => {
               if (value === null) return;
               handleOpenDialog(value, true);

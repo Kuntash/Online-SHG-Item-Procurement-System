@@ -3,7 +3,7 @@ import {
   KeyboardDoubleArrowRightRounded,
   NotificationsRounded,
 } from '@mui/icons-material';
-import { Box, IconButton, Slide, useScrollTrigger } from '@mui/material';
+import { Box, IconButton, Slide, Typography, useScrollTrigger } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
@@ -67,11 +67,17 @@ const Dashboard = () => {
         >
           <ContainerRowBox
             sx={{
-              justifyContent: 'flex-end',
+              width: '100%',
+              justifyContent: 'space-between',
+              display: 'flex',
               paddngLeft: '40px',
               paddingRight: '40px',
             }}
           >
+            <ContainerColumnBox sx={{paddingLeft:'40px'}}>
+              <Typography color='black' sx={{textTransform:'capitalize'}}>{user.email}</Typography>
+              <Typography color='gray' sx={{textTransform:'capitalize'}}>{user.department} Department</Typography>
+            </ContainerColumnBox>
             <IconButton color="secondary">
               <NotificationsRounded sx={{ color: 'greyColor.main' }} />
             </IconButton>

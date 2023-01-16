@@ -114,6 +114,10 @@ export interface AdminOrderProduct {
   itemprice: number;
   itemdescription: string;
   _id: string;
+  paymentinitiated: boolean;
+  paymentinititedate: string;
+  paymentreceived: boolean;
+  paymentreceiveddate: string;
 }
 
 export interface AdminOrderBid {
