@@ -33,7 +33,7 @@ const CeoSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
   const [listItemSelectedIndex, setListItemSelectedIndex] = useState<number>(0);
   const ceoSideMenu: CeoSideMenuType[] = [
     {
-      title:"Dashboard",
+      title:"Home",
       route:'home',
       icon: <HomeMaxRounded />
     },

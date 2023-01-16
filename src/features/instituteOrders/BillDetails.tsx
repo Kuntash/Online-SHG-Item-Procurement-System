@@ -3,6 +3,7 @@ import {
   IconButton,
   Table,
   TableBody,
+  TableCell,
   TableRow,
   Typography,
 } from '@mui/material';
@@ -20,7 +21,7 @@ import {
   StyledTableHead,
   StyledTableCell,
   StyledTableHeadCell,
-  StyledTableRow,
+  // TableRow,
   StyledTablePagination,
 } from '../../components/custom';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
@@ -37,6 +38,7 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
     0,
     (1 + page) * rowsPerPage - shgData?.items?.length
   );
+  const totalPrice = shgData?.items?.reduce((totalPrice, item) => totalPrice+item.itemprice*item.itemquantity, 0);
 
   const handleChangePage = (
     e: React.MouseEvent<HTMLButtonElement> | null,
@@ -46,12 +48,10 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
   };
 
   return (
-    <StyledPaper ref={orderDetailRef}>
+    <StyledPaper sx={{fontSize:'1rem'}} ref={orderDetailRef}>
       <ContainerRowBox
         sx={{
-          columnGap: '5px',
           justifyContent: 'space-between',
-          marginBottom: '1rem',
         }}
       >
         <Typography variant="h2">SHG Details</Typography>
@@ -67,131 +67,171 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
       <ContainerRowBox>
         <Table>
           <TableBody>
-            <StyledTableRow>
-              <StyledTableCell>
-                <Typography
+            <TableRow>
+              <TableCell>
+                <Typography 
                   variant="body1"
-                  sx={{ fontWeight: 'bold' }}
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
                 >
-                  Institute Name :{' '}
+                  Institute :
                 </Typography>
-              </StyledTableCell>
-              <StyledTableCell>
-                {/* <Typography>{shgData.}</Typography> */}
-              </StyledTableCell>
-            </StyledTableRow>
-            <StyledTableRow>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell>
+                <Typography
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+                
+                >{shgData.institutename}</Typography>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
                 <Typography
                   variant="body1"
-                  sx={{ fontWeight: 'bold' }}
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+                >
+                  Department :
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+                  >{shgData.department}</Typography>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Typography
+                  variant="body1"                  
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
                 >
                   Name :{' '}
                 </Typography>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Typography>{shgData.shgname}</Typography>
-              </StyledTableCell>
-            </StyledTableRow>
-            <StyledTableRow>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell>
                 <Typography
-                  variant="body1"
-                  sx={{ fontWeight: 'bold' }}
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+                  >{shgData.shgname}</Typography>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Typography
+                  variant="body1"                  
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+
                 >
                   Contact :{' '}
                 </Typography>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Typography>{shgData.shgcontact}</Typography>
-              </StyledTableCell>
-            </StyledTableRow>
-            <StyledTableRow>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell>
                 <Typography
-                  variant="body1"
-                  sx={{ fontWeight: 'bold' }}
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+                  >{shgData.shgcontact}</Typography>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Typography
+                  variant="body1"                  
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+
                 >
                   Location :{' '}
                 </Typography>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Typography>{shgData.shglocation.toUpperCase()}</Typography>
-              </StyledTableCell>
-            </StyledTableRow>
-            <StyledTableRow>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell>
                 <Typography
-                  variant="body1"
-                  sx={{ fontWeight: 'bold' }}
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+                  >{shgData.shglocation.toUpperCase()}</Typography>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Typography
+                  variant="body1"                  
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+
                 >
                   Account Name :{' '}
                 </Typography>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Typography>{shgData.shgaccountname}</Typography>
-              </StyledTableCell>
-            </StyledTableRow>
-            <StyledTableRow>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell>
                 <Typography
-                  variant="body1"
-                  sx={{ fontWeight: 'bold' }}
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+                  >{shgData.shgaccountname}</Typography>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Typography
+                  variant="body1"                  
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+
                 >
                   Account Number :{' '}
                 </Typography>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Typography>{shgData.shgaccountnumber}</Typography>
-              </StyledTableCell>
-            </StyledTableRow>
-            <StyledTableRow>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell>
                 <Typography
-                  variant="body1"
-                  sx={{ fontWeight: 'bold' }}
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+                  >{shgData.shgaccountnumber}</Typography>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Typography
+                  variant="body1"                  
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+
                 >
                   IFSC :{' '}
                 </Typography>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Typography>{shgData.shgifsc.toUpperCase()}</Typography>
-              </StyledTableCell>
-            </StyledTableRow>
-            <StyledTableRow>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell>
                 <Typography
-                  variant="body1"
-                  sx={{ fontWeight: 'bold' }}
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+                  >{shgData.shgifsc.toUpperCase()}</Typography>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Typography
+                  variant="body1"                  
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+
                 >
                   Bank Name :{' '}
                 </Typography>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Typography>{shgData.shgbankname}</Typography>
-              </StyledTableCell>
-            </StyledTableRow>
-            <StyledTableRow>
-              <StyledTableCell>
+              </TableCell>
+              <TableCell>
                 <Typography
-                  variant="body1"
-                  sx={{ fontWeight: 'bold' }}
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+                  >{shgData.shgbankname}</Typography>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Typography
+                  variant="body1"                  
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+
                 >
                   Branch Name :{' '}
                 </Typography>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Typography>{shgData.shgbranchname}</Typography>
-              </StyledTableCell>
-            </StyledTableRow>
+              </TableCell>
+              <TableCell>
+                <Typography
+                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+                  >{shgData.shgbranchname}</Typography>
+              </TableCell>
+            </TableRow>
           </TableBody>
-        </Table>
-      </ContainerRowBox>
+        </Table>    
+      </ContainerRowBox>    
+        <Typography variant='body1'>Total Price :{totalPrice}</Typography>
       <ContainerRowBox
         sx={{
-          columnGap: '5px',
           justifyContent: 'space-between',
-          marginBottom: '1rem',
         }}
       >
         <Typography variant="h2">Order summary</Typography>
@@ -203,21 +243,20 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
           sx={{
             fontWeight: 600,
             color: 'greyColor.main',
-            marginBottom: '1rem',
           }}
         >
           Item list
         </Typography>
-        <StyledTable>
+        <Table>
           <StyledTableHead sx={{ fontSize: '0.875rem' }}>
             <TableRow>
               <StyledTableHeadCell>Item name</StyledTableHeadCell>
               <StyledTableHeadCell>Item quantity</StyledTableHeadCell>
               <StyledTableHeadCell>Item Price</StyledTableHeadCell>
               <StyledTableHeadCell>Delivered Date</StyledTableHeadCell>
-              {/* <StyledTableHeadCell>Paymentinitiated</StyledTableHeadCell>
-              <StyledTableHeadCell>Paymentinititedate</StyledTableHeadCell>
-              <StyledTableHeadCell>Paymentreceived</StyledTableHeadCell> */}
+              {/* <TableHeadCell>Paymentinitiated</TableHeadCell>
+              <TableHeadCell>Paymentinititedate</TableHeadCell>
+              <TableHeadCell>Paymentreceived</TableHeadCell> */}
             </TableRow>
           </StyledTableHead>
           <TableBody>
@@ -225,25 +264,25 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
               shgData.items
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((item, index) => (
-                  <StyledTableRow
+                  <TableRow
                     sx={{ fontSize: '0.875rem' }}
                     key={index}
                   >
-                    <StyledTableCell>{item.itemname}</StyledTableCell>
-                    <StyledTableCell>{item.itemquantity}</StyledTableCell>
-                    <StyledTableCell>&#x20b9;{item.itemprice}</StyledTableCell>
-                    <StyledTableCell>
+                    <TableCell>{item.itemname}</TableCell>
+                    <TableCell>{item.itemquantity}</TableCell>
+                    <TableCell>&#x20b9;{item.itemprice}</TableCell>
+                    <TableCell>
                       {format(parseISO(item.deliverydate), 'do MMM yyyy')}
-                    </StyledTableCell>
-                    {/* <StyledTableHeadCell>{item.paymentinitiated}</StyledTableHeadCell>
-              <StyledTableHeadCell>{format(parseISO(item.paymentinititedate), 'do MMM yyyy')}</StyledTableHeadCell>
-              <StyledTableHeadCell>{item.paymentreceived}</StyledTableHeadCell> */}
-                  </StyledTableRow>
+                    </TableCell>
+                    {/* <TableHeadCell>{item.paymentinitiated}</TableHeadCell>
+              <TableHeadCell>{format(parseISO(item.paymentinititedate), 'do MMM yyyy')}</TableHeadCell>
+              <TableHeadCell>{item.paymentreceived}</TableHeadCell> */}
+                  </TableRow>
                 ))}
             {emptyRows > 0 && (
-              <StyledTableRow style={{ height: 53 * emptyRows }}>
-                <StyledTableCell colSpan={5} />
-              </StyledTableRow>
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={5} />
+              </TableRow>
             )}
             <TableRow>
               <StyledTablePagination
@@ -262,8 +301,15 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
               />
             </TableRow>
           </TableBody>
-        </StyledTable>
+        </Table>
+
       </ContainerColumnBox>
+      <ContainerRowBox>
+        <ContainerColumnBox alignItems='flex-end' sx={{width:'100%'}}>
+        <Typography variant='body1'>Signature</Typography>
+        <Typography variant='body1'>{shgData.institutename}</Typography>
+        </ContainerColumnBox>
+      </ContainerRowBox>
     </StyledPaper>
   );
 };
