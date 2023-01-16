@@ -1,27 +1,33 @@
 import {
-    FormControl,
     Typography,
-    CircularProgress,
-    Select,
-    MenuItem,
-    InputLabel,
+    Grid
   } from '@mui/material';
   import { useEffect, useState } from 'react';
   import { useAppDispatch, useAppSelector } from '../../app/hooks';
   import {
     ContainerColumnBox,
     ContainerRowBox,
-    StyledButton,
-    StyledContainer,
     StyledPaper,
-    StyledTextField,
   } from '../custom';
-  import { handleOpenSnackbar } from '../../features/utilityStates/utilitySlice';
   import { selectUser } from '../../features/auth/authSlice';
-  import { fetchAllShgData } from '../../features/adminData/adminDataSlice';
 import { ShoppingCart } from '@mui/icons-material';
 import { backendUrl } from '../../config';
 import Loading2 from '../utility/Loading2';
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import InventoryRoundedIcon from '@mui/icons-material/InventoryRounded';
+import ShowChartRoundedIcon from '@mui/icons-material/ShowChartRounded';
+import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
+import ShoppingBagRoundedIcon from '@mui/icons-material/ShoppingBagRounded';
+import CountUp from 'react-countup';
+const Icons =[
+    <PersonRoundedIcon />,
+    <ShoppingBagRoundedIcon />,
+    <InventoryRoundedIcon />,
+    <ShowChartRoundedIcon />,
+    <ShoppingCart />,
+    <AccessTimeRoundedIcon />,
+];
+    
 
   const AdminStatsPage = () => {
     const [status, setStatus] = useState('');
@@ -67,34 +73,35 @@ import Loading2 from '../utility/Loading2';
     },[keys,values]);
   
     return (
-    <StyledContainer sx={{
-        display:'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        flexWrap:'wrap',
-        alignItems: 'center',
-        width: '100%',
-        gap: '1rem'
-    }}>
+    <>
+    <Typography variant='h2' sx={{margin:'1rem'}}>Dashboard</Typography>
+    <Grid container columns={3}>
         {status === 'success'?keys.map((s,i)=>{
         if(i===0) return <></>
-        return <StatCard key={i} title={s} count={values[i]} />
+        return <Grid item><StatCard key={i} title={s} count={values[i]} i={i} /></Grid>
         }):<Loading2 />}
-    </StyledContainer>
-    );
-  };
+    </Grid>
+    </>
+    )
+  }
   
   export default AdminStatsPage;
 
-  const StatCard = ({title,count}:any)=>{
+  const StatCard = ({title,count,i}:any)=>{
+    console.log(title,count,i)
 
     return (
         <StyledPaper sx={{ width: '200px',aspectRatio:'1.3 / 1', margin: 'auto' }}>
           <ContainerColumnBox sx={{justifyContent:'center',height:'100%'}}>
           <ContainerRowBox justifyContent='flex-end'><Typography variant='caption'>{title}</Typography></ContainerRowBox>
           <ContainerRowBox sx={{height:"100%",alignItems:"center",justifyContent:'space-between'}}>
-              <ShoppingCart color='primary' sx={{fontSize:'50px'}} />
-              <Typography variant="h2" color='primary'>{count}</Typography>
+              {Icons[i-1]}
+              <Typography variant="h2" color='primary'>
+            <CountUp
+              start={count*30}
+              end={count}
+              duration={0.6}
+            /></Typography>
           </ContainerRowBox>
           <ContainerRowBox></ContainerRowBox>
           </ContainerColumnBox>
