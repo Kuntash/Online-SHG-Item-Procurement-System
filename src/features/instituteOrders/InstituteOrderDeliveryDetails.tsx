@@ -177,8 +177,7 @@ const InstituteOrderDeliveryDetails = ({ orderId }: { orderId: string }) => {
         </ContainerRowBox>
       </ContainerRowBox>
       <ContainerColumnBox>
-        
-      <Typography
+        <Typography
           variant="body1"
           sx={{
             fontWeight: 600,
@@ -201,6 +200,7 @@ const InstituteOrderDeliveryDetails = ({ orderId }: { orderId: string }) => {
         <StyledTable>
           <StyledTableHead sx={{ fontSize: '0.875rem' }}>
             <TableRow>
+              <StyledTableHeadCell>SHG name</StyledTableHeadCell>
               <StyledTableHeadCell>Item name</StyledTableHeadCell>
               {/* <StyledTableHeadCell>Item type</StyledTableHeadCell> */}
               <StyledTableHeadCell>Item quantity</StyledTableHeadCell>
@@ -212,12 +212,14 @@ const InstituteOrderDeliveryDetails = ({ orderId }: { orderId: string }) => {
           <TableBody>
             {orderDetail &&
               orderDetail.items
+                .filter((item) => item.accepted === true)
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((item, index) => (
                   <StyledTableRow
                     sx={{ fontSize: '0.875rem' }}
                     key={index}
                   >
+                    <StyledTableCell>{item.shgid.name}</StyledTableCell>
                     <StyledTableCell>{item.itemname}</StyledTableCell>
                     {/* <StyledTableCell>{item.itemtype}</StyledTableCell> */}
                     <StyledTableCell>{item.itemquantity}</StyledTableCell>

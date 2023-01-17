@@ -72,8 +72,12 @@ export interface InstituteOrderItem {
   itemid: string;
   itemtype: 'loose' | 'packed';
   itemdescription: string;
+  accepted: boolean;
   delivered: boolean;
-  _id:string;
+  _id: string;
+  shgid: {
+    name: string;
+  };
 }
 
 export interface InstituteOrder {
@@ -112,12 +116,16 @@ export interface AdminOrderProduct {
   approvedquantity: number;
   itemunit: string;
   itemprice: number;
+  accepted: boolean;
   itemdescription: string;
   _id: string;
   paymentinitiated: boolean;
   paymentinititedate: string;
   paymentreceived: boolean;
   paymentreceiveddate: string;
+  shgid: {
+    name: string;
+  };
 }
 
 export interface AdminOrderBid {

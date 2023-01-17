@@ -201,11 +201,13 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
         <StyledTable>
           <StyledTableHead sx={{ fontSize: '0.875rem' }}>
             <TableRow>
+              <StyledTableHeadCell>SHG name</StyledTableHeadCell>
               <StyledTableHeadCell>Item name</StyledTableHeadCell>
               {/* <StyledTableHeadCell>Item type</StyledTableHeadCell> */}
               <StyledTableHeadCell>Item quantity</StyledTableHeadCell>
               <StyledTableHeadCell>Item Price</StyledTableHeadCell>
               <StyledTableHeadCell>Price</StyledTableHeadCell>
+              <StyledTableHeadCell>Accepted</StyledTableHeadCell>
             </TableRow>
           </StyledTableHead>
           {/* TODO: Convert this to a list when the data changes from the api side */}
@@ -218,6 +220,7 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                     sx={{ fontSize: '0.875rem' }}
                     key={index}
                   >
+                    <StyledTableCell>{item.shgid.name}</StyledTableCell>
                     <StyledTableCell>{item.itemname}</StyledTableCell>
                     {/* <StyledTableCell>{item.itemtype}</StyledTableCell> */}
                     <StyledTableCell>{item.itemquantity}</StyledTableCell>
@@ -226,6 +229,17 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                       &#x20b9;
                       {parseInt(item.itemprice) * item.itemquantity}
                     </StyledTableCell>
+                    {item.accepted ? (
+                      <Checkbox
+                        checked={true}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Checkbox
+                        checked={false}
+                        disabled={true}
+                      />
+                    )}
                   </StyledTableRow>
                 ))}
             {emptyRows > 0 && (
@@ -240,6 +254,16 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                   acc + parseInt(item.itemprice) * item.itemquantity,
                 0
               )}
+            </Typography>
+            <Typography>
+              Total Accepted Price: &#x20b9;
+              {orderDetail.items
+                .filter((item) => item.accepted === true)
+                .reduce(
+                  (acc, item) =>
+                    acc + parseInt(item.itemprice) * item.itemquantity,
+                  0
+                )}
             </Typography>
             <TableRow>
               <StyledTablePagination

@@ -368,6 +368,7 @@ const AdminGenerateBill = () => {
             <TableRow>
               <StyledTableHeadCell>Created At</StyledTableHeadCell>
               <StyledTableHeadCell>Institute Name</StyledTableHeadCell>
+              <StyledTableHeadCell>Status</StyledTableHeadCell>
               <StyledTableHeadCell>Total Price </StyledTableHeadCell>
               <StyledTableHeadCell>Total Quantity</StyledTableHeadCell>
             </TableRow>
@@ -380,6 +381,7 @@ const AdminGenerateBill = () => {
                     {format(parseISO(order.createdAt), 'do MMM yyyy')}
                   </StyledTableCell>
                   <StyledTableCell>{order.institutename}</StyledTableCell>
+                  <StyledTableCell>{order.status}</StyledTableCell>
                   <StyledTableCell>{order.itemstotalprice}</StyledTableCell>
                   <StyledTableCell>{order.itemstotalquantity}</StyledTableCell>
                 </StyledTableRow>
