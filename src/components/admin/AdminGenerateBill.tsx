@@ -315,6 +315,10 @@ const AdminGenerateBill = () => {
     if(!report || !report.list) return;
         return (
           <>
+          <ContainerRowBox gap='2rem'>
+            <Typography variant="body1" fontWeight='bold'>Total Quantity: {report.list.reduce((totalquantity:any,order:any)=>totalquantity+order.itemstotalquantity,0)} </Typography>
+            <Typography variant="body1" fontWeight='bold'>Total Price: {report.list.reduce((totalprice:any,order:any)=>totalprice+order.itemstotalquantity*order.itemstotalprice,0)} </Typography>
+          </ContainerRowBox>
           <StyledTable>
             <StyledTableHead sx={{ fontSize: '1rem' }}>
               <TableRow>
