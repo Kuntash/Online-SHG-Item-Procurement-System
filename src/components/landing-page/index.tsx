@@ -43,7 +43,7 @@ const LandingPage = () => {
     }
   }, []);
   const setTopdata = () => {
-    setTop(top - 1);
+    setTop(top - 0.25);
   };
   useEffect(() => {
     setTopdata();
