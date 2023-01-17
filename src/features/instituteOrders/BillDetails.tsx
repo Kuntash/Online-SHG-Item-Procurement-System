@@ -38,7 +38,10 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
     0,
     (1 + page) * rowsPerPage - shgData?.items?.length
   );
-  const totalPrice = shgData?.items?.reduce((totalPrice, item) => totalPrice+item.itemprice*item.itemquantity, 0);
+  const totalPrice = shgData?.items?.reduce(
+    (totalPrice, item) => totalPrice + item.itemprice * item.itemquantity,
+    0
+  );
 
   const handleChangePage = (
     e: React.MouseEvent<HTMLButtonElement> | null,
@@ -48,7 +51,10 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
   };
 
   return (
-    <StyledPaper sx={{fontSize:'1rem'}} ref={orderDetailRef}>
+    <StyledPaper
+      sx={{ fontSize: '1rem' }}
+      ref={orderDetailRef}
+    >
       <ContainerRowBox
         sx={{
           justifyContent: 'space-between',
@@ -69,189 +75,158 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
           <TableBody>
             <TableRow>
               <TableCell>
-                <Typography 
+                <Typography
                   variant="body1"
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+                  sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}
                 >
                   Institute :
                 </Typography>
-<<<<<<< HEAD
-              </StyledTableCell>
-              <StyledTableCell>
-                <Typography>{shgData.institutename}</Typography>
-              </StyledTableCell>
-            </StyledTableRow>
-            <StyledTableRow>
-              <StyledTableCell>
-                <Typography
-                  variant="body1"
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  Department :{' '}
-                </Typography>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Typography>{shgData.department}</Typography>
-              </StyledTableCell>
-            </StyledTableRow>
-            <StyledTableRow>
-              <StyledTableCell>
-=======
               </TableCell>
               <TableCell>
-                <Typography
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-                
-                >{shgData.institutename}</Typography>
+                <Typography sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}>
+                  {shgData.institutename}
+                </Typography>
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
->>>>>>> 217e7238d124be36cf1a349bcd263787a1072dd3
                 <Typography
                   variant="body1"
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+                  sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}
                 >
                   Department :
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-                  >{shgData.department}</Typography>
+                <Typography sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}>
+                  {shgData.department}
+                </Typography>
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
                 <Typography
-                  variant="body1"                  
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
+                  variant="body1"
+                  sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}
                 >
                   Name :{' '}
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-                  >{shgData.shgname}</Typography>
+                <Typography sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}>
+                  {shgData.shgname}
+                </Typography>
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
                 <Typography
-                  variant="body1"                  
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-
+                  variant="body1"
+                  sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}
                 >
                   Contact :{' '}
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-                  >{shgData.shgcontact}</Typography>
+                <Typography sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}>
+                  {shgData.shgcontact}
+                </Typography>
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
                 <Typography
-                  variant="body1"                  
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-
+                  variant="body1"
+                  sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}
                 >
                   Location :{' '}
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-                  >{shgData.shglocation.toUpperCase()}</Typography>
+                <Typography sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}>
+                  {shgData.shglocation.toUpperCase()}
+                </Typography>
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
                 <Typography
-                  variant="body1"                  
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-
+                  variant="body1"
+                  sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}
                 >
                   Account Name :{' '}
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-                  >{shgData.shgaccountname}</Typography>
+                <Typography sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}>
+                  {shgData.shgaccountname}
+                </Typography>
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
                 <Typography
-                  variant="body1"                  
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-
+                  variant="body1"
+                  sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}
                 >
                   Account Number :{' '}
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-                  >{shgData.shgaccountnumber}</Typography>
+                <Typography sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}>
+                  {shgData.shgaccountnumber}
+                </Typography>
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
                 <Typography
-                  variant="body1"                  
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-
+                  variant="body1"
+                  sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}
                 >
                   IFSC :{' '}
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-                  >{shgData.shgifsc.toUpperCase()}</Typography>
+                <Typography sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}>
+                  {shgData.shgifsc.toUpperCase()}
+                </Typography>
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
                 <Typography
-                  variant="body1"                  
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-
+                  variant="body1"
+                  sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}
                 >
                   Bank Name :{' '}
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-                  >{shgData.shgbankname}</Typography>
+                <Typography sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}>
+                  {shgData.shgbankname}
+                </Typography>
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
                 <Typography
-                  variant="body1"                  
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-
+                  variant="body1"
+                  sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}
                 >
                   Branch Name :{' '}
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography
-                  sx={{ fontWeight: 'bold',fontSize:'0.8rem' }}
-                  >{shgData.shgbranchname}</Typography>
+                <Typography sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}>
+                  {shgData.shgbranchname}
+                </Typography>
               </TableCell>
             </TableRow>
           </TableBody>
-        </Table>    
-      </ContainerRowBox>    
-        <Typography variant='body1'>Total Price :{totalPrice}</Typography>
+        </Table>
+      </ContainerRowBox>
+      <Typography variant="body1">Total Price :{totalPrice}</Typography>
       <ContainerRowBox
         sx={{
           justifyContent: 'space-between',
@@ -325,12 +300,14 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
             </TableRow>
           </TableBody>
         </Table>
-
       </ContainerColumnBox>
       <ContainerRowBox>
-        <ContainerColumnBox alignItems='flex-end' sx={{width:'100%'}}>
-        <Typography variant='body1'>Signature</Typography>
-        <Typography variant='body1'>{shgData.institutename}</Typography>
+        <ContainerColumnBox
+          alignItems="flex-end"
+          sx={{ width: '100%' }}
+        >
+          <Typography variant="body1">Signature</Typography>
+          <Typography variant="body1">{shgData.institutename}</Typography>
         </ContainerColumnBox>
       </ContainerRowBox>
     </StyledPaper>

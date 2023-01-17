@@ -37,8 +37,6 @@ export interface IShgData {
   shgaccountname: string;
   institutename: string;
   shgifsc: string;
-  institutename: string;
-  department: string;
   items: {
     delivered: boolean;
     deliverydate: string;
