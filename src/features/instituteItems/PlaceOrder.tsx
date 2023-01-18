@@ -1,13 +1,5 @@
 import {
   Autocomplete,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContentText,
-  DialogTitle,
-  Grid,
-  MenuItem,
-  Select,
   TableBody,
   TableRow,
   TextField,
@@ -15,8 +7,8 @@ import {
 } from '@mui/material';
 
 import DialogContent from '@mui/material/DialogContent';
-import React, { useEffect, useState } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState,useRef } from 'react';
+import { Navigate, useHref, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RootState } from '../../app/store';
 import {
@@ -46,29 +38,28 @@ import {
   selectAllItems,
   submitOrder,
 } from './itemsSlice';
-// import PlaceOrderDetails from './PlaceOrderDetails';
 import { IItemList, ISHG } from './itemsSlice';
-import { useSelector } from 'react-redux';
-import { backendUrl } from '../../config';
 
 const PlaceOrder = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [autocompletekey,setAutoCompleteKey] = useState(0)
   const { state } = useLocation() as RouterStateType;
   const userToken = useAppSelector((state: RootState) => state.auth.token);
   const savedOrders = useAppSelector(selectSavedOrder);
   let items = useAppSelector(selectAllItems);
   const itemsStatus = useAppSelector((state: RootState) => state.items.status);
-  const hasSavedOrder = useAppSelector(
-    (state: RootState) => state.instituteOrders.hasSavedOrder
-  );
-  console.log('savedOrders', savedOrders);
-  const [orderItemsForm, setOrdersItemForm] = useState<{
-    [key: string]: number | string;
-  }>({});
-  const [orderItemsFormdes, setOrdersItemFormdes] = useState<{
-    [key: string]: string;
-  }>({});
+  // const hasSavedOrder = useAppSelector(
+  //   (state: RootState) => state.instituteOrders.hasSavedOrder
+  // );
+  // console.log('savedOrders', savedOrders);
+  // const [orderItemsForm, setOrdersItemForm] = useState<{
+  //   [key: string]: number | string;
+  // }>({});
+  // const [orderItemsFormdes, setOrdersItemFormdes] = useState<{
+  //   [key: string]: string;
+  // }>({});
+  const addedItemshash = useRef(new Set<string>())
   const [addedItemsList, setAddedItemsList] = useState<IItemList[]>([]);
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 5;
@@ -80,7 +71,7 @@ const PlaceOrder = () => {
   const [selectedItem, setSelectedItem] = useState<IItemList | null>();
 
   const [openDialog, setOpenDialog] = useState(false);
-  const [displayOnly, setDisplayOnly] = useState(false);
+  const [modifyOrder, setmodifyOrder] = useState(false);
   const submitOrderStatus = useAppSelector(
     (state) => state.items.submitOrderStatus
   );
@@ -98,15 +89,17 @@ const PlaceOrder = () => {
     dispatch(submitOrder({ addedItemsList, token: userToken }));
   };
 
-  const handleAddItem = (list: IItemList) => {
-    if (list.products.length === 0) return;
-    setAddedItemsList((prev) => [...prev, list]);
+  const handleAddItem = (item: IItemList) => {
+    if(addedItemshash.current.has(item.itemid)) {console.log('item already inserted'); return;}
+    if (item.products.length === 0) return;
+    addedItemshash.current.add(item.itemid)
+    setAddedItemsList((prev) => [...prev, item]);
     //remove items from the addedItemsList
-    console.log('list', list);
+    console.log('item', item);
   };
 
   React.useEffect(() => {
-    console.log(addedItemsList);
+    console.log("addeditemslist",addedItemsList);
   }, [addedItemsList]);
 
   React.useEffect(() => {
@@ -142,23 +135,24 @@ const PlaceOrder = () => {
   ) => {
     setPage(newPage);
   };
-  const handleOnFormChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setOrdersItemForm((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-  const handleOnFormChangedes = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    setOrdersItemFormdes((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  // const handleOnFormChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  //   setOrdersItemForm((prev) => ({
+  //     ...prev,
+  //     [e.target.name]: e.target.value,
+  //   }));
+  // };
+  // const handleOnFormChangedes = (
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ): void => {
+  //   setOrdersItemFormdes((prev) => ({
+  //     ...prev,
+  //     [e.target.name]: e.target.value,
+  //   }));
+  // };
 
   const handleOpenDialog = (item: Item, flag: boolean) => {
-    setDisplayOnly(true);
+    setAutoCompleteKey(k=>k+1)
+    setmodifyOrder(false)
     setSelectedItem({
       itemid: item._id,
       itemname: item.itemname,
@@ -173,10 +167,13 @@ const PlaceOrder = () => {
   };
 
   const handleDisplayDialog = (item: IItemList) => {
-    setDisplayOnly(false);
+    setmodifyOrder(true);
     setSelectedItem(item);
     setOpenDialog(true);
   };
+  useEffect(()=>{
+    console.log("added item list",addedItemsList)
+  },[addedItemsList])
   const getItems = () => {
     const hash = new Set<string>();
     addedItemsList.forEach((item) => {
@@ -186,33 +183,33 @@ const PlaceOrder = () => {
     return items.filter((item) => !hash.has(item._id));
   };
 
-  useEffect(() => {
-    if (hasSavedOrder === 'idle' && userToken)
-      dispatch(getSavedOrder(userToken));
-    else if (hasSavedOrder === 'succeeded') {
-      dispatch(
-        handleOpenSnackbar({
-          snackbarMessage: 'You have some saved order',
-          snackbarType: 'info',
-        })
-      );
-      console.log(savedOrders);
-      let orderItemsListTemp = {};
-      let orderItemsListDesTemp = {};
-      savedOrders.forEach((item, index) => {
-        orderItemsListTemp = {
-          ...orderItemsListTemp,
-          [item._id]: item.itemquantity,
-        };
-        orderItemsListDesTemp = {
-          ...orderItemsListDesTemp,
-          [item._id]: item.itemdescription,
-        };
-      });
-      setOrdersItemForm(orderItemsListTemp);
-      setOrdersItemFormdes(orderItemsListDesTemp);
-    }
-  }, [hasSavedOrder, dispatch, userToken, savedOrders]);
+  // useEffect(() => {
+  //   if (hasSavedOrder === 'idle' && userToken)
+  //     dispatch(getSavedOrder(userToken));
+  //   else if (hasSavedOrder === 'succeeded') {
+  //     dispatch(
+  //       handleOpenSnackbar({
+  //         snackbarMessage: 'You have some saved order',
+  //         snackbarType: 'info',
+  //       })
+  //     );
+  //     console.log(savedOrders);
+  //     let orderItemsListTemp = {};
+  //     let orderItemsListDesTemp = {};
+  //     savedOrders.forEach((item, index) => {
+  //       orderItemsListTemp = {
+  //         ...orderItemsListTemp,
+  //         [item._id]: item.itemquantity,
+  //       };
+  //       orderItemsListDesTemp = {
+  //         ...orderItemsListDesTemp,
+  //         [item._id]: item.itemdescription,
+  //       };
+  //     });
+  //     setOrdersItemForm(orderItemsListTemp);
+  //     setOrdersItemFormdes(orderItemsListDesTemp);
+  //   }
+  // }, [hasSavedOrder, dispatch, userToken, savedOrders]);
   useEffect(() => {
     if (itemsStatus === 'idle') {
       // TODO: Dispatch once the api is working
@@ -444,7 +441,8 @@ const PlaceOrder = () => {
             alignItems: 'center',
           }}
         >
-          <Autocomplete
+          <Autocomplete id='autocomplete'
+          key={autocompletekey}
             clearOnBlur
             onChange={(e, value) => {
               if (value === null) return;
@@ -454,7 +452,7 @@ const PlaceOrder = () => {
             getOptionLabel={(option) => option.itemname}
             sx={{ width: '200px' }}
             renderInput={(params) => (
-              <TextField
+              <TextField 
                 {...params}
                 label="Items"
               />
@@ -488,7 +486,7 @@ const PlaceOrder = () => {
           setOpen={setOpenDialog}
           item={selectedItem}
           handleAddItems={handleAddItem}
-          displayOnly={displayOnly}
+          modifyOrder={modifyOrder}
         />
       ) : (
         <></>

@@ -6,7 +6,7 @@ import {
   InputAdornment,
   IconButton,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
   fetchAllOrdersOfInstitute,
@@ -26,7 +26,7 @@ import {
 import { RootState } from '../../app/store';
 import { parseISO, format } from 'date-fns';
 import { selectUser } from '../auth/authSlice';
-import { ChevronRightRounded } from '@mui/icons-material';
+import { ChevronRightRounded,Edit, EditRounded } from '@mui/icons-material';
 import InstituteOrderDetails from './InstituteOrderDetails';
 import InstituteBiddings from './InstituteBiddings';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
@@ -131,6 +131,11 @@ const InstituteOrders = () => {
       );
     }
   };
+
+  const handleOrderModify = (e:React.MouseEvent<SVGSVGElement, MouseEvent>,order:any) => {
+    e.stopPropagation();
+    console.log("click")
+  }
   if (ordersStatus === 'loading') return <Loading2 />;
   return (
     <>
@@ -223,7 +228,13 @@ const InstituteOrders = () => {
                           </StyledStatus>
                         </StyledTableCell>
                         <StyledTableCell sx={{ marginTop: '1rem' }}>
-                          <ChevronRightRounded color="primary" />
+                          <EditRounded sx={{
+                            ':hover':{
+                              color:'Highlight'
+                            },
+                            paddingleft: '1rem',
+                            paddingright: '1rem',
+                          }} color="primary" onClick={(e)=>handleOrderModify(e,order)} />
                         </StyledTableCell>
                       </StyledTableRow>
                     ))}

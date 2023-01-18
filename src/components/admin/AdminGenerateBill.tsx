@@ -37,9 +37,46 @@ import { CalendarPickerView } from '@mui/x-date-pickers/CalendarPicker';
 import Loading from '../utility/Loading';
 import { flexbox } from '@mui/system';
 import Loading2 from '../utility/Loading2';
+import Checkbox from '@mui/material/Checkbox';
+import { CSVLink } from "react-csv";
+import TableViewIcon from '@mui/icons-material/TableView';
 
 const generateByList = ['department', 'shg', 'item'];
 const reportTypeList = ['month', 'year', 'date'];
+
+interface Ilabel{
+  label: string;
+  key: string;
+  selected: boolean;
+}
+const labels:Ilabel[] = [
+  {
+    label:'Order Date',
+    key:'createdAt',
+    selected:true
+  },
+  {
+    label:'Institute Name',
+    key:'institutename',
+    selected:true
+  },
+  {
+    label:'Status',
+    key:'status',
+    selected:true
+  },
+  {
+    label:'Total Price',
+    key:'itemstotalprice',
+    selected:true
+  },
+  {
+    label:'Total Quantity',
+    key:'itemstotalquantity',
+    selected:true
+  }
+]
+
 const getHeaders = (userToken: string) => {
   const headers = new Headers();
   headers.append('Authorization', `Bearer ${userToken}`);
@@ -236,6 +273,7 @@ interface AdminOrderDetailsTableProps {
   orderStatus: string;
 }
 const AdminGenerateBill = () => {
+  const [tablelabels,settablelabels] = useState<Ilabel[]>(labels)
   const [generateby, setGenerateBy] = useState('');
   const [status, setStatus] = useState('');
   const [departmentList, setDepartmentList] = useState<IDepartmentData[]>([]);
@@ -277,6 +315,7 @@ const AdminGenerateBill = () => {
         break;
     }
   };
+
 
   const handleReportTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (status === 'loading') return;
@@ -335,10 +374,24 @@ const AdminGenerateBill = () => {
     value,
   ]);
 
+  const handleSelectLabels = (e:ChangeEvent<HTMLInputElement>,index:number) => {
+    const check = e.target.checked;
+    const newlabels = [...tablelabels]
+    if(!check) tablelabels[index].selected = false;
+    else tablelabels[index].selected = true;
+    settablelabels(newlabels);
+  };
+
+
+
   const getReport = () => {
     if (!report || !report.list) return;
     return (
       <>
+      <ContainerRowBox justifyContent='flex-end' gap='1rem' alignItems='center'>
+        <Typography variant='body1' fontWeight='bold'>Download:</Typography>
+          <CSVLink data={report.list} headers={tablelabels.filter(lable=>lable.selected)} filename={"report - "+format(new Date(), 'do MMM yyyy')}> <TableViewIcon color='primary' /> </CSVLink>
+          </ContainerRowBox>
         <ContainerRowBox gap="2rem">
           <Typography
             variant="body1"
@@ -362,28 +415,53 @@ const AdminGenerateBill = () => {
               0
             )}{' '}
           </Typography>
+          <Typography
+            variant="body1"
+            fontWeight="bold"
+          >
+            Total Orders :
+            {report.list.length}
+          </Typography>
+        </ContainerRowBox>
+        <ContainerRowBox>
+        {tablelabels.map((label, index) =>
+        
+  <FormControlLabel control={<Checkbox
+      checked={label.selected}
+      onChange={(e)=>handleSelectLabels(e,index)}
+      inputProps={{ 'aria-label': label.label }}
+    />} label={label.label} />
+
+       )}
         </ContainerRowBox>
         <StyledTable>
           <StyledTableHead sx={{ fontSize: '1rem' }}>
             <TableRow>
-              <StyledTableHeadCell>Created At</StyledTableHeadCell>
-              <StyledTableHeadCell>Institute Name</StyledTableHeadCell>
-              <StyledTableHeadCell>Status</StyledTableHeadCell>
-              <StyledTableHeadCell>Total Price </StyledTableHeadCell>
-              <StyledTableHeadCell>Total Quantity</StyledTableHeadCell>
+                  {tablelabels.map((label) =>{
+                    if(label.selected === false) return <></>
+                  return <StyledTableCell>{label.label}</StyledTableCell>
+                  })}
             </TableRow>
           </StyledTableHead>
           <TableBody>
             {report.list.map((order: any) => (
               <>
                 <StyledTableRow sx={{ fontSize: '0.875rem' }}>
-                  <StyledTableCell sx={{ marginTop: '1rem' }}>
+                  {tablelabels.map((label) =>{
+                    if(label.selected === false) return <></>
+                    if (label.key === 'createdAt') {
+                      return  <StyledTableCell sx={{ marginTop: '1rem' }}>
+                    {format(parseISO(order.createdAt), 'do MMM yyyy')}
+                  </StyledTableCell>}
+                  return <StyledTableCell>{order[label.key]}</StyledTableCell>
+                  })}
+                  {/* <StyledTableCell sx={{ marginTop: '1rem' }}>
                     {format(parseISO(order.createdAt), 'do MMM yyyy')}
                   </StyledTableCell>
                   <StyledTableCell>{order.institutename}</StyledTableCell>
                   <StyledTableCell>{order.status}</StyledTableCell>
                   <StyledTableCell>{order.itemstotalprice}</StyledTableCell>
-                  <StyledTableCell>{order.itemstotalquantity}</StyledTableCell>
+                  <StyledTableCell>{order.itemstotalquantity}</StyledTableCell> */}
                 </StyledTableRow>
               </>
             ))}

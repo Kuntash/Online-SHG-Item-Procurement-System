@@ -1,19 +1,14 @@
-import * as React from 'react';
+import  React,{useState,useEffect} from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Item } from '../../types/custom';
 import { backendUrl } from '../../config';
 import { selectUser } from '../auth/authSlice';
-import { useSelector } from 'react-redux';
 import { TableBody, TableRow, Typography } from '@mui/material';
 import {
   StyledButton,
-  StyledPaper,
   StyledTable,
   StyledTableCell,
   StyledTableHead,
@@ -22,8 +17,7 @@ import {
   StyledTextField,
 } from '../../components/custom';
 
-import { IItemList, ISHG } from './itemsSlice';
-import { RootState } from '../../app/store';
+import { IItemList, ISHG, modifyOrder } from './itemsSlice';
 import { useAppSelector } from '../../app/hooks';
 import { useAppDispatch } from '../../app/hooks';
 import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
@@ -32,14 +26,11 @@ export default function FormDialog(props: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   item: IItemList;
   handleAddItems: any;
-  displayOnly: boolean;
+  modifyOrder: boolean;
 }) {
   const dispatch = useAppDispatch();
   const [page, setPage] = React.useState<number>(0);
   const rowsPerPage = 5;
-  // const emptyRows =
-  //   page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shgs.length) : 0;
-
   const [selectedShgs, setSelectedShgs] = React.useState<ISHG[] | []>([]);
   const [productQuantities, setProductQuatities] = React.useState<{
     [key: string]: number;
@@ -81,6 +72,9 @@ export default function FormDialog(props: {
       { ...i, selectedquantity: productQuantities[i.productid] },
     ]);
   };
+  const handleClearShg = (i: ISHG) => {
+    setSelectedShgs((shgs)=>shgs.filter(shg=>shg.id!==i.id))
+  }
 
   const handleSubmit = () => {
     item.products = selectedShgs;
@@ -88,15 +82,20 @@ export default function FormDialog(props: {
     handleClose();
   };
 
+  // React.useEffect(() => {
+  //   if(props.modifyOrder === false){
+
+  //   }
+  // }, [])
+  
+
   React.useEffect(() => {
-    console.log(selectedShgs);
-  }, [selectedShgs]);
+    setSelectedShgs([])
+  }, [item]);
 
   React.useEffect(() => {
     const itemid = item.itemid;
     if (!itemid) return;
-    setShgs(null);
-    setSelectedShgs([]);
     const getshgs = async () => {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
@@ -114,7 +113,7 @@ export default function FormDialog(props: {
         if (response.status === 400)
           throw new Error('An error occured while posting orders');
         const result = await response.json();
-        console.log(result);
+        console.log("shgs products",result);
         setShgs(
           result.productdata.map((r: any) => {
             return {
@@ -132,11 +131,12 @@ export default function FormDialog(props: {
         console.log(err);
       }
     };
-    if (props.displayOnly) getshgs();
-    else {
-      setShgs(item.products);
-    }
-  }, [item, props.displayOnly]);
+    setShgs(null);
+    setSelectedShgs([]);
+    getshgs();
+    if(props.modifyOrder) setSelectedShgs(item.products)
+    if(props.modifyOrder) console.log("already selected items",item.products)
+  }, [item, props.modifyOrder]);
 
   return (
     <div>
@@ -154,12 +154,11 @@ export default function FormDialog(props: {
       >
         <DialogTitle>Selected Item :{item.itemname}</DialogTitle>
         <DialogContent>
-          {/* <StyledPaper> */}
           <Typography
             variant="h2"
             sx={{ marginBottom: '1rem' }}
           >
-            {props.displayOnly ? 'Select items to order' : 'Selected Items'}
+            {!props.modifyOrder ? 'Select items to order' : 'Modify order'}
           </Typography>
           <StyledTable>
             <StyledTableHead sx={{ fontSize: '1rem' }}>
@@ -184,7 +183,14 @@ export default function FormDialog(props: {
                     <StyledTableCell>{shg.quantity}</StyledTableCell>
                     <StyledTableCell>{shg.price}</StyledTableCell>
                     <StyledTableCell>
-                      {props.displayOnly ? (
+                      {shg.location.toUpperCase()}
+                    </StyledTableCell>
+                        {!selectedShgs.find(
+                          (selectedshg, index) =>
+                            shg.productid === selectedshg.productid
+                        ) ? (
+                          <>
+                    <StyledTableCell>
                         <StyledTextField
                           type={'number'}
                           sx={{ width: 'unset' }}
@@ -197,97 +203,49 @@ export default function FormDialog(props: {
                           label={`${item.itemname} की मात्रा (in ${item.itemunit})`}
                           onChange={(e) => handlequantity(e, shg.productid)}
                         />
-                      ) : (
-                        shg.selectedquantity
-                      )}
                     </StyledTableCell>
-                    <StyledTableCell>
-                      {shg.location.toUpperCase()}
-                    </StyledTableCell>
-                    {/* <StyledTableCell>
-                        <StyledTextField
-                          sx={{ width: 'unset' }}
-                          name={item._id}
-                          value={
-                            orderItemsFormdes?.[item._id]
-                              ? orderItemsFormdes?.[item._id]
-                              : ''
-                          }
-                          label={`विवरण`}
-                          onChange={handleOnFormChangedes}
-                        />
-                      </StyledTableCell> */}
-                    {props.displayOnly ? (
                       <StyledTableCell>
-                        {!selectedShgs.find(
-                          (selectedshg, index) =>
-                            shg.productid === selectedshg.productid
-                        ) ? (
                           <StyledButton
                             variant="contained"
                             color="success"
                             sx={{
-                              // minWidth: '100px',
-                              // padding: '0.5rem 0.5rem',
                               boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
                             }}
                             onClick={() => {
                               handleAddShg(shg);
                             }}
-                            // startIcon={<AddRounded sx={{ color: 'white' }} />}
                           >
                             Add
                           </StyledButton>
+                      </StyledTableCell>
+                      </>
                         ) : (
+                          <>
+                          <StyledTableCell>
+                            {productQuantities[shg.productid]}
+                          </StyledTableCell>
+                          <StyledTableCell>
                           <StyledButton
-                            disabled
                             variant="contained"
-                            color="primary"
+                            color="error"
+                            onClick={() => {
+                              handleClearShg(shg);
+                            }}
                             sx={{ padding: '0.5rem 0.9rem' }}
                           >
-                            Added
+                            Edit
                           </StyledButton>
+                          </StyledTableCell>
+                          </>
                         )}
-                      </StyledTableCell>
-                    ) : (
-                      ''
-                    )}
                   </StyledTableRow>
                 ))}
-              {/* {emptyRows > 0 && (
-                  <StyledTableRow style={{ height: 53 * emptyRows }}>
-                    <StyledTableCell colSpan={5} />
-                  </StyledTableRow>
-                )} */}
-              {/* <TableRow>
-                  <StyledTablePagination
-                    rowsPerPageOptions={[5]}
-                    SelectProps={{
-                      inputProps: {
-                        'aria-label': 'rows per page',
-                      },
-                      native: true,
-                    }}
-                    count={items.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    ActionsComponent={TablePaginationActions}
-                  />
-                </TableRow> */}
             </TableBody>
           </StyledTable>
-          {/* </StyledPaper> */}
         </DialogContent>
         <DialogActions>
-          {!props.displayOnly ? (
-            <Button onClick={handleClose}>Close</Button>
-          ) : (
-            <>
               <Button onClick={handleClose}>Cancel</Button>
               <Button onClick={handleSubmit}>submit</Button>
-            </>
-          )}
         </DialogActions>
       </Dialog>
     </div>
