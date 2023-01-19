@@ -3,6 +3,7 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  IconButton,
   Radio,
   RadioGroup,
   RadioGroupState,
@@ -11,12 +12,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Grid } from 'swiper';
 import { useAppSelector } from '../../app/hooks';
 import { backendUrl } from '../../config';
 import { selectUser } from '../../features/auth/authSlice';
 import {
+  ContainerColumnBox,
   ContainerRowBox,
   StyledContainer,
   StyledPaper,
@@ -40,6 +42,8 @@ import Loading2 from '../utility/Loading2';
 import Checkbox from '@mui/material/Checkbox';
 import { CSVLink } from "react-csv";
 import TableViewIcon from '@mui/icons-material/TableView';
+import { useReactToPrint } from 'react-to-print';
+import { PrintRounded } from '@mui/icons-material';
 
 const generateByList = ['department', 'shg', 'item'];
 const reportTypeList = ['month', 'year', 'date'];
@@ -50,6 +54,11 @@ interface Ilabel{
   selected: boolean;
 }
 const labels:Ilabel[] = [
+  {
+    label:'Order Id',
+    key: 'orderid',
+    selected: true,
+  },
   {
     label:'Order Date',
     key:'createdAt',
@@ -87,9 +96,10 @@ const labels:Ilabel[] = [
   },
   {
   label:'Institute Location',
-  key:'instutelocation',
+  key:'institutelocation',
   selected:true
-  }
+  },
+
 ]
 
 const getHeaders = (userToken: string) => {
@@ -309,8 +319,29 @@ const AdminGenerateBill = () => {
   const [selectedShg, setSelectedShg] = useState<IShgData | null>(null);
   const [report, setReport] = useState<any>([]);
   const user = useAppSelector(selectUser);
+  const [sortBy,setSortBy] = useState<string>('');
+  const [sortOrder,setSortOrder] = useState<string>('ascending');
+  const tableRef = useRef<HTMLTableElement>(null);
+  
+  const handlePrint = useReactToPrint({
+    content: () => tableRef.current,
+  });
 
-  console.log(value?.year());
+
+
+  const handleSortBy = (e:ChangeEvent<HTMLInputElement>)=>{
+    const sortedlist = report.list.sort((r1:any,r2:any)=>(r1[e.target.value]-r2[e.target.value]))
+    setReport({reportType:report.reportType,list:sortedlist});
+    setSortBy(e.target.value);
+  }
+
+  useEffect(()=>{
+    if(sortBy === '') return;
+    let sortedlist:any = []
+    if(sortOrder === 'descending') sortedlist = report.list.sort((r1:any,r2:any)=>(r2[sortBy]-r1[sortBy]))
+    else sortedlist = report.list.sort((r1:any,r2:any)=>(r1[sortBy]-r2[sortBy]))
+    setReport({reportType:report.reportType,list:sortedlist});
+    },[sortBy,sortOrder])
 
   const handleRadioChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (status === 'loading') return;
@@ -346,6 +377,7 @@ const AdminGenerateBill = () => {
   useEffect(() => {
     console.log(generateby, selectedDepartment, reportType);
     const fetchdata = async () => {
+      setSortBy('')
       if (generateby === '' || reportType === '' || !user || !user.token)
         return;
       if (!value) return;
@@ -413,6 +445,7 @@ const AdminGenerateBill = () => {
     settablelabels(newlabels);
   };
 
+  
 
 
   const getReport = () => {
@@ -421,8 +454,62 @@ const AdminGenerateBill = () => {
       <>
       <ContainerRowBox justifyContent='flex-end' gap='1rem' alignItems='center'>
         <Typography variant='body1' fontWeight='bold'>Download:</Typography>
-          <CSVLink data={report.list} headers={tablelabels.filter(lable=>lable.selected)} filename={"report - "+format(new Date(), 'do MMM yyyy')}> <TableViewIcon color='primary' /> </CSVLink>
+          <IconButton
+            color="success"
+            onClick={handlePrint}
+          >
+            <PrintRounded color="success" />
+          </IconButton>
+          <CSVLink data={
+              JSON.parse(JSON.stringify(report.list)).map((e:any)=>{e.institutecontact='=""'+e.institutecontact+'""'; return e})
+          } headers={tablelabels.filter(lable=>lable.selected)} filename={"report - "+format(new Date(), 'do MMM yyyy')}> <TableViewIcon color='primary' /> </CSVLink>
           </ContainerRowBox>
+        <ContainerRowBox gap='1rem'>
+          <Typography variant='body1' fontWeight='bold' >SORT BY: </Typography>
+          <FormControl>
+          <RadioGroup
+            aria-labelledby="sort_by"
+            name="sort_by"
+            value={sortBy}
+            onChange={(e)=>handleSortBy(e)}
+            sx={{
+              display:'flex',
+              flexFlow:'row',
+            }}
+            >
+          <FormControlLabel value="itemstotalprice" control={<Radio />} label="Total Price" />
+          <FormControlLabel value="itemstotalquantity" control={<Radio />} label="Total Quantity" />
+          </RadioGroup>
+          </FormControl>
+          <Typography variant='body1' fontWeight='bold' >Sort Order : </Typography>
+          <FormControl>
+          <RadioGroup
+            aria-labelledby="sort_order"
+            name="sort_order"
+            value={sortOrder}
+            onChange={(e)=>(setSortOrder(e.target.value))}
+            sx={{
+              display:'flex',
+              flexFlow:'row',
+            }}
+            >
+          <FormControlLabel value="ascending" control={<Radio />} label="A-Z" />
+          <FormControlLabel value="descending" control={<Radio />} label="Z-A" />
+          </RadioGroup>
+          </FormControl>
+        </ContainerRowBox>
+        <ContainerRowBox>
+        {tablelabels.map((label, index) =>
+        
+  <FormControlLabel control={<Checkbox
+      checked={label.selected}
+      onChange={(e)=>handleSelectLabels(e,index)}
+      inputProps={{ 'aria-label': label.label }}
+    />} label={label.label} />
+
+       )}
+        </ContainerRowBox>
+        <ContainerColumnBox ref={tableRef}>
         <ContainerRowBox gap="2rem">
           <Typography
             variant="body1"
@@ -453,17 +540,13 @@ const AdminGenerateBill = () => {
             Total Orders :
             {report.list.length}
           </Typography>
-        </ContainerRowBox>
-        <ContainerRowBox>
-        {tablelabels.map((label, index) =>
-        
-  <FormControlLabel control={<Checkbox
-      checked={label.selected}
-      onChange={(e)=>handleSelectLabels(e,index)}
-      inputProps={{ 'aria-label': label.label }}
-    />} label={label.label} />
-
-       )}
+          
+          <Typography
+            variant="body1"
+            fontWeight="bold"
+          >
+            Date : {format(new Date(), 'ppPP')}
+          </Typography>
         </ContainerRowBox>
         <StyledTable>
           <StyledTableHead sx={{ fontSize: '1rem' }}>
@@ -498,6 +581,7 @@ const AdminGenerateBill = () => {
             ))}
           </TableBody>
         </StyledTable>
+        </ContainerColumnBox>
       </>
     );
   };

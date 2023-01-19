@@ -178,8 +178,8 @@ export default function FormDialog(props: {
                 <StyledTableHeadCell>SHG name</StyledTableHeadCell>
                 <StyledTableHeadCell>Available Quantity</StyledTableHeadCell>
                 <StyledTableHeadCell>Price</StyledTableHeadCell>
-                <StyledTableHeadCell>Quantity</StyledTableHeadCell>
                 <StyledTableHeadCell>location</StyledTableHeadCell>
+                <StyledTableHeadCell>Quantity</StyledTableHeadCell>
                 <StyledTableHeadCell></StyledTableHeadCell>
               </TableRow>
             </StyledTableHead>
