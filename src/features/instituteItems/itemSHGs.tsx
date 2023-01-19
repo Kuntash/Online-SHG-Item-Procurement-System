@@ -73,10 +73,13 @@ export default function FormDialog(props: {
     ]);
   };
   const handleClearShg = (i: ISHG) => {
-    setSelectedShgs((shgs)=>shgs.filter(shg=>shg.id!==i.id))
+    const filtered = selectedShgs.filter(shg=>shg.productid!==i.productid)
+    console.log("edited",filtered);
+    setSelectedShgs(filtered)
   }
 
   const handleSubmit = () => {
+    console.log("selected",selectedShgs)
     item.products = selectedShgs;
     props.handleAddItems(item);
     handleClose();
@@ -89,9 +92,9 @@ export default function FormDialog(props: {
   // }, [])
   
 
-  React.useEffect(() => {
-    setSelectedShgs([])
-  }, [item]);
+  // React.useEffect(() => {
+  //   setSelectedShgs([])
+  // }, [item]);
 
   React.useEffect(() => {
     const itemid = item.itemid;

@@ -140,10 +140,9 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
   // Create a Style Component
   if (orderDetail === undefined) return <h1> Order Not found</h1>;
   return (
-    <StyledPaper ref={orderDetailRef}>
+    <StyledPaper sx={{width:'min-content'}} ref={orderDetailRef}>
       <ContainerRowBox
         sx={{
-          columnGap: '5px',
           justifyContent: 'space-between',
           marginBottom: '1rem',
         }}
@@ -183,7 +182,6 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
           sx={{
             fontWeight: 600,
             color: 'greyColor.main',
-            marginBottom: '1rem',
           }}
         >
           Order ID: {orderDetail._id}
@@ -193,7 +191,6 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
           sx={{
             fontWeight: 600,
             color: 'greyColor.main',
-            marginBottom: '1rem',
           }}
         >
           Item list
@@ -229,6 +226,7 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                       &#x20b9;
                       {parseInt(item.itemprice) * item.itemquantity}
                     </StyledTableCell>
+                    <StyledTableCell>
                     {item.accepted ? (
                       <Checkbox
                         checked={true}
@@ -240,6 +238,7 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                         disabled={true}
                       />
                     )}
+                    </StyledTableCell>
                   </StyledTableRow>
                 ))}
             {emptyRows > 0 && (
@@ -247,24 +246,6 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                 <StyledTableCell colSpan={5} />
               </StyledTableRow>
             )}
-            <Typography>
-              Total Price: &#x20b9;
-              {orderDetail.items.reduce(
-                (acc, item) =>
-                  acc + parseInt(item.itemprice) * item.itemquantity,
-                0
-              )}
-            </Typography>
-            <Typography>
-              Total Accepted Price: &#x20b9;
-              {orderDetail.items
-                .filter((item) => item.accepted === true)
-                .reduce(
-                  (acc, item) =>
-                    acc + parseInt(item.itemprice) * item.itemquantity,
-                  0
-                )}
-            </Typography>
             <TableRow>
               <StyledTablePagination
                 rowsPerPageOptions={[5]}
@@ -283,6 +264,9 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
             </TableRow>
           </TableBody>
         </StyledTable>
+        {orderDetail.status === 'pending'?
+        <StyledButton variant='contained' onClick={()=>dispatch(lockOrderOfInstitute({token:userToken,orderId:orderDetail._id}))}>Lock Order</StyledButton>:
+        <></>}
       </ContainerColumnBox>
     </StyledPaper>
   );

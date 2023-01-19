@@ -225,6 +225,9 @@ const PlaceOrder = () => {
         }
       )
     })
+    filteredItems.forEach((item) =>{
+      addedItemshash.current.add(item.itemid)
+    })
     setAddedItemsList(filteredItems)
     console.log("filtered items",filteredItems);
     console.log("state",state);
