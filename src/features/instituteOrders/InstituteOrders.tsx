@@ -9,6 +9,7 @@ import {
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
+  deleteOrder,
   fetchAllOrdersOfInstitute,
   selectAllInstituteOrders,
 } from './instituteOrdersSlice';
@@ -26,7 +27,7 @@ import {
 import { RootState } from '../../app/store';
 import { parseISO, format } from 'date-fns';
 import { selectUser } from '../auth/authSlice';
-import { ChevronRightRounded,Edit, EditRounded } from '@mui/icons-material';
+import { ChevronRightRounded,DeleteSweep,Edit, EditRounded } from '@mui/icons-material';
 import InstituteOrderDetails from './InstituteOrderDetails';
 import InstituteBiddings from './InstituteBiddings';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
@@ -64,6 +65,7 @@ const InstituteOrders = () => {
   };
 
   useEffect(() => {
+    if(!orders) return;
     setFormattedOrders(
       orders.map((order, index) => ({
         ...order,
@@ -138,6 +140,10 @@ const InstituteOrders = () => {
     e.stopPropagation();
     navigate('../place-order',{state:order})
   }
+  const handleOrderCancel = (e:React.MouseEvent<SVGSVGElement, MouseEvent>,order:any)=>{
+    e.stopPropagation();
+    dispatch(deleteOrder({token:user.token as string, orderId:order._id as string}))
+  }
   if (ordersStatus === 'loading') return <Loading2 />;
   return (
     <>
@@ -199,6 +205,7 @@ const InstituteOrders = () => {
                     <StyledTableHeadCell>Order date</StyledTableHeadCell>
                     <StyledTableHeadCell>Status</StyledTableHeadCell>
                     <StyledTableHeadCell></StyledTableHeadCell>
+                    <StyledTableHeadCell></StyledTableHeadCell>
                   </TableRow>
                 </StyledTableHead>
                 <TableBody>
@@ -229,6 +236,8 @@ const InstituteOrders = () => {
                             {order.status}
                           </StyledStatus>
                         </StyledTableCell>
+                        {order.status === 'pending'?
+                        <>
                         <StyledTableCell sx={{ marginTop: '1rem' }}>
                           <EditRounded sx={{
                             ':hover':{
@@ -238,6 +247,21 @@ const InstituteOrders = () => {
                             paddingright: '1rem',
                           }} color="primary" onClick={(e)=>handleOrderModify(e,order)} />
                         </StyledTableCell>
+                        <StyledTableCell sx={{ marginTop: '1rem' }}>
+                          <DeleteSweep sx={{
+                            ':hover':{
+                              color:'Highlight'
+                            },
+                            paddingleft: '1rem',
+                            paddingright: '1rem',
+                          }} color="primary" onClick={(e)=>handleOrderCancel(e,order)} />
+                        </StyledTableCell>
+                        </>:
+                        <>
+                        <StyledTableCell></StyledTableCell>
+                        <StyledTableCell></StyledTableCell>
+                        </>
+                          }
                       </StyledTableRow>
                     ))}
                   {emptyRows > 0 && (

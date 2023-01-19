@@ -17,7 +17,7 @@ import {
   StyledTextField,
 } from '../../components/custom';
 
-import { IItemList, ISHG, modifyOrder } from './itemsSlice';
+import itemsSlice, { IItemList, ISHG, modifyOrder } from './itemsSlice';
 import { useAppSelector } from '../../app/hooks';
 import { useAppDispatch } from '../../app/hooks';
 import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
@@ -134,7 +134,16 @@ export default function FormDialog(props: {
     setShgs(null);
     setSelectedShgs([]);
     getshgs();
-    if(props.modifyOrder) setSelectedShgs(item.products)
+    if(props.modifyOrder) {
+      const q :{[key: string]:number}={}
+      item.products.forEach(product => {
+        console.log(product)
+        q[product.productid] = product.selectedquantity
+      })
+      console.log('filtered quantity', q)
+      setSelectedShgs(item.products)
+      setProductQuatities(q)
+    }
     if(props.modifyOrder) console.log("already selected items",item.products)
   }, [item, props.modifyOrder]);
 

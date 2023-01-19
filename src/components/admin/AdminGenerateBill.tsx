@@ -349,10 +349,15 @@ const AdminGenerateBill = () => {
       if (generateby === '' || reportType === '' || !user || !user.token)
         return;
       if (!value) return;
-      let d = 1;
+      let d = 0;
+      let dvalue=''
+      let dvalue2=''
       if (reportType === 'month') d = value.month() + 1;
       if (reportType === 'year') d = value.year();
-      if (reportType === 'date') d = value.day() + 1;
+      if (reportType === 'date'){
+          dvalue=value.format('DD/MM/YYYY')
+          dvalue2=value2?value2.format('DD/MM/YYYY'):dvalue
+      }
       switch (generateby) {
         case 'department':
           if (!selectedDepartment) return;
@@ -360,7 +365,8 @@ const AdminGenerateBill = () => {
             user.token,
             selectedDepartment._id,
             reportType,
-            d
+            d?d:dvalue,
+            dvalue2
           );
           setReport({ reportType: 'department', list: departmentorders });
           return;
@@ -370,7 +376,8 @@ const AdminGenerateBill = () => {
             user.token,
             selectedItem._id,
             reportType,
-            d
+            d?d:dvalue,
+            dvalue2?dvalue2:dvalue
           );
           setReport({ reportType: 'item', list: itemorders });
           return;
@@ -380,7 +387,8 @@ const AdminGenerateBill = () => {
             user.token,
             selectedShg._id,
             reportType,
-            d
+            d?d:dvalue,
+            dvalue2
           );
           setReport({ reportType: 'shg', list: shgorders });
           return;
@@ -394,6 +402,7 @@ const AdminGenerateBill = () => {
     selectedShg,
     reportType,
     value,
+    value2
   ]);
 
   const handleSelectLabels = (e:ChangeEvent<HTMLInputElement>,index:number) => {

@@ -30,6 +30,7 @@ import {
   LineElement,
   Title
 } from 'chart.js';
+import Loading from '../utility/Loading';
 const Icons = [
   <PersonRoundedIcon sx={{ fontSize: '4rem' }} />,
   <ShoppingBagRoundedIcon sx={{ fontSize: '4rem' }} />,
@@ -46,6 +47,9 @@ const AdminStatsPage = () => {
   const user = useAppSelector(selectUser);
   const keys = Object.keys(stats);
   const values = Object.values(stats);
+
+  console.log("keys: " ,keys);
+  console.log("values: " ,values);
 
   useEffect(() => {
 
@@ -78,6 +82,7 @@ const AdminStatsPage = () => {
     };
     getStats();
   }, [])
+  if(status !== 'success') return <Loading2 />;
 
   return (
     <Box sx={{ backgroundColor: 'rgb(232, 232, 232)' }}>
@@ -90,10 +95,10 @@ const AdminStatsPage = () => {
           return <Grid sx={{padding:'1rem'}} item xs={3}><StatCard key={i} title={s} count={values[i]} i={i} /></Grid>
         }) : <Loading2 />}
         <Grid item xs={4}>
-          <PieChart data={values.splice(values.length - 3, 3)} />
+          <PieChart orders={stats.orders} data={values.splice(values.length - 3, 2)} />
         </Grid>
         <Grid item xs={8}>
-          <LineChart />
+          <LineChart data={stats.top10sellingproducts} />
         </Grid>
       </Grid>
 
@@ -133,6 +138,7 @@ const StatCard = ({ title, count, i }: any) => {
 
 const PieChart = (props: any) => {
   ChartJS.register(ArcElement, Tooltip, Legend);
+  console.log("pie chart",props.data)
   const options = {
     responsive: true,
     maintainAspectRatio: true,
@@ -149,11 +155,11 @@ const PieChart = (props: any) => {
 
 
   const data = {
-    labels: ['Completed', 'Pending', 'Payment Pending'],
+    labels: ['Pending', 'Payment Pending','Completed' ],
     datasets: [
       {
         label: 'orders',
-        data: props.data,
+        data: [...props.data,props.orders-props.data[0]-props.data[1]],
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -183,6 +189,7 @@ const PieChart = (props: any) => {
 }
 
 const LineChart = (props: any) => {
+  if(!props.data) return <></>
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -202,7 +209,7 @@ const LineChart = (props: any) => {
     datasets: [
       {
         label: 'Items',
-        data: [10000, 9000, 8000, 7000, 6544, 4345, 2323, 1987, 1500, 1000],
+        data: props.data.map((e:any)=>e.itemprice),
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',

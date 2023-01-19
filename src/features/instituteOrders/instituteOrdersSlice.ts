@@ -7,6 +7,7 @@ import {
 } from '../../types/custom';
 
 import { backendUrl } from '../../config';
+import { handleOpenSnackbar } from '../utilityStates/utilitySlice';
 
 interface OrderState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -15,6 +16,7 @@ interface OrderState {
   orderdelivery: 'idle' | 'loading' | 'succeeded' | 'failed';
   approveBidStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
   updatedelivery: 'idle' | 'loading' | 'succeeded' | 'failed';
+  deleteorder: 'idle' | 'loading' | 'succeeded' | 'failed';
   savedOrder: PlaceOrderItem[];
   orders: InstituteOrder[] | [];
 }
@@ -26,6 +28,7 @@ const initialState: OrderState = {
   hasSavedOrder: 'idle',
   orderdelivery: 'idle',
   updatedelivery: 'idle',
+  deleteorder: 'idle',
   savedOrder: [],
   orders: [],
 };
@@ -114,9 +117,12 @@ export const lockOrderOfInstitute = createAsyncThunk(
   'instituteOrders/lockOrdersOfInstitute',
   async (
     { token, orderId }: { token: string | undefined; orderId: string },
-    { rejectWithValue }
+    { rejectWithValue,dispatch }
   ) => {
-    try {
+    try {dispatch(handleOpenSnackbar({
+      snackbarMessage:'locking order',
+      snackbarType:'info'
+    }))
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
       headers.append('Content-type', 'application/json');
@@ -133,10 +139,19 @@ export const lockOrderOfInstitute = createAsyncThunk(
         backendUrl+'order/lock',
         requestOptions
       );
+      if(response.status === 200) dispatch(handleOpenSnackbar({
+        snackbarMessage:'Order Locked Successfully',
+        snackbarType:'success'
+      }))
       if (response.status === 400) throw new Error('Error while locking order');
       const result = await response.json();
       return result;
     } catch (err) {
+      dispatch(handleOpenSnackbar({
+      snackbarMessage:'Failed to lock order',
+      snackbarType:'error'
+    }))
+      
       return rejectWithValue(err);
     }
   }
@@ -196,6 +211,52 @@ export const orderdelivery = createAsyncThunk(
       );
       if (response.status === 400) throw new Error('An error occurred');
     } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const deleteOrder = createAsyncThunk(
+  'instituteOrders/deleteOrder',
+  async (
+    {
+      token,
+      orderId,
+    }: { token: string | undefined; orderId: string; },
+    { rejectWithValue,dispatch }
+  ) => {
+    try {
+      dispatch(handleOpenSnackbar({
+        snackbarMessage:'Deleting order',
+        snackbarType:'info'
+      }))
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${token}`);
+      headers.append('Content-type', 'application/json');
+      headers.append('Access-Control-Allow-Origin', '*');
+      const raw = JSON.stringify({ orderid: orderId});
+      const requestOptions: RequestInit = {
+        method: 'DELETE',
+        headers,
+        redirect: 'follow',
+        body: raw,
+      };
+      const response = await fetch(
+        backendUrl+'order/deleteorder/',
+        requestOptions
+      );
+    if(response.status === 200) {dispatch(handleOpenSnackbar({
+      snackbarMessage:'Order deleted',
+      snackbarType:'success'
+    }))
+  dispatch(fetchAllOrdersOfInstitute(token));
+  }
+      if (response.status === 400) throw new Error('An error occurred');
+    } catch (err) {
+      dispatch(handleOpenSnackbar({
+        snackbarMessage:'Error occured while deleting order',
+        snackbarType:'error'
+      }))
       return rejectWithValue(err);
     }
   }
@@ -310,6 +371,15 @@ const instituteOrdersSlice = createSlice({
       })
       .addCase(updatedelivery.rejected, (state, action) => {
         state.updatedelivery = 'failed';
+      })
+      .addCase(deleteOrder.pending, (state, action) => {
+        state.deleteorder = 'loading';
+      })
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        state.deleteorder = 'succeeded';
+      })
+      .addCase(deleteOrder.rejected, (state, action) => {
+        state.deleteorder = 'failed';
       });
   },
 });

@@ -189,41 +189,44 @@ const PlaceOrder = () => {
   useEffect(()=>{
     if(!state) return;
     // grouping items 
-    // const newitems = new Map();
-    // state.items.forEach((item) => {
-    //   if(newitems.has(item.itemid)){
-    //      newitems.set(item.itemid,[...newitems.get(item.itemid),item])
-    //      console.log("has")
-    //   }
-    //   else{
-    //     console.log("dont")
-    //     newitems.set(item.itemid,[item])
-    //   }
-    // })
-    // const filteredItems:IItemList[] = [];
-    // newitems.forEach((item,key) =>{
-    //   filteredItems.push(
-    //     {
-    //       itemid: item.itemid,
-    //       itemname: item.itemname,
-    //       itemDescription: item.itemdescription,
-    //       itemType: item.itemtype,
-    //       itemunit: item.itemunit,
-    //       products:[
-    //         {
-    //           id:item.shgid._id,
-    //           name:item.shgid.name,
-    //           quantity:item.productid.quantity,
-    //           location: item.shgid.location,
-    //           productid: item.productid._id,
-    //           selectedquantity:item.itemquantity,
-    //           price:item.itemprice,
-    //         }
-    //       ]
-    //     }
-    //   )
-    // })
-    // console.log("filtered items",newitems);
+    const newitems = new Map();
+    state.items.forEach((item:any) => {
+      if(newitems.has(item.itemid)){
+         newitems.set(item.itemid,[...newitems.get(item.itemid),item])
+         console.log("has")
+      }
+      else{
+        console.log("dont")
+        newitems.set(item.itemid,[item])
+      }
+    })
+    const filteredItems:IItemList[] = [];
+    newitems.forEach((items,key) =>{
+      const products:any=[]
+      items.forEach((item:any) => {
+        products.push({
+          id:item.shgid._id,
+          name:item.shgid.name,
+          quantity:item.productid.quantity,
+          location: item.shgid.location,
+          productid: item.productid._id,
+          selectedquantity:item.itemquantity,
+          price:item.itemprice,
+        })})
+      const i:any = items[0];
+      filteredItems.push(
+        {
+          itemid: i.itemid,
+          itemname: i.itemname,
+          itemDescription: i.itemdescription,
+          itemType: i.itemtype,
+          itemunit: i.itemunit,
+          products:products
+        }
+      )
+    })
+    setAddedItemsList(filteredItems)
+    console.log("filtered items",filteredItems);
     console.log("state",state);
   },[state])
   // useEffect(() => {

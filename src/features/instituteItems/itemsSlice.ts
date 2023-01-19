@@ -183,7 +183,7 @@ export const submitOrder = createAsyncThunk(
         }))
       )
       .flat();
-    console.log(formattedAddedItemsList);
+    console.log("submit order",formattedAddedItemsList);
     try {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
@@ -201,7 +201,7 @@ export const submitOrder = createAsyncThunk(
         backendUrl + 'order/postorder',
         requestOptions
       );
-      console.log(response);
+      console.log(response,"submit order reponse");
       if (response.status === 400)
         throw new Error('An error occured while posting orders');
       const result = await response.json();
