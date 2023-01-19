@@ -226,7 +226,6 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
           </TableBody>
         </Table>
       </ContainerRowBox>
-      <Typography variant="body1">Total Price :{totalPrice}</Typography>
       <ContainerRowBox
         sx={{
           justifyContent: 'space-between',
@@ -301,6 +300,7 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
           </TableBody>
         </Table>
       </ContainerColumnBox>
+      <Typography variant="body1">Total Price :{totalPrice}</Typography>
       <ContainerRowBox>
         <ContainerColumnBox
           alignItems="flex-end"

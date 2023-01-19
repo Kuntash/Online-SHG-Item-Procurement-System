@@ -1,16 +1,7 @@
-import {
-  Typography,
-  Grid,
-  Box,
-  Container
-} from '@mui/material';
+import { Typography, Grid, Box, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import {
-  ContainerColumnBox,
-  ContainerRowBox,
-  StyledPaper,
-} from '../custom';
+import { ContainerColumnBox, ContainerRowBox, StyledPaper } from '../custom';
 import { selectUser } from '../../features/auth/authSlice';
 import { LabelSharp, ShoppingCart } from '@mui/icons-material';
 import { backendUrl } from '../../config';
@@ -23,12 +14,15 @@ import ShoppingBagRoundedIcon from '@mui/icons-material/ShoppingBagRounded';
 import CountUp from 'react-countup';
 import { Doughnut, Line } from 'react-chartjs-2';
 import {
-  Chart as ChartJS, ArcElement, Tooltip, Legend,
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
-  Title
+  Title,
 } from 'chart.js';
 import Loading from '../utility/Loading';
 const Icons = [
@@ -40,7 +34,6 @@ const Icons = [
   <AccessTimeRoundedIcon sx={{ fontSize: '4rem' }} />,
 ];
 
-
 const AdminStatsPage = () => {
   const [status, setStatus] = useState('');
   const [stats, setStats] = useState<any>({});
@@ -48,11 +41,10 @@ const AdminStatsPage = () => {
   const keys = Object.keys(stats);
   const values = Object.values(stats);
 
-  console.log("keys: " ,keys);
-  console.log("values: " ,values);
+  console.log('keys: ', keys);
+  console.log('values: ', values);
 
   useEffect(() => {
-
     const getStats = async () => {
       try {
         const headers = new Headers();
@@ -64,7 +56,7 @@ const AdminStatsPage = () => {
           headers,
           redirect: 'follow',
         };
-        setStatus('loading')
+        setStatus('loading');
         const response = await fetch(
           `${backendUrl}ceo/getstats`,
           requestOptions
@@ -75,70 +67,127 @@ const AdminStatsPage = () => {
         setStatus('success');
         //   const formatedResult = Object.entries(result)
         setStats(result);
-        console.log("stats", result);
+        console.log('stats', result);
       } catch (err) {
         console.log(err);
       }
     };
     getStats();
-  }, [])
-  if(status !== 'success') return <Loading2 />;
+  }, []);
+  if (status !== 'success') return <Loading2 />;
 
   return (
     <Box sx={{ backgroundColor: 'rgb(232, 232, 232)' }}>
-      <Typography variant='h2' sx={{ margin: '1rem' }}>Dashboard</Typography>
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} direction="row" justifyContent="center" alignItems="center" sx={{
-        padding:'0 2rem'
-      }}>
-        {status === 'success' ? keys.map((s, i) => {
-          if (i === 0 || i > keys.length - 4) return <></>
-          return <Grid sx={{padding:'1rem'}} item xs={3}><StatCard key={i} title={s} count={values[i]} i={i} /></Grid>
-        }) : <Loading2 />}
-        <Grid item xs={4}>
-          <PieChart orders={stats.orders} data={values.splice(values.length - 3, 2)} />
+      <Typography
+        variant="h2"
+        sx={{ margin: '1rem' }}
+      >
+        Dashboard
+      </Typography>
+      <Grid
+        container
+        rowSpacing={1}
+        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+        sx={{
+          padding: '0 2rem',
+        }}
+      >
+        {status === 'success' ? (
+          keys.map((s, i) => {
+            if (i === 0 || i > keys.length - 4) return <></>;
+            return (
+              <Grid
+                sx={{ padding: '1rem' }}
+                item
+                xs={3}
+              >
+                <StatCard
+                  key={i}
+                  title={s}
+                  count={values[i]}
+                  i={i}
+                />
+              </Grid>
+            );
+          })
+        ) : (
+          <Loading2 />
+        )}
+        <Grid
+          item
+          xs={4}
+        >
+          <PieChart
+            orders={stats.orders}
+            data={values.splice(values.length - 3, 2)}
+          />
         </Grid>
-        <Grid item xs={8}>
+        <Grid
+          item
+          xs={8}
+        >
           <LineChart data={stats.top10sellingproducts} />
         </Grid>
       </Grid>
-
-
     </Box>
-  )
-}
+  );
+};
 
 export default AdminStatsPage;
 
 const StatCard = ({ title, count, i }: any) => {
-  console.log(title, count, i)
+  console.log(title, count, i);
 
   return (
     <StyledPaper sx={{ aspectRatio: '1.5 / 1' }}>
       <ContainerColumnBox sx={{ justifyContent: 'center', height: '100%' }}>
-        <ContainerRowBox justifyContent='flex-end'><Typography variant='body1' sx={{ textTransform: 'capitalize' }}>{title}</Typography></ContainerRowBox>
-        <ContainerRowBox sx={{ height: "100%", alignItems: "center", justifyContent: 'space-between' }}>
-
-          <Typography color='primary' sx={{
-            boxShadow:
-              'rgb(145 158 171 / 20%) 0px 0px 2px 0px, rgb(145 158 171 / 12%) 0px 12px 24px -4px',
-          }}>{Icons[i - 1]}</Typography>
-          <Typography variant="h2" color='primary'>
+        <ContainerRowBox justifyContent="flex-end">
+          <Typography
+            variant="body1"
+            sx={{ textTransform: 'capitalize' }}
+          >
+            {title}
+          </Typography>
+        </ContainerRowBox>
+        <ContainerRowBox
+          sx={{
+            height: '100%',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography
+            color="primary"
+            sx={{
+              boxShadow:
+                'rgb(145 158 171 / 20%) 0px 0px 2px 0px, rgb(145 158 171 / 12%) 0px 12px 24px -4px',
+            }}
+          >
+            {Icons[i - 1]}
+          </Typography>
+          <Typography
+            variant="h2"
+            color="primary"
+          >
             <CountUp
               start={count / 3}
               end={count}
               duration={1}
-            /></Typography>
+            />
+          </Typography>
         </ContainerRowBox>
         <ContainerRowBox></ContainerRowBox>
       </ContainerColumnBox>
     </StyledPaper>
-
-  )
-}
+  );
+};
 
 const PieChart = (props: any) => {
   ChartJS.register(ArcElement, Tooltip, Legend);
-  console.log("pie chart",props.data)
+  console.log('pie chart', props.data);
   const options = {
     responsive: true,
     maintainAspectRatio: true,
@@ -153,13 +202,12 @@ const PieChart = (props: any) => {
     },
   };
 
-
   const data = {
-    labels: ['Pending', 'Payment Pending','Completed' ],
+    labels: ['Pending', 'Payment Pending', 'Completed'],
     datasets: [
       {
         label: 'orders',
-        data: [...props.data,props.orders-props.data[0]-props.data[1]],
+        data: [...props.data, props.orders - props.data[0] - props.data[1]],
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -183,13 +231,16 @@ const PieChart = (props: any) => {
 
   return (
     <StyledPaper>
-      <Doughnut options={options} data={data} />
+      <Doughnut
+        options={options}
+        data={data}
+      />
     </StyledPaper>
-  )
-}
+  );
+};
 
 const LineChart = (props: any) => {
-  if(!props.data) return <></>
+  if (!props.data) return <></>;
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -205,11 +256,11 @@ const LineChart = (props: any) => {
   }
 
   const data = {
-    labels: labels,
+    labels: props.data.map((e: any) => e.itemname),
     datasets: [
       {
         label: 'Items',
-        data: props.data.map((e:any)=>e.itemprice),
+        data: props.data.map((e: any) => e.itemprice),
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -244,11 +295,15 @@ const LineChart = (props: any) => {
     },
   };
   return (
-    <StyledPaper sx={{
-      marginTop:'1rem'
-    }}>
-      <Line data={data} options={options} />
-
+    <StyledPaper
+      sx={{
+        marginTop: '1rem',
+      }}
+    >
+      <Line
+        data={data}
+        options={options}
+      />
     </StyledPaper>
-  )
-}
+  );
+};

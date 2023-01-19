@@ -206,6 +206,7 @@ const InstituteOrderDeliveryDetails = ({ orderId }: { orderId: string }) => {
               <StyledTableHeadCell>Item quantity</StyledTableHeadCell>
               <StyledTableHeadCell>Item Price</StyledTableHeadCell>
               <StyledTableHeadCell>Received</StyledTableHeadCell>
+              <StyledTableHeadCell>Payment Received</StyledTableHeadCell>
             </TableRow>
           </StyledTableHead>
           {/* TODO: Convert this to a list when the data changes from the api side */}
@@ -224,20 +225,35 @@ const InstituteOrderDeliveryDetails = ({ orderId }: { orderId: string }) => {
                     {/* <StyledTableCell>{item.itemtype}</StyledTableCell> */}
                     <StyledTableCell>{item.itemquantity}</StyledTableCell>
                     <StyledTableCell>&#x20b9;{item.itemprice}</StyledTableCell>
-                    {item.delivered ? (
-                      <Checkbox
-                        checked={true}
-                        disabled={true}
-                      />
-                    ) : (
-                      <Checkbox
-                        checked={
-                          updatedOrders.find((i) => i._id === item._id) !==
-                          undefined
-                        }
-                        onChange={(e) => handleUpdateDeliveryStatus(e, item)}
-                      />
-                    )}
+                    <StyledTableCell>
+                      {item.delivered ? (
+                        <Checkbox
+                          checked={true}
+                          disabled={true}
+                        />
+                      ) : (
+                        <Checkbox
+                          checked={
+                            updatedOrders.find((i) => i._id === item._id) !==
+                            undefined
+                          }
+                          onChange={(e) => handleUpdateDeliveryStatus(e, item)}
+                        />
+                      )}
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      {item.paymentreceived ? (
+                        <Checkbox
+                          checked={true}
+                          disabled={true}
+                        />
+                      ) : (
+                        <Checkbox
+                          checked={false}
+                          disabled={true}
+                        />
+                      )}
+                    </StyledTableCell>
                   </StyledTableRow>
                 ))}
             {emptyRows > 0 && (
