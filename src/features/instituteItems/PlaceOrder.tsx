@@ -37,6 +37,7 @@ import {
   resetStatus,
   selectAllItems,
   submitOrder,
+  modifyOrder as ModifyOrder
 } from './itemsSlice';
 import { IItemList, ISHG } from './itemsSlice';
 
@@ -44,7 +45,7 @@ const PlaceOrder = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [autocompletekey,setAutoCompleteKey] = useState(0)
-  const { state } = useLocation() as RouterStateType;
+  const { state } = useLocation() as any;
   const userToken = useAppSelector((state: RootState) => state.auth.token);
   const savedOrders = useAppSelector(selectSavedOrder);
   let items = useAppSelector(selectAllItems);
@@ -86,7 +87,8 @@ const PlaceOrder = () => {
       );
       return;
     }
-    dispatch(submitOrder({ addedItemsList, token: userToken }));
+    if(state?._id) dispatch(ModifyOrder({addedItemsList,token:userToken,orderId:state._id}));
+    else dispatch(submitOrder({ addedItemsList, token: userToken }));
   };
 
   const handleAddItem = (item: IItemList) => {
@@ -183,6 +185,47 @@ const PlaceOrder = () => {
     return items.filter((item) => !hash.has(item._id));
   };
 
+
+  useEffect(()=>{
+    if(!state) return;
+    // grouping items 
+    // const newitems = new Map();
+    // state.items.forEach((item) => {
+    //   if(newitems.has(item.itemid)){
+    //      newitems.set(item.itemid,[...newitems.get(item.itemid),item])
+    //      console.log("has")
+    //   }
+    //   else{
+    //     console.log("dont")
+    //     newitems.set(item.itemid,[item])
+    //   }
+    // })
+    // const filteredItems:IItemList[] = [];
+    // newitems.forEach((item,key) =>{
+    //   filteredItems.push(
+    //     {
+    //       itemid: item.itemid,
+    //       itemname: item.itemname,
+    //       itemDescription: item.itemdescription,
+    //       itemType: item.itemtype,
+    //       itemunit: item.itemunit,
+    //       products:[
+    //         {
+    //           id:item.shgid._id,
+    //           name:item.shgid.name,
+    //           quantity:item.productid.quantity,
+    //           location: item.shgid.location,
+    //           productid: item.productid._id,
+    //           selectedquantity:item.itemquantity,
+    //           price:item.itemprice,
+    //         }
+    //       ]
+    //     }
+    //   )
+    // })
+    // console.log("filtered items",newitems);
+    console.log("state",state);
+  },[state])
   // useEffect(() => {
   //   if (hasSavedOrder === 'idle' && userToken)
   //     dispatch(getSavedOrder(userToken));

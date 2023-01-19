@@ -8,6 +8,7 @@ export interface ItemsState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   submitOrderStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
   saveOrderStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
+  modifyOrderStatus: 'idle'| 'succeeded' | 'failed'| 'loading';
   savedOrders?: IItemList[];
   items: Item[];
 }
@@ -26,8 +27,8 @@ export interface IItemList {
   itemname: string;
   itemid: string;
   itemunit?: string;
-  totalquantity: number;
-  totalPrices: number;
+  totalquantity?: number;
+  totalPrices?: number;
   itemType: string;
   itemDescription: string;
   products: ISHG[];
@@ -37,6 +38,7 @@ const initialState: ItemsState = {
   status: 'idle',
   submitOrderStatus: 'idle',
   saveOrderStatus: 'idle',
+  modifyOrderStatus: 'idle',
   items: [],
 };
 
@@ -66,52 +68,52 @@ export const fetchAllItems = createAsyncThunk(
   }
 );
 
-export const modifyOrder = createAsyncThunk(
-  'items/modifyOrder',
-  async (
-    {
-      addedItemsList,
-      token,
-      orderId,
-    }: {
-      addedItemsList: PlaceOrderItem[];
-      token: string | undefined;
-      orderId: string;
-    },
-    { rejectWithValue }
-  ) => {
-    const formattedAddedItemsList = addedItemsList.map((addedItem, index) => ({
-      itemid: addedItem._id,
-      itemquantity: addedItem.itemquantity,
-      itemname: addedItem.itemname,
-    }));
-    try {
-      const headers = new Headers();
-      headers.append('Authorization', `Bearer ${token}`);
-      headers.append('Content-type', 'application/json');
-      headers.append('Access-Control-Allow-Origin', '*');
-      const raw = JSON.stringify(formattedAddedItemsList);
-      const requestOptions: RequestInit = {
-        method: 'PUT',
-        headers,
-        redirect: 'follow',
-        body: raw,
-      };
+// export const modifyOrder = createAsyncThunk(
+//   'items/modifyOrder',
+//   async (
+//     {
+//       addedItemsList,
+//       token,
+//       orderId,
+//     }: {
+//       addedItemsList: PlaceOrderItem[];
+//       token: string | undefined;
+//       orderId: string;
+//     },
+//     { rejectWithValue }
+//   ) => {
+//     const formattedAddedItemsList = addedItemsList.map((addedItem, index) => ({
+//       itemid: addedItem._id,
+//       itemquantity: addedItem.itemquantity,
+//       itemname: addedItem.itemname,
+//     }));
+//     try {
+//       const headers = new Headers();
+//       headers.append('Authorization', `Bearer ${token}`);
+//       headers.append('Content-type', 'application/json');
+//       headers.append('Access-Control-Allow-Origin', '*');
+//       const raw = JSON.stringify(formattedAddedItemsList);
+//       const requestOptions: RequestInit = {
+//         method: 'PUT',
+//         headers,
+//         redirect: 'follow',
+//         body: raw,
+//       };
 
-      const response = await fetch(
-        `${backendUrl}order/modifyorder/${orderId}`,
-        requestOptions
-      );
-      if (response.status === 400)
-        throw new Error('An error occured while posting orders');
-      const result = await response.json();
-      console.log(result);
-      return result;
-    } catch (err) {
-      return rejectWithValue(err);
-    }
-  }
-);
+//       const response = await fetch(
+//         `${backendUrl}order/modifyorder/${orderId}`,
+//         requestOptions
+//       );
+//       if (response.status === 400)
+//         throw new Error('An error occured while posting orders');
+//       const result = await response.json();
+//       console.log(result);
+//       return result;
+//     } catch (err) {
+//       return rejectWithValue(err);
+//     }
+//   }
+// );
 export const saveOrder = createAsyncThunk(
   'items/saveOrder',
   async (
@@ -212,6 +214,59 @@ export const submitOrder = createAsyncThunk(
   }
 );
 
+export const modifyOrder = createAsyncThunk(
+  'items/modifyOrder',
+  async (
+    {
+      addedItemsList,
+      token,
+      orderId
+    }: {
+      addedItemsList: IItemList[];
+      token: string | undefined;
+      orderId: string;
+    },
+    { rejectWithValue }
+  ) => {
+    const formattedAddedItemsList = addedItemsList
+      .map((addedItem, index) =>
+        addedItem.products.map((product) => ({
+          productid: product.productid,
+          itemquantity: product.selectedquantity,
+        }))
+      )
+      .flat();
+    console.log(formattedAddedItemsList);
+    try {
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${token}`);
+      headers.append('Content-type', 'application/json');
+      headers.append('Access-Control-Allow-Origin', '*');
+      const raw = JSON.stringify({orderid:orderId,items: formattedAddedItemsList});
+      const requestOptions: RequestInit = {
+        method: 'PUT',
+        headers,
+        redirect: 'follow',
+        body: raw,
+      };
+
+      const response = await fetch(
+        backendUrl + 'order/modifyorder',
+        requestOptions
+      );
+      console.log(response);
+      if (response.status === 400)
+        throw new Error('An error occured while posting orders');
+      const result = await response.json();
+      console.log("modify order result",result);
+      return result;
+    } catch (err) {
+      console.log('hi', err);
+      rejectWithValue(err);
+    }
+  }
+);
+
 const itemsSlice = createSlice({
   name: 'items',
   initialState,
@@ -219,6 +274,7 @@ const itemsSlice = createSlice({
     resetStatus(state: ItemsState) {
       state.saveOrderStatus = 'idle';
       state.submitOrderStatus = 'idle';
+      state.modifyOrderStatus = 'idle';
     },
   },
 

@@ -74,6 +74,21 @@ const labels:Ilabel[] = [
     label:'Total Quantity',
     key:'itemstotalquantity',
     selected:true
+  },
+  {
+    label:'Department',
+    key:'department',
+    selected:true
+  },
+  {
+    label:'Institute Contact',
+    key:'institutecontact',
+    selected:true
+  },
+  {
+  label:'Institute Location',
+  key:'instutelocation',
+  selected:true
   }
 ]
 
@@ -167,7 +182,8 @@ const getDepartmentReport = async (
   userToken: string,
   id: string,
   type: string,
-  value: number
+  value: number | string,
+  value2?: number | string
 ) => {
   try {
     const headers = getHeaders(userToken);
@@ -175,6 +191,7 @@ const getDepartmentReport = async (
       departmentid: id,
       reporttype: type,
       value: value,
+      value2: value2
     };
     console.log(JSON.stringify(raw));
     const requestOptions: RequestInit = {
@@ -200,7 +217,8 @@ const getShgReport = async (
   userToken: string,
   id: string,
   type: string,
-  value: number
+  value: number | string,
+  value2?: number | string
 ) => {
   try {
     const headers = getHeaders(userToken);
@@ -208,6 +226,7 @@ const getShgReport = async (
       shgid: id,
       reporttype: type,
       value: value,
+      value2: value2
     };
     console.log(JSON.stringify(raw));
     const requestOptions: RequestInit = {
@@ -233,7 +252,8 @@ const getItemReport = async (
   userToken: string,
   id: string,
   type: string,
-  value: number
+  value: number | string,
+  value2?: number | string
 ) => {
   try {
     const headers = getHeaders(userToken);
@@ -241,6 +261,7 @@ const getItemReport = async (
       itemid: id,
       reporttype: type,
       value: value,
+      value2: value2,
     };
     console.log(JSON.stringify(raw));
     const requestOptions: RequestInit = {
@@ -281,6 +302,7 @@ const AdminGenerateBill = () => {
   const [shgList, setShgList] = useState<IShgData[]>([]);
   const [reportType, setReportType] = useState('');
   const [value, setValue] = React.useState<Dayjs | null>(dayjs());
+  const [value2,setValue2] = React.useState<Dayjs | null>(dayjs());
   const [selectedDepartment, setSelectedDepartment] =
     useState<IDepartmentData | null>(null);
   const [selectedItem, setSelectedItem] = useState<IItemData | null>(null);
@@ -586,7 +608,7 @@ const AdminGenerateBill = () => {
     if (reportType === 'month') {
       view.push('month');
     }
-    if (reportType == 'date') {
+    if (reportType === 'date') {
       view.push('year');
       view.push('month');
       view.push('day');
@@ -595,7 +617,7 @@ const AdminGenerateBill = () => {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           views={view as CalendarPickerView[]}
-          label={reportType.toUpperCase() + ' Only'}
+          label={reportType === 'date'?'From': (reportType.toUpperCase() + ' Only')}
           value={value}
           onChange={(newValue) => {
             setValue(newValue);
@@ -607,6 +629,23 @@ const AdminGenerateBill = () => {
             />
           )}
         />
+        {reportType === 'date'?<>
+        <DatePicker
+          views={view as CalendarPickerView[]}
+          label="To"
+          value={value2}
+          onChange={(newValue) => {
+            setValue2(newValue);
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              helperText={null}
+            />
+          )}
+        />
+        </>
+        :<></>}
       </LocalizationProvider>
     );
   };

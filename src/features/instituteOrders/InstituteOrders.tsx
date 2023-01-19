@@ -34,6 +34,7 @@ import { InstituteOrder } from '../../types/custom';
 import Loading2 from '../../components/utility/Loading2';
 import { StyledTextField } from '../../components/custom';
 import SearchIcon from '@mui/icons-material/Search';
+import { useNavigate } from 'react-router';
 export interface FormattedOrdersType extends InstituteOrder {
   backgroundColor?: string;
   color?: string;
@@ -47,6 +48,7 @@ const InstituteOrders = () => {
   const [formattedOrders, setFormattedOrders] = useState<any>([]);
   const [filteredOrders, setFilteredOrders] = useState<any>([]);
   const [search, setsearch] = useState<any>([]);
+  const navigate  = useNavigate()
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 5;
   const emptyRows =
@@ -134,7 +136,7 @@ const InstituteOrders = () => {
 
   const handleOrderModify = (e:React.MouseEvent<SVGSVGElement, MouseEvent>,order:any) => {
     e.stopPropagation();
-    console.log("click")
+    navigate('../place-order',{state:order})
   }
   if (ordersStatus === 'loading') return <Loading2 />;
   return (

@@ -86,11 +86,11 @@ const AdminStatsPage = () => {
         padding:'0 2rem'
       }}>
         {status === 'success' ? keys.map((s, i) => {
-          if (i === 0 || i > keys.length - 3) return <></>
+          if (i === 0 || i > keys.length - 4) return <></>
           return <Grid sx={{padding:'1rem'}} item xs={3}><StatCard key={i} title={s} count={values[i]} i={i} /></Grid>
         }) : <Loading2 />}
         <Grid item xs={4}>
-          <PieChart data={values.splice(values.length - 3, 2)} />
+          <PieChart data={values.splice(values.length - 3, 3)} />
         </Grid>
         <Grid item xs={8}>
           <LineChart />
@@ -152,8 +152,8 @@ const PieChart = (props: any) => {
     labels: ['Completed', 'Pending', 'Payment Pending'],
     datasets: [
       {
-        label: '# of Votes',
-        data: [10, 34, 10],
+        label: 'orders',
+        data: props.data,
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
