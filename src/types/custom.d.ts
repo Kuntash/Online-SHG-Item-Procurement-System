@@ -73,6 +73,7 @@ export interface InstituteOrderItem {
   itemtype: 'loose' | 'packed';
   itemdescription: string;
   accepted: boolean;
+  paymentreceived: boolean;
   delivered: boolean;
   _id: string;
   shgid: {
