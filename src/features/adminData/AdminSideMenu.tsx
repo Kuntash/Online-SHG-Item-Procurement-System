@@ -95,8 +95,9 @@ const CeoSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
   };
 
   useEffect(() => {
+    handleRedirect('home');
     // Focus on View all orders on initial render
-    (listRef.current?.children[1] as HTMLElement)?.focus();
+    (listRef.current?.children[0] as HTMLElement)?.focus();
   }, []);
   const renderListItem: RenderListItem = (title, route, icon, index) => {
     return (

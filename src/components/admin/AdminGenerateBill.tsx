@@ -7,13 +7,13 @@ import {
   Radio,
   RadioGroup,
   RadioGroupState,
+  Grid,
   TableBody,
   TableRow,
   TextField,
   Typography,
 } from '@mui/material';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { Grid } from 'swiper';
 import { useAppSelector } from '../../app/hooks';
 import { backendUrl } from '../../config';
 import { selectUser } from '../../features/auth/authSlice';
@@ -594,7 +594,7 @@ const AdminGenerateBill = () => {
   }, [shgList]);
 
   const getSelectedComponent = () => {
-    if (status === 'loading') return;
+    if (status === 'loading') <Loading2 />
     switch (generateby) {
       case 'department':
         return (
@@ -732,6 +732,9 @@ const AdminGenerateBill = () => {
           }}
           renderInput={(params) => (
             <TextField
+              sx={{
+                marginTop:'0.7rem'
+              }}
               {...params}
               helperText={null}
             />
@@ -756,14 +759,12 @@ const AdminGenerateBill = () => {
         <StyledContainer sx={{ display: 'flex', alignItems: 'flex-start' }}>
           <Typography variant="h2">Generate Report</Typography>
         </StyledContainer>
-        <StyledContainer sx={{ opacity: status === 'loading' ? 1 : 0 }}>
-          <Loading2 />
-        </StyledContainer>
       </StyledContainer>
-      <ContainerRowBox
-        justifyContent="start"
-        gap="1rem"
+      <Grid container
+        justifyContent="flex-start"
+        alignItems='center'
       >
+        <Grid item xs={2} >
         <FormControl>
           <FormLabel id="generateby">Generate by</FormLabel>
           <RadioGroup
@@ -782,7 +783,10 @@ const AdminGenerateBill = () => {
             ))}
           </RadioGroup>
         </FormControl>
-        <div>{getSelectedComponent()}</div>
+        </Grid>
+        <Grid item xs={2}>{status === 'loading'?<Loading2 />:getSelectedComponent()}</Grid>
+        
+        <Grid item xs={2}>
         {selectedDepartment || selectedItem || selectedShg ? (
           <FormControl>
             <FormLabel id="generateby">Report Type</FormLabel>
@@ -805,8 +809,11 @@ const AdminGenerateBill = () => {
         ) : (
           <></>
         )}
+        </Grid>
+        <Grid item xs={2}>
         {getValueComponent()}
-      </ContainerRowBox>
+        </Grid>
+      </Grid>
       {getReport()}
     </StyledPaper>
   );
