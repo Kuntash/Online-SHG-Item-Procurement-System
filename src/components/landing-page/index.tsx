@@ -11,12 +11,14 @@ import Announcement from '../../assets/announcement.svg';
 import { parseISO, format } from 'date-fns';
 import {
   ContainerColumnBox,
+  ContainerRowBox,
   StyledButton,
   StyledPaper,
   StyledTextField,
 } from '../../components/custom';
 import { height } from '@mui/system';
 import CountUp from 'react-countup';
+import { FacebookRounded, YouTube } from '@mui/icons-material';
 const LandingPage = () => {
   const [announcement, setAnnouncement] = useState<any>([]);
   const [top, setTop] = useState<number>(0);
@@ -287,8 +289,8 @@ const LandingPage = () => {
             }}
           >
             <CountUp
-              start={80000}
-              end={150000}
+              start={9000}
+              end={11378}
             />
           </h1>
           <p
@@ -319,8 +321,7 @@ const LandingPage = () => {
             }}
           >
             <CountUp
-              start={20000}
-              end={87000}
+              end={301}
             />
           </h1>
           <p
@@ -536,6 +537,7 @@ const LandingPage = () => {
         sx={{
           backgroundColor: '#000000',
           color: 'white',
+          padding:'2rem 0.8rem'
         }}
       >
         {/* <Box
@@ -550,7 +552,7 @@ const LandingPage = () => {
             About Us / Contact Us / Feedback
           </Typography>
         </Box> */}
-        <Box
+        {/* <Box
           sx={{
             padding: '30px',
             textAlign: 'center',
@@ -561,7 +563,28 @@ const LandingPage = () => {
             <br />
             Copyright 2023
           </Typography>
-        </Box>
+        </Box> */}
+              <ContainerRowBox margin='1rem 0' gap='0.8rem' justifyContent='center' alignItems='center'>
+                <Typography variant='caption'>
+                  Social Links : 
+                </Typography>
+                <a rel="noreferrer" href='https://www.facebook.com/profile.php?id=100020707523276&mibextid=ZbWKwL' target='_blank'>
+                  <ContainerRowBox color='white' gap='0.5rem' alignItems='center'><FacebookRounded />
+                  <Typography variant='caption'>Facebook</Typography>
+                  </ContainerRowBox>
+                </a>
+                <Typography variant='body1' color='gray' gap='0.5rem' alignItems='center'>|</Typography>
+                <a rel="noreferrer" href='https://www.youtube.com/channel/UCUtQkljJyarbCkVeg9E79UA' target='_blank'>
+                  <ContainerRowBox color='white' gap='0.5rem' alignItems='center'>
+                   <YouTube />
+                  <Typography variant='caption'>Youtube</Typography>
+                  </ContainerRowBox>
+                </a>
+              </ContainerRowBox>
+              <ContainerColumnBox alignItems='center' justifyContent='center' height='100%'>
+                <Typography variant='caption'>Developed By National Institute Of Technology, Raipur</Typography>
+                <Typography variant='caption'>Copyright 2023</Typography>
+              </ContainerColumnBox>
       </Box>
     </>
   );
