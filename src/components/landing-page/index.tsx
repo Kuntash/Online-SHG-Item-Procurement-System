@@ -354,7 +354,7 @@ const LandingPage = () => {
               fontSize: '36px',
             }}
           >
-            <CountUp end={790} />+
+            <CountUp end={130} />+
           </h1>
           <p
             style={{
@@ -363,7 +363,7 @@ const LandingPage = () => {
               marginBottom: '2rem',
             }}
           >
-            TOTAL ORDERS PLACED
+            TOTAL NUMBER OF PRODUCER GROUPS
           </p>
         </div>
         <div
@@ -383,7 +383,7 @@ const LandingPage = () => {
               fontSize: '36px',
             }}
           >
-            <CountUp end={29} />%
+            <CountUp end={515} />%
           </h1>
           <p
             style={{
@@ -392,7 +392,36 @@ const LandingPage = () => {
               marginBottom: '2rem',
             }}
           >
-            NET ORDER INCREASE
+            NUMBER OF VILLAGE ORGANIZATION
+          </p>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <h1
+            style={{
+              fontWeight: '500',
+              color: '#265A1F',
+              marginTop: '2rem',
+              marginBottom: '1rem',
+              fontSize: '36px',
+            }}
+          >
+            <CountUp end={10} />
+          </h1>
+          <p
+            style={{
+              fontWeight: '500',
+              color: 'rgb(71, 186, 71)',
+              marginBottom: '2rem',
+            }}
+          >
+            NUMBER OF RIPA
           </p>
         </div>
       </div>
