@@ -184,9 +184,7 @@ export default function FormDialog(props: {
               </TableRow>
             </StyledTableHead>
             <TableBody>
-              {shgs
-                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((shg, index) => (
+              {shgs?.map((shg, index) => (
                   <StyledTableRow
                     key={index}
                     sx={{ fontSize: '0.875rem' }}
