@@ -140,10 +140,11 @@ const InstituteOrderDeliveryDetails = ({ orderId }: { orderId: string }) => {
   // Create a Style Component
   if (orderDetail === undefined) return <h1> Order Not found</h1>;
   return (
-    <StyledPaper ref={orderDetailRef}>
+    <StyledPaper sx={{
+      width:'min-content',
+    }} ref={orderDetailRef}>
       <ContainerRowBox
         sx={{
-          columnGap: '5px',
           justifyContent: 'space-between',
           marginBottom: '1rem',
         }}

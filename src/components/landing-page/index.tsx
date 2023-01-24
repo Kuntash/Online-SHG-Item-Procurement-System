@@ -134,6 +134,9 @@ const LandingPage = () => {
           </Grid> */}
         </Grid>
       </Container>
+      <Box sx={{ margin: '0.5rem 1.5rem'}}>
+        <Typography variant='h4' color='primary' textAlign='center' width='100%'>हर महिला समूह में, हर समूह आर्थिक गतिविधि में।</Typography>
+      </Box>
       <Box sx={{ margin: '0.5rem 1.5rem', border: '1px solid #9994' }}>
         <Swiper
           // style={{ padding: '1rem' }}

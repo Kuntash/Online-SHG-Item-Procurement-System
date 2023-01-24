@@ -36,8 +36,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { format, parseISO } from 'date-fns';
 import { CalendarPickerView } from '@mui/x-date-pickers/CalendarPicker';
-import Loading from '../utility/Loading';
-import { flexbox } from '@mui/system';
 import Loading2 from '../utility/Loading2';
 import Checkbox from '@mui/material/Checkbox';
 import { CSVLink } from "react-csv";
@@ -569,13 +567,6 @@ const AdminGenerateBill = () => {
                   </StyledTableCell>}
                   return <StyledTableCell>{order[label.key]}</StyledTableCell>
                   })}
-                  {/* <StyledTableCell sx={{ marginTop: '1rem' }}>
-                    {format(parseISO(order.createdAt), 'do MMM yyyy')}
-                  </StyledTableCell>
-                  <StyledTableCell>{order.institutename}</StyledTableCell>
-                  <StyledTableCell>{order.status}</StyledTableCell>
-                  <StyledTableCell>{order.itemstotalprice}</StyledTableCell>
-                  <StyledTableCell>{order.itemstotalquantity}</StyledTableCell> */}
                 </StyledTableRow>
               </>
             ))}

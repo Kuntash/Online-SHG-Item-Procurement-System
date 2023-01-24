@@ -12,7 +12,7 @@ import ShowChartRoundedIcon from '@mui/icons-material/ShowChartRounded';
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import ShoppingBagRoundedIcon from '@mui/icons-material/ShoppingBagRounded';
 import CountUp from 'react-countup';
-import { Doughnut, Line } from 'react-chartjs-2';
+import { Doughnut, Line, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -77,7 +77,7 @@ const AdminStatsPage = () => {
   if (status !== 'success') return <Loading2 />;
 
   return (
-    <Box sx={{ backgroundColor: 'rgb(232, 232, 232)' }}>
+    <Box sx={{ backgroundColor: 'rgb(232, 232, 232)',height:'100%' }}>
       <Typography
         variant="h2"
         sx={{ margin: '1rem' }}
@@ -86,7 +86,7 @@ const AdminStatsPage = () => {
       </Typography>
       <Grid
         container
-        rowSpacing={1}
+        rowSpacing={2}
         columnSpacing={{ xs: 1, sm: 2, md: 3 }}
         direction="row"
         justifyContent="center"
@@ -100,7 +100,6 @@ const AdminStatsPage = () => {
             if (i === 0 || i > keys.length - 4) return <></>;
             return (
               <Grid
-                sx={{ padding: '1rem' }}
                 item
                 xs={3}
               >
@@ -128,6 +127,7 @@ const AdminStatsPage = () => {
         <Grid
           item
           xs={8}
+          
         >
           <LineChart data={stats.top10sellingproducts} />
         </Grid>
@@ -142,8 +142,8 @@ const StatCard = ({ title, count, i }: any) => {
   console.log(title, count, i);
 
   return (
-    <StyledPaper sx={{ aspectRatio: '1.5 / 1' }}>
-      <ContainerColumnBox sx={{ justifyContent: 'center', height: '100%' }}>
+    <StyledPaper>
+      <ContainerColumnBox sx={{ justifyContent: 'center'}}>
         <ContainerRowBox justifyContent="flex-end">
           <Typography
             variant="body1"
@@ -209,20 +209,20 @@ const PieChart = (props: any) => {
         label: 'orders',
         data: [...props.data, props.orders - props.data[0] - props.data[1]],
         backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
-        ],
-        borderColor: [
           'rgba(255, 99, 132, 1)',
           'rgba(54, 162, 235, 1)',
           'rgba(255, 206, 86, 1)',
           'rgba(75, 192, 192, 1)',
           'rgba(153, 102, 255, 1)',
           'rgba(255, 159, 64, 1)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
         ],
         borderWidth: 1,
       },
@@ -231,7 +231,7 @@ const PieChart = (props: any) => {
 
   return (
     <StyledPaper>
-      <Doughnut
+      <Pie
         options={options}
         data={data}
       />
@@ -295,11 +295,7 @@ const LineChart = (props: any) => {
     },
   };
   return (
-    <StyledPaper
-      sx={{
-        marginTop: '1rem',
-      }}
-    >
+    <StyledPaper>
       <Line
         data={data}
         options={options}
