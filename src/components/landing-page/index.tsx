@@ -354,7 +354,7 @@ const LandingPage = () => {
               fontSize: '36px',
             }}
           >
-            <CountUp end={130} />+
+            <CountUp end={130} />
           </h1>
           <p
             style={{
@@ -383,7 +383,7 @@ const LandingPage = () => {
               fontSize: '36px',
             }}
           >
-            <CountUp end={515} />%
+            <CountUp end={515} />
           </h1>
           <p
             style={{
