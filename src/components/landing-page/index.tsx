@@ -19,6 +19,7 @@ import {
 import { height } from '@mui/system';
 import CountUp from 'react-countup';
 import { FacebookRounded, YouTube } from '@mui/icons-material';
+import bihralogo from '../../assets/bihralogo.jpg'
 const LandingPage = () => {
   const [announcement, setAnnouncement] = useState<any>([]);
   const [top, setTop] = useState<number>(0);
@@ -111,27 +112,9 @@ const LandingPage = () => {
               </Typography>
             </Box>
           </Grid>
-          {/* <Grid item>
-            <Button
-              onClick={focusLogin}
-              sx={{
-                borderRadius: '12px',
-                cursor: 'pointer',
-                padding: '10px 34px',
-                backgroundColor: '#47BA47',
-                textTransform: 'capitalize',
-                boxShadow: '1px 1px 5px rgba(0, 0, 0, 0.25)',
-                '&:hover': {
-                  backgroundColor: '#555',
-                  color: '#000',
-                },
-              }}
-            >
-              <Typography sx={{ color: '#fff', fontWeight: '700' }}>
-                Log in
-              </Typography>
-            </Button>
-          </Grid> */}
+          <Grid item>
+            <img src={bihralogo} width="80px" height="80px" alt="bihralogo" />
+          </Grid>
         </Grid>
       </Container>
       <Box sx={{ margin: '0.5rem 1.5rem'}}>
