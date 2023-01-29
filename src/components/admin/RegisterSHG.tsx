@@ -22,6 +22,8 @@ interface HelperTextType {
   contact: string;
   name: string;
   location: string;
+  block: string;
+  cluster: string;
 }
 const RegisterShg = () => {
   const [status, setStatus] = useState('');
@@ -31,10 +33,15 @@ const RegisterShg = () => {
   const [name, setName] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [contact, setContact] = useState<string>('');
+  const [block, setBlock] = useState<string>('');
+  const [cluster, setCluster] = useState<string>('');
+  const [clusteroptions, setClusteroptions] = useState<any>([]);
   const [helperTexts, setHelperTexts] = useState<HelperTextType>({
     name: '',
     location: '',
     contact: '',
+    block: '',
+    cluster: '',
   });
   const handleContact = (cont: string) => {
     const reg = /\d+$/;
@@ -131,8 +138,111 @@ const RegisterShg = () => {
         ...prev,
         contact: 'Contact length should be 10',
       }));
-    else register({ name, location, contact });
+    else if (!block)
+      setHelperTexts((prev) => ({ ...prev, zone: 'Zone is required' }));
+    else if (!cluster)
+      setHelperTexts((prev) => ({ ...prev, cluster: 'Cluster is required' }));
+    else register({ name, location, contact, block, cluster });
   };
+  const blockoptions: Array<any> = [
+    {
+      id: 1,
+      name: 'अभनपुर',
+    },
+    {
+      id: 2,
+      name: 'आरंग',
+    },
+    {
+      id: 3,
+      name: 'तिल्दा',
+    },
+    {
+      id: 4,
+      name: 'धरसींवा',
+    },
+  ];
+  const handleclusteroptions = (block: string) => {
+    if (block === 'अभनपुर') {
+      setClusteroptions([
+        {
+          id: 1,
+          name: 'उन्नति क्लस्टर संगठन पोंड',
+        },
+        {
+          id: 2,
+          name: 'आदर्श क्लस्टर संगठन मानिकचौरी',
+        },
+        {
+          id: 3,
+          name: 'चंचल क्लस्टर संगठन खोरपा',
+        },
+        {
+          id: 4,
+          name: 'प्रगति क्लस्टर संगठन केन्द्री',
+        },
+      ]);
+    } else if (block === 'आरंग') {
+      setClusteroptions([
+        {
+          id: 1,
+          name: 'संगम क्लस्टर संगठन रसनि',
+        },
+        {
+          id: 2,
+          name: 'आशा क्लस्टर संगठन चंदखुरी',
+        },
+        {
+          id: 3,
+          name: 'अमृत क्लस्टर संगठन गुल्लू',
+        },
+        {
+          id: 4,
+          name: 'ख़ुशी क्लस्टर संगठन भैंसा',
+        },
+      ]);
+    } else if (block === 'तिल्दा') {
+      setClusteroptions([
+        {
+          id: 1,
+          name: 'छग महतारी क्लस्टर संगठन बंगोली',
+        },
+        {
+          id: 2,
+          name: 'आराधना क्लस्टर संगठन कोटा',
+        },
+        {
+          id: 3,
+          name: 'नारि शक्ति क्लस्टर संगठन बेलदारसिवनी',
+        },
+        {
+          id: 4,
+          name: 'भूमि महिला क्लस्टर संगठन सांकरा',
+        },
+      ]);
+    } else if (block === 'धरसींवा') {
+      setClusteroptions([
+        {
+          id: 1,
+          name: 'लक्ष्य महिला क्लस्टर माना',
+        },
+        {
+          id: 2,
+          name: 'शक्ति क्लस्टर सगठन सिलयारी',
+        },
+        {
+          id: 3,
+          name: 'ज्ञानदीप क्लस्टर संगठन धरसींवा',
+        },
+        {
+          id: 4,
+          name: 'वीणा क्लस्टर संगठन मांढर',
+        },
+      ]);
+    }
+    setCluster('');
+  };
+
   return (
     <StyledPaper sx={{ width: '60%', margin: 'auto' }}>
       <ContainerColumnBox sx={{ rowGap: '1.5rem' }}>
@@ -178,6 +288,37 @@ const RegisterShg = () => {
             {zones.map((zone: any) => (
               <MenuItem value={zone.zonename}>
                 {zone.zonename.toUpperCase()}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl>
+          <InputLabel id="location-label">Block</InputLabel>
+          <Select
+            labelId="location-label"
+            value={block}
+            label="Location"
+            onChange={(e) => {
+              setBlock(e.target.value);
+              handleclusteroptions(e.target.value);
+            }}
+          >
+            {blockoptions.map((block: any) => (
+              <MenuItem value={block.name}>{block.name.toUpperCase()}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl>
+          <InputLabel id="location-label">Cluster</InputLabel>
+          <Select
+            labelId="location-label"
+            value={cluster}
+            label="Location"
+            onChange={(e) => setCluster(e.target.value)}
+          >
+            {clusteroptions.map((clusterd: any) => (
+              <MenuItem value={clusterd.name}>
+                {clusterd.name.toUpperCase()}
               </MenuItem>
             ))}
           </Select>

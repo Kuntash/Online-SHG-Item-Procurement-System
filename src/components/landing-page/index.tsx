@@ -19,7 +19,7 @@ import {
 import { height } from '@mui/system';
 import CountUp from 'react-countup';
 import { FacebookRounded, YouTube } from '@mui/icons-material';
-import bihralogo from '../../assets/bihralogo.jpg'
+import bihralogo from '../../assets/bihralogo.jpg';
 const LandingPage = () => {
   const [announcement, setAnnouncement] = useState<any>([]);
   const [top, setTop] = useState<number>(0);
@@ -113,12 +113,24 @@ const LandingPage = () => {
             </Box>
           </Grid>
           <Grid item>
-            <img src={bihralogo} width="80px" height="80px" alt="bihralogo" />
+            <img
+              src={bihralogo}
+              width="80px"
+              height="80px"
+              alt="bihralogo"
+            />
           </Grid>
         </Grid>
       </Container>
-      <Box sx={{ margin: '0.5rem 1.5rem'}}>
-        <Typography variant='h4' color='primary' textAlign='center' width='100%'>हर महिला समूह में, हर समूह आर्थिक गतिविधि में।</Typography>
+      <Box sx={{ margin: '0.5rem 1.5rem' }}>
+        <Typography
+          variant="h4"
+          color="primary"
+          textAlign="center"
+          width="100%"
+        >
+          हर महिला समूह में, हर समूह आर्थिक गतिविधि में।
+        </Typography>
       </Box>
       <Box sx={{ margin: '0.5rem 1.5rem', border: '1px solid #9994' }}>
         <Swiper
@@ -306,9 +318,7 @@ const LandingPage = () => {
               fontSize: '36px',
             }}
           >
-            <CountUp
-              end={301}
-            />
+            <CountUp end={301} />
           </h1>
           <p
             style={{
@@ -462,13 +472,12 @@ const LandingPage = () => {
             fontSize: '24px',
           }}
         >
-          A self-help group is a financial intermediary committee usually
-          composed of 12 to 25 local women between the ages of 18 and 50. Most
-          self-help groups are in India, though they can be found in other
-          countries, especially in South Asia and Southeast Asia. A SHG is
-          generally a group of people who work on daily wages who form a loose
-          grouping or union. Money is collected from those who are able to
-          donate and given to members in need.
+          छत्तीसगढ़ राज्य ग्रामीण आजीविका मिशन ‘‘बिहान’’ अंतर्गत रायपुर जिले के
+          सभी 476 ग्रामों में 11378 महिला स्व सहायता समूह का गठन कर 120697
+          परिवारों को जोड़ा गया है। CG SHG Mart वेब एप्लीकेशन एवं मोबाईल एप्प के
+          माध्यम से स्व सहायता समूहों, उत्पादक समूह, गौठान, रीपा आदि के उत्पादों
+          को शासकीय विभागों में सप्लाई करने के लिए यह प्लेटफाॅर्म तैयार किया गया
+          है।
         </Typography>
       </Box>
       <Box
@@ -552,7 +561,7 @@ const LandingPage = () => {
         sx={{
           backgroundColor: '#000000',
           color: 'white',
-          padding:'2rem 0.8rem'
+          padding: '2rem 0.8rem',
         }}
       >
         {/* <Box
@@ -579,27 +588,60 @@ const LandingPage = () => {
             Copyright 2023
           </Typography>
         </Box> */}
-              <ContainerRowBox margin='1rem 0' gap='0.8rem' justifyContent='center' alignItems='center'>
-                <Typography variant='caption'>
-                  Social Links : 
-                </Typography>
-                <a rel="noreferrer" href='https://www.facebook.com/profile.php?id=100020707523276&mibextid=ZbWKwL' target='_blank'>
-                  <ContainerRowBox color='white' gap='0.5rem' alignItems='center'><FacebookRounded />
-                  <Typography variant='caption'>Facebook</Typography>
-                  </ContainerRowBox>
-                </a>
-                <Typography variant='body1' color='gray' gap='0.5rem' alignItems='center'>|</Typography>
-                <a rel="noreferrer" href='https://www.youtube.com/channel/UCUtQkljJyarbCkVeg9E79UA' target='_blank'>
-                  <ContainerRowBox color='white' gap='0.5rem' alignItems='center'>
-                   <YouTube />
-                  <Typography variant='caption'>Youtube</Typography>
-                  </ContainerRowBox>
-                </a>
-              </ContainerRowBox>
-              <ContainerColumnBox alignItems='center' justifyContent='center' height='100%'>
-                <Typography variant='caption'>Developed By National Institute Of Technology, Raipur</Typography>
-                <Typography variant='caption'>Copyright 2023</Typography>
-              </ContainerColumnBox>
+        <ContainerRowBox
+          margin="1rem 0"
+          gap="0.8rem"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Typography variant="caption">Social Links :</Typography>
+          <a
+            rel="noreferrer"
+            href="https://www.facebook.com/profile.php?id=100020707523276&mibextid=ZbWKwL"
+            target="_blank"
+          >
+            <ContainerRowBox
+              color="white"
+              gap="0.5rem"
+              alignItems="center"
+            >
+              <FacebookRounded />
+              <Typography variant="caption">Facebook</Typography>
+            </ContainerRowBox>
+          </a>
+          <Typography
+            variant="body1"
+            color="gray"
+            gap="0.5rem"
+            alignItems="center"
+          >
+            |
+          </Typography>
+          <a
+            rel="noreferrer"
+            href="https://www.youtube.com/channel/UCUtQkljJyarbCkVeg9E79UA"
+            target="_blank"
+          >
+            <ContainerRowBox
+              color="white"
+              gap="0.5rem"
+              alignItems="center"
+            >
+              <YouTube />
+              <Typography variant="caption">Youtube</Typography>
+            </ContainerRowBox>
+          </a>
+        </ContainerRowBox>
+        <ContainerColumnBox
+          alignItems="center"
+          justifyContent="center"
+          height="100%"
+        >
+          <Typography variant="caption">
+            Developed By National Institute Of Technology, Raipur
+          </Typography>
+          <Typography variant="caption">Copyright 2023</Typography>
+        </ContainerColumnBox>
       </Box>
     </>
   );
