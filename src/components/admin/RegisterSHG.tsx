@@ -34,6 +34,7 @@ const RegisterShg = () => {
   const [location, setLocation] = useState<string>('');
   const [contact, setContact] = useState<string>('');
   const [block, setBlock] = useState<string>('');
+  const [blocks, setBlocks] = useState<any>([]);
   const [cluster, setCluster] = useState<string>('');
   const [clusteroptions, setClusteroptions] = useState<any>([]);
   const [helperTexts, setHelperTexts] = useState<HelperTextType>({
@@ -64,6 +65,21 @@ const RegisterShg = () => {
       console.log(err);
     }
   };
+  const getallblocks = async () => {
+    const requestOptions: RequestInit = {
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      'https://backend.cgshgmart.com/ceo/getblocks',
+      requestOptions
+    );
+    const result = await response.json();
+    setBlocks(result.blocks);
+  };
   useEffect(() => {
     if (status === 'loading')
       dispatch(
@@ -90,6 +106,7 @@ const RegisterShg = () => {
       dispatch(fetchAllShgData(user.token));
     }
     getallzones();
+    getallblocks();
   }, [status, dispatch]);
 
   const register = async (data: HelperTextType) => {
@@ -119,6 +136,8 @@ const RegisterShg = () => {
       setName('');
       setLocation('');
       setContact('');
+      setBlock('');
+      setCluster('');
       return;
     } catch (error: any) {
       setStatus('failed');
@@ -144,102 +163,11 @@ const RegisterShg = () => {
       setHelperTexts((prev) => ({ ...prev, cluster: 'Cluster is required' }));
     else register({ name, location, contact, block, cluster });
   };
-  const blockoptions: Array<any> = [
-    {
-      id: 1,
-      name: 'अभनपुर',
-    },
-    {
-      id: 2,
-      name: 'आरंग',
-    },
-    {
-      id: 3,
-      name: 'तिल्दा',
-    },
-    {
-      id: 4,
-      name: 'धरसींवा',
-    },
-  ];
   const handleclusteroptions = (block: string) => {
-    if (block === 'अभनपुर') {
-      setClusteroptions([
-        {
-          id: 1,
-          name: 'उन्नति क्लस्टर संगठन पोंड',
-        },
-        {
-          id: 2,
-          name: 'आदर्श क्लस्टर संगठन मानिकचौरी',
-        },
-        {
-          id: 3,
-          name: 'चंचल क्लस्टर संगठन खोरपा',
-        },
-        {
-          id: 4,
-          name: 'प्रगति क्लस्टर संगठन केन्द्री',
-        },
-      ]);
-    } else if (block === 'आरंग') {
-      setClusteroptions([
-        {
-          id: 1,
-          name: 'संगम क्लस्टर संगठन रसनि',
-        },
-        {
-          id: 2,
-          name: 'आशा क्लस्टर संगठन चंदखुरी',
-        },
-        {
-          id: 3,
-          name: 'अमृत क्लस्टर संगठन गुल्लू',
-        },
-        {
-          id: 4,
-          name: 'ख़ुशी क्लस्टर संगठन भैंसा',
-        },
-      ]);
-    } else if (block === 'तिल्दा') {
-      setClusteroptions([
-        {
-          id: 1,
-          name: 'छग महतारी क्लस्टर संगठन बंगोली',
-        },
-        {
-          id: 2,
-          name: 'आराधना क्लस्टर संगठन कोटा',
-        },
-        {
-          id: 3,
-          name: 'नारि शक्ति क्लस्टर संगठन बेलदारसिवनी',
-        },
-        {
-          id: 4,
-          name: 'भूमि महिला क्लस्टर संगठन सांकरा',
-        },
-      ]);
-    } else if (block === 'धरसींवा') {
-      setClusteroptions([
-        {
-          id: 1,
-          name: 'लक्ष्य महिला क्लस्टर माना',
-        },
-        {
-          id: 2,
-          name: 'शक्ति क्लस्टर सगठन सिलयारी',
-        },
-        {
-          id: 3,
-          name: 'ज्ञानदीप क्लस्टर संगठन धरसींवा',
-        },
-        {
-          id: 4,
-          name: 'वीणा क्लस्टर संगठन मांढर',
-        },
-      ]);
-    }
+    const options = blocks.filter(
+      (blockdata: any) => blockdata.blockname === block
+    );
+    setClusteroptions(options[0].clusters);
     setCluster('');
   };
 
@@ -303,8 +231,8 @@ const RegisterShg = () => {
               handleclusteroptions(e.target.value);
             }}
           >
-            {blockoptions.map((block: any) => (
-              <MenuItem value={block.name}>{block.name.toUpperCase()}</MenuItem>
+            {blocks.map((block: any) => (
+              <MenuItem value={block.blockname}>{block.blockname}</MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -317,8 +245,8 @@ const RegisterShg = () => {
             onChange={(e) => setCluster(e.target.value)}
           >
             {clusteroptions.map((clusterd: any) => (
-              <MenuItem value={clusterd.name}>
-                {clusterd.name.toUpperCase()}
+              <MenuItem value={clusterd.clustername}>
+                {clusterd.clustername}
               </MenuItem>
             ))}
           </Select>

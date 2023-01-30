@@ -24,12 +24,12 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 interface HelperTextType {
   username: string;
   password: string;
-  department: string;
   contact: string;
   name: string;
   location: string;
+  blockid: string;
 }
-const AddAdmin = () => {
+const AddBlockAdmin = () => {
   const [status, setStatus] = useState('');
   const [zones, setZones] = useState<string[]>([]);
   const [departments, setDepartments] = useState<string[]>([]);
@@ -39,8 +39,9 @@ const AddAdmin = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [location, setLocation] = useState<string>('');
-  const [department, setDepartment] = useState<string>('');
   const [contact, setContact] = useState<string>('');
+  const [block, setBlock] = useState<string>('');
+  const [blocks, setBlocks] = useState<any>([]);
   const [showPassword2, setShowPassword2] = useState<boolean>(false);
   const [helperTexts, setHelperTexts] = useState<HelperTextType>({
     name: '',
@@ -48,7 +49,7 @@ const AddAdmin = () => {
     contact: '',
     username: '',
     password: '',
-    department: '',
+    blockid: '',
   });
   const handleContact = (cont: string) => {
     const reg = /\d+$/;
@@ -71,25 +72,20 @@ const AddAdmin = () => {
       console.log(err);
     }
   };
-  const getalldepartments = async () => {
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    headers.append('authorization', `Bearer ${user.token}`);
+  const getallblocks = async () => {
     const requestOptions: RequestInit = {
-      headers: headers,
       method: 'GET',
       redirect: 'follow',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     };
-    try {
-      const response = await fetch(
-        'https://backend.cgshgmart.com/ceo/getdepartments',
-        requestOptions
-      );
-      const result = await response.json();
-      setDepartments(result.departmentdata);
-    } catch (err) {
-      console.log(err);
-    }
+    const response = await fetch(
+      'https://backend.cgshgmart.com/ceo/getblocks',
+      requestOptions
+    );
+    const result = await response.json();
+    setBlocks(result.blocks);
   };
   useEffect(() => {
     if (status === 'loading')
@@ -117,7 +113,7 @@ const AddAdmin = () => {
       dispatch(fetchAllShgData(user.token));
     }
     getallzones();
-    getalldepartments();
+    getallblocks();
   }, [status, dispatch]);
 
   const register = async (data: HelperTextType) => {
@@ -136,7 +132,7 @@ const AddAdmin = () => {
     setStatus('loading');
     try {
       const response = await fetch(
-        'https://backend.cgshgmart.com/institute/register',
+        'https://backend.cgshgmart.com/ceo/addblockadmin',
         requestOptions
       );
       if (response.status !== 200) {
@@ -149,7 +145,7 @@ const AddAdmin = () => {
       setContact('');
       setUsername('');
       setPassword('');
-      setDepartment('');
+      setBlock('');
       return;
     } catch (error: any) {
       setStatus('failed');
@@ -178,10 +174,10 @@ const AddAdmin = () => {
       setHelperTexts((prev) => ({ ...prev, username: 'Username is required' }));
     else if (!password)
       setHelperTexts((prev) => ({ ...prev, password: 'Password is required' }));
-    else if (!department)
+    else if (!block)
       dispatch(
         handleOpenSnackbar({
-          snackbarMessage: 'Select Department',
+          snackbarMessage: 'Select Block',
           snackbarType: 'error',
         })
       );
@@ -192,7 +188,7 @@ const AddAdmin = () => {
         contact,
         username,
         password,
-        department,
+        blockid: block,
       };
       register(data);
     }
@@ -204,7 +200,7 @@ const AddAdmin = () => {
     <StyledPaper sx={{ width: '60%', margin: 'auto' }}>
       <ContainerColumnBox sx={{ rowGap: '1.5rem' }}>
         <ContainerColumnBox sx={{ rowGap: '1rem', marginBottom: '1rem' }}>
-          <Typography variant="h2">Register New Admin</Typography>
+          <Typography variant="h2">Register New Block Admin</Typography>
           <Typography
             variant="body1"
             color="secondary.dark"
@@ -291,22 +287,16 @@ const AddAdmin = () => {
           </Select>
         </FormControl>
         <FormControl>
-          <InputLabel id="department-label">Department</InputLabel>
+          <InputLabel id="block-label">Block</InputLabel>
           <Select
-            labelId="department-label"
-            value={department}
-            label="Department"
-            onChange={(e) => setDepartment(e.target.value)}
+            labelId="block-label"
+            value={block}
+            label="Block"
+            onChange={(e) => setBlock(e.target.value)}
           >
-            {departments
-              ?.filter(
-                (department: any) => department.department !== 'zoneadmin'
-              )
-              ?.map((department: any) => (
-                <MenuItem value={department.department}>
-                  {department.department.toUpperCase()}
-                </MenuItem>
-              ))}
+            {blocks?.map((block: any) => (
+              <MenuItem value={block._id}>{block.blockname}</MenuItem>
+            ))}
           </Select>
         </FormControl>
         <StyledButton
@@ -328,4 +318,4 @@ const AddAdmin = () => {
   );
 };
 
-export default AddAdmin;
+export default AddBlockAdmin;

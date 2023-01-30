@@ -18,6 +18,7 @@ import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import AddIcon from '@mui/icons-material/Add';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 interface CeoSideMenuType {
   title: string;
   route: string;
@@ -83,6 +84,11 @@ const CeoSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
       title: 'Add Admin',
       route: 'addadmin',
       icon: <SupervisorAccountIcon />,
+    },
+    {
+      title: 'Add Block Admin',
+      route: 'addblockadmin',
+      icon: <AccountBalanceIcon />,
     },
     // {
     //   title: 'View all institutes',

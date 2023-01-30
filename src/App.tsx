@@ -27,6 +27,7 @@ import AdminGenerateBill from './components/admin/AdminGenerateBill';
 import AdminStatsPage from './components/admin/AdminStatsPage';
 import AddItem from './components/admin/AddItem';
 import AddAdmin from './components/admin/AddAdmin';
+import AddBlockAdmin from './components/admin/AddBlockAdmin';
 const { useNavigate } = require('react-router-dom');
 function App() {
   const [checkcookie, setCheckcookie] = useState(true);
@@ -139,6 +140,10 @@ function App() {
             <Route
               path="addadmin"
               element={<AddAdmin />}
+            />
+            <Route
+              path="addblockadmin"
+              element={<AddBlockAdmin />}
             />
             <Route path="view-all-shgs">
               <Route
