@@ -223,7 +223,18 @@ const AddBlockAdmin = () => {
           <StyledTextField
             helperText={helperTexts.username}
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.includes(' ')) {
+                dispatch(
+                  handleOpenSnackbar({
+                    snackbarMessage: 'Spaces are not allowed in username',
+                    snackbarType: 'error',
+                  })
+                );
+                return;
+              }
+              setUsername(e.target.value);
+            }}
             sx={{ borderRadius: '0.8rem', width: '100%' }}
             label="Username"
             variant="outlined"
