@@ -19,7 +19,7 @@ interface AdminOrderDetailsTableProps {
   department: string;
   instituteLocation: string;
   orderStatus: string;
-  items:AdminOrderProduct[]
+  items: AdminOrderProduct[];
 }
 const AdminOrderDetailsTable = ({
   orderId,
@@ -28,11 +28,11 @@ const AdminOrderDetailsTable = ({
   department,
   instituteLocation,
   orderStatus,
-  items
+  items,
 }: AdminOrderDetailsTableProps) => {
-  const getTotalPrice = ()=>{
-    return items.reduce((i,item)=>(i+item.itemprice*item.itemquantity),0);
-  }
+  const getTotalPrice = () => {
+    return items.reduce((i, item) => i + item.itemprice * item.itemquantity, 0);
+  };
   return (
     <StyledPaper>
       <Typography
@@ -67,9 +67,7 @@ const AdminOrderDetailsTable = ({
             <StyledTableCell sx={{ marginTop: '1rem' }}>
               {department}
             </StyledTableCell>
-            <StyledTableCell>
-              {getTotalPrice()} Rs
-            </StyledTableCell>
+            <StyledTableCell>{getTotalPrice()} Rs</StyledTableCell>
             <StyledTableCell sx={{ marginTop: '1rem' }}>
               {instituteLocation.toUpperCase()}
             </StyledTableCell>

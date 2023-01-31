@@ -300,7 +300,7 @@ const AddAdmin = () => {
           >
             {departments
               ?.filter(
-                (department: any) => department.department !== 'zoneadmin'
+                (department: any) => department.department !== 'blockadmin'
               )
               ?.map((department: any) => (
                 <MenuItem value={department.department}>

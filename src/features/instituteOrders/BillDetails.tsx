@@ -49,7 +49,7 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
   ) => {
     setPage(newPage);
   };
-
+  console.log(shgData);
   return (
     <StyledPaper
       sx={{ fontSize: '1rem' }}
@@ -301,6 +301,20 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
         </Table>
       </ContainerColumnBox>
       <Typography variant="body1">Total Price :{totalPrice}</Typography>
+      {shgData?.items[0]?.paymentreceived && (
+        <>
+          <Typography variant="body1">
+            Received Amount :{shgData?.items[0]?.paymentamount}
+          </Typography>
+          <Typography variant="body1">
+            Received Date :
+            {format(
+              parseISO(shgData?.items[0]?.paymentreceiveddate),
+              'do MMM yyyy'
+            )}
+          </Typography>
+        </>
+      )}
       <ContainerRowBox>
         <ContainerColumnBox
           alignItems="flex-end"

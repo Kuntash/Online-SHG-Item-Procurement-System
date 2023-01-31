@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
-import {backendUrl} from '../../config.js'
+import { backendUrl } from '../../config.js';
 
 interface User {
   status: 'idle' | 'loading' | 'succeeded' | 'failed' | 'nocookie';
-  userType?: 'ceo' | 'department' | 'institute';
+  userType?: 'ceo' | 'department' | 'institute' | 'blockadmin';
   email: string | undefined;
   token: string | undefined;
   error?: string | undefined;
@@ -16,7 +16,7 @@ const initialState: User = {
   email: undefined,
   token: undefined,
   error: '',
-  department:''
+  department: '',
 };
 interface LoginParameter {
   email: string;
@@ -28,10 +28,7 @@ export const login = createAsyncThunk(
   async ({ email, password }: LoginParameter, { rejectWithValue }) => {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    headers.append(
-      'Access-Control-Allow-Origin',
-      backendUrl+''
-    );
+    headers.append('Access-Control-Allow-Origin', backendUrl + '');
     const raw = JSON.stringify({
       email,
       password,
@@ -47,14 +44,19 @@ export const login = createAsyncThunk(
 
     try {
       const response = await fetch(
-        backendUrl+'department/login',
+        backendUrl + 'department/login',
         requestOptions
       );
       const result = await response.json();
-      console.log("user",result)
+      console.log('user', result);
       if (response.status === 400)
         return rejectWithValue({ message: result.error });
-      return { email: email, userType: result.usertype, token: result.token,department:result.department };
+      return {
+        email: email,
+        userType: result.usertype,
+        token: result.token,
+        department: result.department,
+      };
     } catch (error: any) {
       console.log(error);
       return rejectWithValue(error?.message);
@@ -65,13 +67,10 @@ export const getjwt = createAsyncThunk(
   'auth/getjwt',
   async (token: string | undefined, { rejectWithValue }) => {
     try {
-      const response = await fetch(
-        backendUrl+'department/jwt',
-        {
-          method: 'GET',
-          credentials: 'include',
-        }
-      );
+      const response = await fetch(backendUrl + 'department/jwt', {
+        method: 'GET',
+        credentials: 'include',
+      });
       if (response.status === 400) throw Error('An error occurred');
       const result = await response.json();
       return result;
@@ -88,10 +87,7 @@ export const authSlice = createSlice({
     logout: (state) => {
       const headers = new Headers();
       headers.append('Content-Type', 'application/json');
-      headers.append(
-        'Access-Control-Allow-Origin',
-        backendUrl+''
-      );
+      headers.append('Access-Control-Allow-Origin', backendUrl + '');
 
       const requestOptions: RequestInit = {
         method: 'GET',
@@ -99,10 +95,7 @@ export const authSlice = createSlice({
         redirect: 'follow',
         credentials: 'include',
       };
-      fetch(
-        backendUrl+'department/logout',
-        requestOptions
-      );
+      fetch(backendUrl + 'department/logout', requestOptions);
       state.status = 'nocookie';
       state.email = undefined;
       state.token = undefined;

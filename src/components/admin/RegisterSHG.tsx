@@ -24,6 +24,7 @@ interface HelperTextType {
   location: string;
   block: string;
   cluster: string;
+  village: string;
 }
 const RegisterShg = () => {
   const [status, setStatus] = useState('');
@@ -36,6 +37,7 @@ const RegisterShg = () => {
   const [block, setBlock] = useState<string>('');
   const [blocks, setBlocks] = useState<any>([]);
   const [cluster, setCluster] = useState<string>('');
+  const [village, setVillage] = useState<string>('');
   const [clusteroptions, setClusteroptions] = useState<any>([]);
   const [helperTexts, setHelperTexts] = useState<HelperTextType>({
     name: '',
@@ -43,6 +45,7 @@ const RegisterShg = () => {
     contact: '',
     block: '',
     cluster: '',
+    village: '',
   });
   const handleContact = (cont: string) => {
     const reg = /\d+$/;
@@ -108,7 +111,7 @@ const RegisterShg = () => {
     getallzones();
     getallblocks();
   }, [status, dispatch]);
-
+  console.log(user);
   const register = async (data: HelperTextType) => {
     if (status === 'loading') return;
     const headers = new Headers();
@@ -138,6 +141,7 @@ const RegisterShg = () => {
       setContact('');
       setBlock('');
       setCluster('');
+      setVillage('');
       return;
     } catch (error: any) {
       setStatus('failed');
@@ -161,7 +165,12 @@ const RegisterShg = () => {
       setHelperTexts((prev) => ({ ...prev, zone: 'Zone is required' }));
     else if (!cluster)
       setHelperTexts((prev) => ({ ...prev, cluster: 'Cluster is required' }));
-    else register({ name, location, contact, block, cluster });
+    else if (!village)
+      setHelperTexts((prev) => ({
+        ...prev,
+        village: 'Village/Town Name is required',
+      }));
+    else register({ name, location, contact, block, cluster, village });
   };
   const handleclusteroptions = (block: string) => {
     const options = blocks.filter(
@@ -250,6 +259,17 @@ const RegisterShg = () => {
               </MenuItem>
             ))}
           </Select>
+        </FormControl>
+        <FormControl>
+          <StyledTextField
+            helperText={helperTexts.village}
+            value={village}
+            onChange={(e) => setVillage(e.target.value)}
+            sx={{ borderRadius: '0.8rem', width: '100%' }}
+            label="Village/Town Name"
+            variant="outlined"
+            type="text"
+          />
         </FormControl>
         <StyledButton
           startIcon={

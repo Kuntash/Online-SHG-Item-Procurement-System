@@ -47,6 +47,8 @@ export interface IShgData {
     paymentinitiated: boolean;
     paymentinititedate: string;
     paymentreceived: boolean;
+    paymentamount: number;
+    paymentreceiveddate: string;
   }[];
 }
 

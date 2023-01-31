@@ -193,6 +193,12 @@ function App() {
             {/* SHG List */}
             {/* Shg Individual profile */}
           </Route>
+          <Route path="zoneadmin">
+            <Route
+              path="home"
+              element={<h1>Home</h1>}
+            />
+          </Route>
         </Route>
       </Routes>
       <Snackbar

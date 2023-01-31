@@ -38,7 +38,7 @@ import { format, parseISO } from 'date-fns';
 import { CalendarPickerView } from '@mui/x-date-pickers/CalendarPicker';
 import Loading2 from '../utility/Loading2';
 import Checkbox from '@mui/material/Checkbox';
-import { CSVLink } from "react-csv";
+import { CSVLink } from 'react-csv';
 import TableViewIcon from '@mui/icons-material/TableView';
 import { useReactToPrint } from 'react-to-print';
 import { PrintRounded } from '@mui/icons-material';
@@ -46,59 +46,58 @@ import { PrintRounded } from '@mui/icons-material';
 const generateByList = ['department', 'shg', 'item'];
 const reportTypeList = ['month', 'year', 'date'];
 
-interface Ilabel{
+interface Ilabel {
   label: string;
   key: string;
   selected: boolean;
 }
-const labels:Ilabel[] = [
+const labels: Ilabel[] = [
   {
-    label:'Order Id',
+    label: 'Order Id',
     key: 'orderid',
     selected: true,
   },
   {
-    label:'Order Date',
-    key:'createdAt',
-    selected:true
+    label: 'Order Date',
+    key: 'createdAt',
+    selected: true,
   },
   {
-    label:'Institute Name',
-    key:'institutename',
-    selected:true
+    label: 'Institute Name',
+    key: 'institutename',
+    selected: true,
   },
   {
-    label:'Status',
-    key:'status',
-    selected:true
+    label: 'Status',
+    key: 'status',
+    selected: true,
   },
   {
-    label:'Total Price',
-    key:'itemstotalprice',
-    selected:true
+    label: 'Total Price',
+    key: 'itemstotalprice',
+    selected: true,
   },
   {
-    label:'Total Quantity',
-    key:'itemstotalquantity',
-    selected:true
+    label: 'Total Quantity',
+    key: 'itemstotalquantity',
+    selected: true,
   },
   {
-    label:'Department',
-    key:'department',
-    selected:true
+    label: 'Department',
+    key: 'department',
+    selected: true,
   },
   {
-    label:'Institute Contact',
-    key:'institutecontact',
-    selected:true
+    label: 'Institute Contact',
+    key: 'institutecontact',
+    selected: true,
   },
   {
-  label:'Institute Location',
-  key:'institutelocation',
-  selected:true
+    label: 'Institute Location',
+    key: 'institutelocation',
+    selected: true,
   },
-
-]
+];
 
 const getHeaders = (userToken: string) => {
   const headers = new Headers();
@@ -199,7 +198,7 @@ const getDepartmentReport = async (
       departmentid: id,
       reporttype: type,
       value: value,
-      value2: value2
+      value2: value2,
     };
     console.log(JSON.stringify(raw));
     const requestOptions: RequestInit = {
@@ -234,7 +233,7 @@ const getShgReport = async (
       shgid: id,
       reporttype: type,
       value: value,
-      value2: value2
+      value2: value2,
     };
     console.log(JSON.stringify(raw));
     const requestOptions: RequestInit = {
@@ -302,7 +301,7 @@ interface AdminOrderDetailsTableProps {
   orderStatus: string;
 }
 const AdminGenerateBill = () => {
-  const [tablelabels,settablelabels] = useState<Ilabel[]>(labels)
+  const [tablelabels, settablelabels] = useState<Ilabel[]>(labels);
   const [generateby, setGenerateBy] = useState('');
   const [status, setStatus] = useState('');
   const [departmentList, setDepartmentList] = useState<IDepartmentData[]>([]);
@@ -310,36 +309,42 @@ const AdminGenerateBill = () => {
   const [shgList, setShgList] = useState<IShgData[]>([]);
   const [reportType, setReportType] = useState('');
   const [value, setValue] = React.useState<Dayjs | null>(dayjs());
-  const [value2,setValue2] = React.useState<Dayjs | null>(dayjs());
+  const [value2, setValue2] = React.useState<Dayjs | null>(dayjs());
   const [selectedDepartment, setSelectedDepartment] =
     useState<IDepartmentData | null>(null);
   const [selectedItem, setSelectedItem] = useState<IItemData | null>(null);
   const [selectedShg, setSelectedShg] = useState<IShgData | null>(null);
   const [report, setReport] = useState<any>([]);
   const user = useAppSelector(selectUser);
-  const [sortBy,setSortBy] = useState<string>('');
-  const [sortOrder,setSortOrder] = useState<string>('ascending');
+  const [sortBy, setSortBy] = useState<string>('');
+  const [sortOrder, setSortOrder] = useState<string>('ascending');
   const tableRef = useRef<HTMLTableElement>(null);
-  
+
   const handlePrint = useReactToPrint({
     content: () => tableRef.current,
   });
 
-
-
-  const handleSortBy = (e:ChangeEvent<HTMLInputElement>)=>{
-    const sortedlist = report.list.sort((r1:any,r2:any)=>(r1[e.target.value]-r2[e.target.value]))
-    setReport({reportType:report.reportType,list:sortedlist});
+  const handleSortBy = (e: ChangeEvent<HTMLInputElement>) => {
+    const sortedlist = report.list.sort(
+      (r1: any, r2: any) => r1[e.target.value] - r2[e.target.value]
+    );
+    setReport({ reportType: report.reportType, list: sortedlist });
     setSortBy(e.target.value);
-  }
+  };
 
-  useEffect(()=>{
-    if(sortBy === '') return;
-    let sortedlist:any = []
-    if(sortOrder === 'descending') sortedlist = report.list.sort((r1:any,r2:any)=>(r2[sortBy]-r1[sortBy]))
-    else sortedlist = report.list.sort((r1:any,r2:any)=>(r1[sortBy]-r2[sortBy]))
-    setReport({reportType:report.reportType,list:sortedlist});
-    },[sortBy,sortOrder])
+  useEffect(() => {
+    if (sortBy === '') return;
+    let sortedlist: any = [];
+    if (sortOrder === 'descending')
+      sortedlist = report.list.sort(
+        (r1: any, r2: any) => r2[sortBy] - r1[sortBy]
+      );
+    else
+      sortedlist = report.list.sort(
+        (r1: any, r2: any) => r1[sortBy] - r2[sortBy]
+      );
+    setReport({ reportType: report.reportType, list: sortedlist });
+  }, [sortBy, sortOrder]);
 
   const handleRadioChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (status === 'loading') return;
@@ -349,7 +354,11 @@ const AdminGenerateBill = () => {
     switch (e.target.value) {
       case 'department':
         const dlist = await getDepartmentList(user.token || '');
-        setDepartmentList(dlist);
+        setDepartmentList(
+          dlist.filter(
+            (d) => d.department !== 'blockadmin' && d.department !== 'nrlm'
+          )
+        );
         setStatus('');
         break;
       case 'shg':
@@ -367,7 +376,6 @@ const AdminGenerateBill = () => {
     }
   };
 
-
   const handleReportTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (status === 'loading') return;
     setReportType(e.target.value);
@@ -375,18 +383,18 @@ const AdminGenerateBill = () => {
   useEffect(() => {
     console.log(generateby, selectedDepartment, reportType);
     const fetchdata = async () => {
-      setSortBy('')
+      setSortBy('');
       if (generateby === '' || reportType === '' || !user || !user.token)
         return;
       if (!value) return;
       let d = 0;
-      let dvalue=''
-      let dvalue2=''
+      let dvalue = '';
+      let dvalue2 = '';
       if (reportType === 'month') d = value.month() + 1;
       if (reportType === 'year') d = value.year();
-      if (reportType === 'date'){
-          dvalue=value.format('DD/MM/YYYY')
-          dvalue2=value2?value2.format('DD/MM/YYYY'):dvalue
+      if (reportType === 'date') {
+        dvalue = value.format('DD/MM/YYYY');
+        dvalue2 = value2 ? value2.format('DD/MM/YYYY') : dvalue;
       }
       switch (generateby) {
         case 'department':
@@ -395,7 +403,7 @@ const AdminGenerateBill = () => {
             user.token,
             selectedDepartment._id,
             reportType,
-            d?d:dvalue,
+            d ? d : dvalue,
             dvalue2
           );
           setReport({ reportType: 'department', list: departmentorders });
@@ -406,8 +414,8 @@ const AdminGenerateBill = () => {
             user.token,
             selectedItem._id,
             reportType,
-            d?d:dvalue,
-            dvalue2?dvalue2:dvalue
+            d ? d : dvalue,
+            dvalue2 ? dvalue2 : dvalue
           );
           setReport({ reportType: 'item', list: itemorders });
           return;
@@ -417,7 +425,7 @@ const AdminGenerateBill = () => {
             user.token,
             selectedShg._id,
             reportType,
-            d?d:dvalue,
+            d ? d : dvalue,
             dvalue2
           );
           setReport({ reportType: 'shg', list: shgorders });
@@ -432,146 +440,196 @@ const AdminGenerateBill = () => {
     selectedShg,
     reportType,
     value,
-    value2
+    value2,
   ]);
 
-  const handleSelectLabels = (e:ChangeEvent<HTMLInputElement>,index:number) => {
+  const handleSelectLabels = (
+    e: ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
     const check = e.target.checked;
-    const newlabels = [...tablelabels]
-    if(!check) tablelabels[index].selected = false;
+    const newlabels = [...tablelabels];
+    if (!check) tablelabels[index].selected = false;
     else tablelabels[index].selected = true;
     settablelabels(newlabels);
   };
-
-  
-
 
   const getReport = () => {
     if (!report || !report.list) return;
     return (
       <>
-      <ContainerRowBox justifyContent='flex-end' gap='1rem' alignItems='center'>
-        <Typography variant='body1' fontWeight='bold'>Download:</Typography>
+        <ContainerRowBox
+          justifyContent="flex-end"
+          gap="1rem"
+          alignItems="center"
+        >
+          <Typography
+            variant="body1"
+            fontWeight="bold"
+          >
+            Download:
+          </Typography>
           <IconButton
             color="success"
             onClick={handlePrint}
           >
             <PrintRounded color="success" />
           </IconButton>
-          <CSVLink data={
-              JSON.parse(JSON.stringify(report.list)).map((e:any)=>{e.institutecontact='=""'+e.institutecontact+'""'; return e})
-          } headers={tablelabels.filter(lable=>lable.selected)} filename={"report - "+format(new Date(), 'do MMM yyyy')}> <TableViewIcon color='primary' /> </CSVLink>
-          </ContainerRowBox>
-        <ContainerRowBox gap='1rem'>
-          <Typography variant='body1' fontWeight='bold' >SORT BY: </Typography>
+          <CSVLink
+            data={JSON.parse(JSON.stringify(report.list)).map((e: any) => {
+              e.institutecontact = '=""' + e.institutecontact + '""';
+              return e;
+            })}
+            headers={tablelabels.filter((lable) => lable.selected)}
+            filename={'report - ' + format(new Date(), 'do MMM yyyy')}
+          >
+            {' '}
+            <TableViewIcon color="primary" />{' '}
+          </CSVLink>
+        </ContainerRowBox>
+        <ContainerRowBox gap="1rem">
+          <Typography
+            variant="body1"
+            fontWeight="bold"
+          >
+            SORT BY:{' '}
+          </Typography>
           <FormControl>
-          <RadioGroup
-            aria-labelledby="sort_by"
-            name="sort_by"
-            value={sortBy}
-            onChange={(e)=>handleSortBy(e)}
-            sx={{
-              display:'flex',
-              flexFlow:'row',
-            }}
+            <RadioGroup
+              aria-labelledby="sort_by"
+              name="sort_by"
+              value={sortBy}
+              onChange={(e) => handleSortBy(e)}
+              sx={{
+                display: 'flex',
+                flexFlow: 'row',
+              }}
             >
-          <FormControlLabel value="itemstotalprice" control={<Radio />} label="Total Price" />
-          <FormControlLabel value="itemstotalquantity" control={<Radio />} label="Total Quantity" />
-          </RadioGroup>
+              <FormControlLabel
+                value="itemstotalprice"
+                control={<Radio />}
+                label="Total Price"
+              />
+              <FormControlLabel
+                value="itemstotalquantity"
+                control={<Radio />}
+                label="Total Quantity"
+              />
+            </RadioGroup>
           </FormControl>
-          <Typography variant='body1' fontWeight='bold' >Sort Order : </Typography>
+          <Typography
+            variant="body1"
+            fontWeight="bold"
+          >
+            Sort Order :{' '}
+          </Typography>
           <FormControl>
-          <RadioGroup
-            aria-labelledby="sort_order"
-            name="sort_order"
-            value={sortOrder}
-            onChange={(e)=>(setSortOrder(e.target.value))}
-            sx={{
-              display:'flex',
-              flexFlow:'row',
-            }}
+            <RadioGroup
+              aria-labelledby="sort_order"
+              name="sort_order"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              sx={{
+                display: 'flex',
+                flexFlow: 'row',
+              }}
             >
-          <FormControlLabel value="ascending" control={<Radio />} label="A-Z" />
-          <FormControlLabel value="descending" control={<Radio />} label="Z-A" />
-          </RadioGroup>
+              <FormControlLabel
+                value="ascending"
+                control={<Radio />}
+                label="A-Z"
+              />
+              <FormControlLabel
+                value="descending"
+                control={<Radio />}
+                label="Z-A"
+              />
+            </RadioGroup>
           </FormControl>
         </ContainerRowBox>
         <ContainerRowBox>
-        {tablelabels.map((label, index) =>
-        
-  <FormControlLabel control={<Checkbox
-      checked={label.selected}
-      onChange={(e)=>handleSelectLabels(e,index)}
-      inputProps={{ 'aria-label': label.label }}
-    />} label={label.label} />
-
-       )}
+          {tablelabels.map((label, index) => (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={label.selected}
+                  onChange={(e) => handleSelectLabels(e, index)}
+                  inputProps={{ 'aria-label': label.label }}
+                />
+              }
+              label={label.label}
+            />
+          ))}
         </ContainerRowBox>
         <ContainerColumnBox ref={tableRef}>
-        <ContainerRowBox gap="2rem">
-          <Typography
-            variant="body1"
-            fontWeight="bold"
-          >
-            Total Quantity:{' '}
-            {report.list.reduce(
-              (totalquantity: any, order: any) =>
-                totalquantity + order.itemstotalquantity,
-              0
-            )}{' '}
-          </Typography>
-          <Typography
-            variant="body1"
-            fontWeight="bold"
-          >
-            Total Price:{' '}
-            {report.list.reduce(
-              (totalprice: any, order: any) =>
-                totalprice + order.itemstotalprice,
-              0
-            )}{' '}
-          </Typography>
-          <Typography
-            variant="body1"
-            fontWeight="bold"
-          >
-            Total Orders :
-            {report.list.length}
-          </Typography>
-          
-          <Typography
-            variant="body1"
-            fontWeight="bold"
-          >
-            Date : {format(new Date(), 'ppPP')}
-          </Typography>
-        </ContainerRowBox>
-        <StyledTable>
-          <StyledTableHead sx={{ fontSize: '1rem' }}>
-            <TableRow>
-                  {tablelabels.map((label) =>{
-                    if(label.selected === false) return <></>
-                  return <StyledTableCell>{label.label}</StyledTableCell>
-                  })}
-            </TableRow>
-          </StyledTableHead>
-          <TableBody>
-            {report.list.map((order: any) => (
-              <>
-                <StyledTableRow sx={{ fontSize: '0.875rem' }}>
-                  {tablelabels.map((label) =>{
-                    if(label.selected === false) return <></>
-                    if (label.key === 'createdAt') {
-                      return  <StyledTableCell sx={{ marginTop: '1rem' }}>
-                    {format(parseISO(order.createdAt), 'do MMM yyyy')}
-                  </StyledTableCell>}
-                  return <StyledTableCell>{order[label.key]}</StyledTableCell>
-                  })}
-                </StyledTableRow>
-              </>
-            ))}
-          </TableBody>
-        </StyledTable>
+          <ContainerRowBox gap="2rem">
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+            >
+              Total Quantity:{' '}
+              {report.list.reduce(
+                (totalquantity: any, order: any) =>
+                  totalquantity + order.itemstotalquantity,
+                0
+              )}{' '}
+            </Typography>
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+            >
+              Total Price:{' '}
+              {report.list.reduce(
+                (totalprice: any, order: any) =>
+                  totalprice + order.itemstotalprice,
+                0
+              )}{' '}
+            </Typography>
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+            >
+              Total Orders :{report.list.length}
+            </Typography>
+
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+            >
+              Date : {format(new Date(), 'ppPP')}
+            </Typography>
+          </ContainerRowBox>
+          <StyledTable>
+            <StyledTableHead sx={{ fontSize: '1rem' }}>
+              <TableRow>
+                {tablelabels.map((label) => {
+                  if (label.selected === false) return <></>;
+                  return <StyledTableCell>{label.label}</StyledTableCell>;
+                })}
+              </TableRow>
+            </StyledTableHead>
+            <TableBody>
+              {report.list.map((order: any) => (
+                <>
+                  <StyledTableRow sx={{ fontSize: '0.875rem' }}>
+                    {tablelabels.map((label) => {
+                      if (label.selected === false) return <></>;
+                      if (label.key === 'createdAt') {
+                        return (
+                          <StyledTableCell sx={{ marginTop: '1rem' }}>
+                            {format(parseISO(order.createdAt), 'do MMM yyyy')}
+                          </StyledTableCell>
+                        );
+                      }
+                      return (
+                        <StyledTableCell>{order[label.key]}</StyledTableCell>
+                      );
+                    })}
+                  </StyledTableRow>
+                </>
+              ))}
+            </TableBody>
+          </StyledTable>
         </ContainerColumnBox>
       </>
     );
@@ -585,7 +643,7 @@ const AdminGenerateBill = () => {
   }, [shgList]);
 
   const getSelectedComponent = () => {
-    if (status === 'loading') <Loading2 />
+    if (status === 'loading') <Loading2 />;
     switch (generateby) {
       case 'department':
         return (
@@ -701,7 +759,9 @@ const AdminGenerateBill = () => {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           views={view as CalendarPickerView[]}
-          label={reportType === 'date'?'From': (reportType.toUpperCase() + ' Only')}
+          label={
+            reportType === 'date' ? 'From' : reportType.toUpperCase() + ' Only'
+          }
           value={value}
           onChange={(newValue) => {
             setValue(newValue);
@@ -713,26 +773,29 @@ const AdminGenerateBill = () => {
             />
           )}
         />
-        {reportType === 'date'?<>
-        <DatePicker
-          views={view as CalendarPickerView[]}
-          label="To"
-          value={value2}
-          onChange={(newValue) => {
-            setValue2(newValue);
-          }}
-          renderInput={(params) => (
-            <TextField
-              sx={{
-                marginTop:'0.7rem'
+        {reportType === 'date' ? (
+          <>
+            <DatePicker
+              views={view as CalendarPickerView[]}
+              label="To"
+              value={value2}
+              onChange={(newValue) => {
+                setValue2(newValue);
               }}
-              {...params}
-              helperText={null}
+              renderInput={(params) => (
+                <TextField
+                  sx={{
+                    marginTop: '0.7rem',
+                  }}
+                  {...params}
+                  helperText={null}
+                />
+              )}
             />
-          )}
-        />
-        </>
-        :<></>}
+          </>
+        ) : (
+          <></>
+        )}
       </LocalizationProvider>
     );
   };
@@ -751,43 +814,24 @@ const AdminGenerateBill = () => {
           <Typography variant="h2">Generate Report</Typography>
         </StyledContainer>
       </StyledContainer>
-      <Grid container
+      <Grid
+        container
         justifyContent="flex-start"
-        alignItems='center'
+        alignItems="center"
       >
-        <Grid item xs={2} >
-        <FormControl>
-          <FormLabel id="generateby">Generate by</FormLabel>
-          <RadioGroup
-            aria-labelledby="Generate By"
-            name="Generate By"
-            value={generateby}
-            onChange={handleRadioChange}
-          >
-            {generateByList.map((e, i) => (
-              <FormControlLabel
-                value={e}
-                key={i}
-                control={<Radio />}
-                label={e.toUpperCase()}
-              />
-            ))}
-          </RadioGroup>
-        </FormControl>
-        </Grid>
-        <Grid item xs={2}>{status === 'loading'?<Loading2 />:getSelectedComponent()}</Grid>
-        
-        <Grid item xs={2}>
-        {selectedDepartment || selectedItem || selectedShg ? (
+        <Grid
+          item
+          xs={2}
+        >
           <FormControl>
-            <FormLabel id="generateby">Report Type</FormLabel>
+            <FormLabel id="generateby">Generate by</FormLabel>
             <RadioGroup
-              aria-labelledby="Report Type"
-              name="Report Type"
-              value={reportType}
-              onChange={handleReportTypeChange}
+              aria-labelledby="Generate By"
+              name="Generate By"
+              value={generateby}
+              onChange={handleRadioChange}
             >
-              {reportTypeList.map((e, i) => (
+              {generateByList.map((e, i) => (
                 <FormControlLabel
                   value={e}
                   key={i}
@@ -797,12 +841,46 @@ const AdminGenerateBill = () => {
               ))}
             </RadioGroup>
           </FormControl>
-        ) : (
-          <></>
-        )}
         </Grid>
-        <Grid item xs={2}>
-        {getValueComponent()}
+        <Grid
+          item
+          xs={2}
+        >
+          {status === 'loading' ? <Loading2 /> : getSelectedComponent()}
+        </Grid>
+
+        <Grid
+          item
+          xs={2}
+        >
+          {selectedDepartment || selectedItem || selectedShg ? (
+            <FormControl>
+              <FormLabel id="generateby">Report Type</FormLabel>
+              <RadioGroup
+                aria-labelledby="Report Type"
+                name="Report Type"
+                value={reportType}
+                onChange={handleReportTypeChange}
+              >
+                {reportTypeList.map((e, i) => (
+                  <FormControlLabel
+                    value={e}
+                    key={i}
+                    control={<Radio />}
+                    label={e.toUpperCase()}
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+          ) : (
+            <></>
+          )}
+        </Grid>
+        <Grid
+          item
+          xs={2}
+        >
+          {getValueComponent()}
         </Grid>
       </Grid>
       {getReport()}

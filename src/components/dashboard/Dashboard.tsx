@@ -3,7 +3,13 @@ import {
   KeyboardDoubleArrowRightRounded,
   NotificationsRounded,
 } from '@mui/icons-material';
-import { Box, IconButton, Slide, Typography, useScrollTrigger } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Slide,
+  Typography,
+  useScrollTrigger,
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
@@ -18,6 +24,7 @@ import {
 import DepartmentSideMenu from './DepartmentSideMenu';
 import InstituteSideMenu from './InstituteSideMenu';
 import CeoSideMenu from '../../features/adminData/AdminSideMenu';
+import ZoneAdminSideMenu from '../../features/zoneAdmin/ZoneAdminSideMenu';
 const HideOnScroll = (props: { children: JSX.Element }) => {
   const trigger = useScrollTrigger();
   return (
@@ -43,6 +50,8 @@ const Dashboard = () => {
       sideMenu = <InstituteSideMenu drawerOpen={drawerOpen} />;
     if (user.userType === 'ceo')
       sideMenu = <CeoSideMenu drawerOpen={drawerOpen} />;
+    if (user.userType === 'blockadmin')
+      sideMenu = <ZoneAdminSideMenu drawerOpen={drawerOpen} />;
   }
 
   useEffect(() => {
@@ -74,9 +83,27 @@ const Dashboard = () => {
               paddingRight: '40px',
             }}
           >
-            <ContainerColumnBox sx={{paddingLeft:'40px'}}>
-              {user.email?<Typography color='black' sx={{textTransform:'capitalize'}}>{user.email}</Typography>:""}
-              {user.department?<Typography color='gray' sx={{textTransform:'capitalize'}}>{user.department} Department</Typography>:""}
+            <ContainerColumnBox sx={{ paddingLeft: '40px' }}>
+              {user.email ? (
+                <Typography
+                  color="black"
+                  sx={{ textTransform: 'capitalize' }}
+                >
+                  {user.email}
+                </Typography>
+              ) : (
+                ''
+              )}
+              {user.department ? (
+                <Typography
+                  color="gray"
+                  sx={{ textTransform: 'capitalize' }}
+                >
+                  {user.department} Department
+                </Typography>
+              ) : (
+                ''
+              )}
             </ContainerColumnBox>
             <IconButton color="secondary">
               <NotificationsRounded sx={{ color: 'greyColor.main' }} />
