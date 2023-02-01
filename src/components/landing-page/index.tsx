@@ -20,6 +20,7 @@ import { height } from '@mui/system';
 import CountUp from 'react-countup';
 import { FacebookRounded, YouTube } from '@mui/icons-material';
 import bihralogo from '../../assets/bihralogo.jpg';
+import g20 from '../../assets/g20.png';
 const LandingPage = () => {
   const [announcement, setAnnouncement] = useState<any>([]);
   const [top, setTop] = useState<number>(0);
@@ -95,11 +96,12 @@ const LandingPage = () => {
                   fontStyle: 'normal',
                   fontSize: '24px',
                   lineHeight: 'normal',
+                  margin: '0.5rem',
                 }}
               >
-                Chhattisgarh State Centre
+                CG SHG Mart
               </Typography>
-              <Typography
+              {/* <Typography
                 sx={{
                   fontWeight: '400',
                   fontSize: '16px',
@@ -109,12 +111,20 @@ const LandingPage = () => {
                 }}
               >
                 CG SHG Mart
-              </Typography>
+              </Typography> */}
             </Box>
           </Grid>
           <Grid item>
             <img
               src={bihralogo}
+              width="80px"
+              height="80px"
+              alt="bihralogo"
+            />
+          </Grid>
+          <Grid item>
+            <img
+              src={g20}
               width="80px"
               height="80px"
               alt="bihralogo"
@@ -653,6 +663,9 @@ const LandingPage = () => {
         >
           <Typography variant="caption">
             Developed By National Institute Of Technology, Raipur
+          </Typography>
+          <Typography variant="caption">
+            Promoted By Zila Panchayat Raipur
           </Typography>
           <Typography variant="caption">Copyright 2023</Typography>
         </ContainerColumnBox>
