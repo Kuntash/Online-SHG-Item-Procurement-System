@@ -132,6 +132,16 @@ const LandingPage = () => {
           हर महिला समूह में, हर समूह आर्थिक गतिविधि में।
         </Typography>
       </Box>
+      <Box sx={{ margin: '0.5rem 1.5rem' }}>
+        <Typography
+          variant="h4"
+          color="primary"
+          textAlign="center"
+          width="100%"
+        >
+          आरूग अंगना,आरूग उत्पाद ।
+        </Typography>
+      </Box>
       <Box sx={{ margin: '0.5rem 1.5rem', border: '1px solid #9994' }}>
         <Swiper
           // style={{ padding: '1rem' }}
@@ -200,10 +210,12 @@ const LandingPage = () => {
                 fontWeight: '400',
               }}
             >
-              Chhattisgarh Chief Minister Bhupesh Baghel decided to hike the
-              budgetary sanction for loans provided to women groups by five
-              times to Rs 10 crore from the present Rs 2 crore every year. The
-              loan limit of SHGs is also raised from Rs one lakh to Rs 2 lakh.
+              छत्तीसगढ़ राज्य ग्रामीण आजीविका मिशन ‘‘बिहान’’ अंतर्गत रायपुर जिले
+              के सभी 476 ग्रामों में 11378 महिला स्व सहायता समूह का गठन कर
+              120697 परिवारों को जोड़ा गया है। CG SHG Mart वेब एप्लीकेशन एवं
+              मोबाईल एप्प के माध्यम से स्व सहायता समूहों, उत्पादक समूह, गौठान,
+              रीपा आदि के उत्पादों को विक्रय हेतु एक माध्यम उपलब्ध करवाया गया
+              है।
             </Box>
           </SwiperSlide>
           <SwiperSlide
@@ -225,10 +237,12 @@ const LandingPage = () => {
                 fontWeight: '400',
               }}
             >
-              Chhattisgarh Chief Minister Bhupesh Baghel announced waiving off
-              the overdue or unpaid loans worth Rs 12.77 crore of the women
-              Self-Help Groups (SHGs) so that they can avail fresh loans to
-              start new economic activities.
+              छत्तीसगढ़ राज्य ग्रामीण आजीविका मिशन ‘‘बिहान’’ अंतर्गत रायपुर जिले
+              के सभी 476 ग्रामों में 11378 महिला स्व सहायता समूह का गठन कर
+              120697 परिवारों को जोड़ा गया है। CG SHG Mart वेब एप्लीकेशन एवं
+              मोबाईल एप्प के माध्यम से स्व सहायता समूहों, उत्पादक समूह, गौठान,
+              रीपा आदि के उत्पादों को विक्रय हेतु एक माध्यम उपलब्ध करवाया गया
+              है।
             </Box>
             <Box style={{ width: '50%' }}>
               <img
@@ -460,7 +474,7 @@ const LandingPage = () => {
             lineHeight: 'normal',
           }}
         >
-          <span style={{ color: '#47BA47' }}>About</span> Self Help Group
+          <span style={{ color: '#47BA47' }}>प्रोजेक्ट</span> का विज़न एवं मिशन
         </Typography>
         <Typography
           color="primary"
@@ -472,11 +486,12 @@ const LandingPage = () => {
             fontSize: '24px',
           }}
         >
-          छत्तीसगढ़ राज्य ग्रामीण आजीविका मिशन ‘‘बिहान’’ अंतर्गत रायपुर जिले के
-          सभी 476 ग्रामों में 11378 महिला स्व सहायता समूह का गठन कर 120697
-          परिवारों को जोड़ा गया है। CG SHG Mart वेब एप्लीकेशन एवं मोबाईल एप्प के
-          माध्यम से स्व सहायता समूहों, उत्पादक समूह, गौठान, रीपा आदि के उत्पादों
-          को विक्रय हेतु एक माध्यम उपलब्ध करवाया गया है।
+          विजन:- महिला स्व सहायता समूहों के उत्पादों को बाजार उपलब्ध करवाने के
+          लिए प्लेटफाॅर्म उपलब्ध करवाना।
+          <br />
+          <br /> मिशन:- स्व सहायता समूहों/उत्पादक समूहों/गौठानो के उत्पाद/रीपा
+          के उत्पाद आदि को शासकीय विभागों एवं खुले बाजार मे विक्रय हेतु आॅनलाईन
+          प्लेटफाॅर्म उपलब्ध करवाकर, ग्रामीण अर्थव्यवस्था को मजबूती प्रदान करना।
         </Typography>
       </Box>
       <Box
