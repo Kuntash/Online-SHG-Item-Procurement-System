@@ -161,6 +161,10 @@ const AddItem = () => {
           >
             <MenuItem value={'Kg'}>Kg</MenuItem>
             <MenuItem value={'Dozen'}>Dozen</MenuItem>
+            <MenuItem value={'Dozen'}>Gram</MenuItem>
+            <MenuItem value={'Dozen'}>Litre</MenuItem>
+            <MenuItem value={'Dozen'}>Millilitre</MenuItem>
+            <MenuItem value={'Dozen'}>Piece</MenuItem>
           </Select>
         </FormControl>
         <StyledButton
