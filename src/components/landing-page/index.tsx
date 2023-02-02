@@ -114,6 +114,7 @@ const LandingPage = () => {
               </Typography> */}
             </Box>
           </Grid>
+          <ContainerRowBox gap="2rem" alignItems="center">
           <Grid item>
             <img
               src={bihralogo}
@@ -130,6 +131,7 @@ const LandingPage = () => {
               alt="bihralogo"
             />
           </Grid>
+          </ContainerRowBox>
         </Grid>
       </Container>
       <Box sx={{ margin: '0.5rem 1.5rem' }}>
