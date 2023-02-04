@@ -41,9 +41,6 @@ const AdminStatsPage = () => {
   const keys = Object.keys(stats);
   const values = Object.values(stats);
 
-  console.log('keys: ', keys);
-  console.log('values: ', values);
-
   useEffect(() => {
     const getStats = async () => {
       try {
@@ -67,7 +64,6 @@ const AdminStatsPage = () => {
         setStatus('success');
         //   const formatedResult = Object.entries(result)
         setStats(result);
-        console.log('stats', result);
       } catch (err) {
         console.log(err);
       }
@@ -77,7 +73,7 @@ const AdminStatsPage = () => {
   if (status !== 'success') return <Loading2 />;
 
   return (
-    <Box sx={{ backgroundColor: 'rgb(232, 232, 232)',height:'100%' }}>
+    <Box sx={{ backgroundColor: 'rgb(232, 232, 232)', height: '100%' }}>
       <Typography
         variant="h2"
         sx={{ margin: '1rem' }}
@@ -127,7 +123,6 @@ const AdminStatsPage = () => {
         <Grid
           item
           xs={8}
-          
         >
           <LineChart data={stats.top10sellingproducts} />
         </Grid>
@@ -139,11 +134,9 @@ const AdminStatsPage = () => {
 export default AdminStatsPage;
 
 const StatCard = ({ title, count, i }: any) => {
-  console.log(title, count, i);
-
   return (
     <StyledPaper>
-      <ContainerColumnBox sx={{ justifyContent: 'center'}}>
+      <ContainerColumnBox sx={{ justifyContent: 'center' }}>
         <ContainerRowBox justifyContent="flex-end">
           <Typography
             variant="body1"
@@ -187,7 +180,6 @@ const StatCard = ({ title, count, i }: any) => {
 
 const PieChart = (props: any) => {
   ChartJS.register(ArcElement, Tooltip, Legend);
-  console.log('pie chart', props.data);
   const options = {
     responsive: true,
     maintainAspectRatio: true,

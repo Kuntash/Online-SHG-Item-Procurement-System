@@ -48,7 +48,6 @@ export const login = createAsyncThunk(
         requestOptions
       );
       const result = await response.json();
-      console.log('user', result);
       if (response.status === 400)
         return rejectWithValue({ message: result.error });
       return {
@@ -109,7 +108,6 @@ export const authSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(login.rejected, (state, action) => {
-        console.log(action);
         state.status = 'failed';
       })
       .addCase(login.fulfilled, (state, action) => {

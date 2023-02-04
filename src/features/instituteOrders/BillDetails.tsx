@@ -27,7 +27,6 @@ import {
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
 import { IShgData } from './Bill';
 const BillDetails = ({ shgData }: { shgData: IShgData }) => {
-  console.log(shgData);
   const orderDetailRef = useRef<HTMLDivElement | null>(null);
   const handlePrint = useReactToPrint({
     content: () => orderDetailRef.current,
@@ -49,7 +48,6 @@ const BillDetails = ({ shgData }: { shgData: IShgData }) => {
   ) => {
     setPage(newPage);
   };
-  console.log(shgData);
   return (
     <StyledPaper
       sx={{ fontSize: '1rem' }}

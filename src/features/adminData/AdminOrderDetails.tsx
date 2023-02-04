@@ -1,6 +1,13 @@
 import React, { useRef } from 'react';
 import { ChevronRightRounded, PrintRounded } from '@mui/icons-material';
-import { Box, Breadcrumbs, Grid, IconButton, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Breadcrumbs,
+  Grid,
+  IconButton,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
@@ -19,23 +26,26 @@ const AdminOrderDetails = () => {
   const order = useAppSelector((state: RootState) =>
     selectAdminOrderById(state, orderId as string)
   );
-  const cardRef = useRef(null)
+  const cardRef = useRef(null);
   const handlePrint = useReactToPrint({
     content: () => cardRef.current,
   });
-
-  console.log(order);
   if (order === undefined) return <h1>Order not found</h1>;
   return (
-    <StyledContainer sx={{ flexGrow: 1 }} ref={cardRef}>
-      <ContainerRowBox width='100%' justifyContent='flex-end'>
-        
-      <IconButton
-            color="success"
-            onClick={handlePrint}
-          >
-            <PrintRounded color="success" />
-          </IconButton>
+    <StyledContainer
+      sx={{ flexGrow: 1 }}
+      ref={cardRef}
+    >
+      <ContainerRowBox
+        width="100%"
+        justifyContent="flex-end"
+      >
+        <IconButton
+          color="success"
+          onClick={handlePrint}
+        >
+          <PrintRounded color="success" />
+        </IconButton>
       </ContainerRowBox>
       <Grid
         container

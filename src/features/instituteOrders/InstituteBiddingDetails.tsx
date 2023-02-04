@@ -141,8 +141,6 @@ const InstituteBiddingDetails = ({
     );
   };
   const handleVerifyDelivery = async (id: string) => {
-    console.log(id);
-    console.log(orderId);
     dispatch(
       orderdelivery({
         token: user.token,
@@ -204,7 +202,6 @@ const InstituteBiddingDetails = ({
       dispatch(resetdelivery());
     }
   }, [productsBidded, instituteOrders, dispatch]);
-  console.log(bidInfo);
   return (
     <StyledPaper ref={bidRef}>
       <ContainerRowBox

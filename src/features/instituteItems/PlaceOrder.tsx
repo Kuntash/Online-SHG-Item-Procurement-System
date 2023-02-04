@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 
 import DialogContent from '@mui/material/DialogContent';
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Navigate, useHref, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RootState } from '../../app/store';
@@ -37,14 +37,14 @@ import {
   resetStatus,
   selectAllItems,
   submitOrder,
-  modifyOrder as ModifyOrder
+  modifyOrder as ModifyOrder,
 } from './itemsSlice';
 import { IItemList, ISHG } from './itemsSlice';
 
 const PlaceOrder = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [autocompletekey,setAutoCompleteKey] = useState(0)
+  const [autocompletekey, setAutoCompleteKey] = useState(0);
   const { state } = useLocation() as any;
   const userToken = useAppSelector((state: RootState) => state.auth.token);
   const savedOrders = useAppSelector(selectSavedOrder);
@@ -60,7 +60,7 @@ const PlaceOrder = () => {
   // const [orderItemsFormdes, setOrdersItemFormdes] = useState<{
   //   [key: string]: string;
   // }>({});
-  const addedItemshash = useRef(new Set<string>())
+  const addedItemshash = useRef(new Set<string>());
   const [addedItemsList, setAddedItemsList] = useState<IItemList[]>([]);
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 5;
@@ -87,22 +87,24 @@ const PlaceOrder = () => {
       );
       return;
     }
-    if(state?._id) dispatch(ModifyOrder({addedItemsList,token:userToken,orderId:state._id}));
+    if (state?._id)
+      dispatch(
+        ModifyOrder({ addedItemsList, token: userToken, orderId: state._id })
+      );
     else dispatch(submitOrder({ addedItemsList, token: userToken }));
   };
 
   const handleAddItem = (item: IItemList) => {
-    if(addedItemshash.current.has(item.itemid)) {console.log('item already inserted'); return;}
+    if (addedItemshash.current.has(item.itemid)) {
+      return;
+    }
     if (item.products.length === 0) return;
-    addedItemshash.current.add(item.itemid)
+    addedItemshash.current.add(item.itemid);
     setAddedItemsList((prev) => [...prev, item]);
     //remove items from the addedItemsList
-    console.log('item', item);
   };
 
-  React.useEffect(() => {
-    console.log("addeditemslist",addedItemsList);
-  }, [addedItemsList]);
+  React.useEffect(() => {}, [addedItemsList]);
 
   React.useEffect(() => {
     if (submitOrderStatus === 'loading')
@@ -153,8 +155,8 @@ const PlaceOrder = () => {
   // };
 
   const handleOpenDialog = (item: Item, flag: boolean) => {
-    setAutoCompleteKey(k=>k+1)
-    setmodifyOrder(false)
+    setAutoCompleteKey((k) => k + 1);
+    setmodifyOrder(false);
     setSelectedItem({
       itemid: item._id,
       itemname: item.itemname,
@@ -173,65 +175,55 @@ const PlaceOrder = () => {
     setSelectedItem(item);
     setOpenDialog(true);
   };
-  useEffect(()=>{
-    console.log("added item list",addedItemsList)
-  },[addedItemsList])
+  useEffect(() => {}, [addedItemsList]);
   const getItems = () => {
     const hash = new Set<string>();
     addedItemsList.forEach((item) => {
       hash.add(item.itemid);
-      console.log(item.itemid);
     });
     return items.filter((item) => !hash.has(item._id));
   };
 
-
-  useEffect(()=>{
-    if(!state) return;
-    // grouping items 
+  useEffect(() => {
+    if (!state) return;
+    // grouping items
     const newitems = new Map();
-    state.items.forEach((item:any) => {
-      if(newitems.has(item.itemid)){
-         newitems.set(item.itemid,[...newitems.get(item.itemid),item])
-         console.log("has")
+    state.items.forEach((item: any) => {
+      if (newitems.has(item.itemid)) {
+        newitems.set(item.itemid, [...newitems.get(item.itemid), item]);
+      } else {
+        newitems.set(item.itemid, [item]);
       }
-      else{
-        console.log("dont")
-        newitems.set(item.itemid,[item])
-      }
-    })
-    const filteredItems:IItemList[] = [];
-    newitems.forEach((items,key) =>{
-      const products:any=[]
-      items.forEach((item:any) => {
+    });
+    const filteredItems: IItemList[] = [];
+    newitems.forEach((items, key) => {
+      const products: any = [];
+      items.forEach((item: any) => {
         products.push({
-          id:item.shgid._id,
-          name:item.shgid.name,
-          quantity:item.productid.quantity,
+          id: item.shgid._id,
+          name: item.shgid.name,
+          quantity: item.productid.quantity,
           location: item.shgid.location,
           productid: item.productid._id,
-          selectedquantity:item.itemquantity,
-          price:item.itemprice,
-        })})
-      const i:any = items[0];
-      filteredItems.push(
-        {
-          itemid: i.itemid,
-          itemname: i.itemname,
-          itemDescription: i.itemdescription,
-          itemType: i.itemtype,
-          itemunit: i.itemunit,
-          products:products
-        }
-      )
-    })
-    filteredItems.forEach((item) =>{
-      addedItemshash.current.add(item.itemid)
-    })
-    setAddedItemsList(filteredItems)
-    console.log("filtered items",filteredItems);
-    console.log("state",state);
-  },[state])
+          selectedquantity: item.itemquantity,
+          price: item.itemprice,
+        });
+      });
+      const i: any = items[0];
+      filteredItems.push({
+        itemid: i.itemid,
+        itemname: i.itemname,
+        itemDescription: i.itemdescription,
+        itemType: i.itemtype,
+        itemunit: i.itemunit,
+        products: products,
+      });
+    });
+    filteredItems.forEach((item) => {
+      addedItemshash.current.add(item.itemid);
+    });
+    setAddedItemsList(filteredItems);
+  }, [state]);
   // useEffect(() => {
   //   if (hasSavedOrder === 'idle' && userToken)
   //     dispatch(getSavedOrder(userToken));
@@ -262,7 +254,6 @@ const PlaceOrder = () => {
   useEffect(() => {
     if (itemsStatus === 'idle') {
       // TODO: Dispatch once the api is working
-      console.log('Dispatching function to fetch all items');
       dispatch(fetchAllItems());
     }
   }, [itemsStatus, dispatch, addedItemsList]);
@@ -490,8 +481,9 @@ const PlaceOrder = () => {
             alignItems: 'center',
           }}
         >
-          <Autocomplete id='autocomplete'
-          key={autocompletekey}
+          <Autocomplete
+            id="autocomplete"
+            key={autocompletekey}
             clearOnBlur
             onChange={(e, value) => {
               if (value === null) return;
@@ -501,7 +493,7 @@ const PlaceOrder = () => {
             getOptionLabel={(option) => option.itemname}
             sx={{ width: '200px' }}
             renderInput={(params) => (
-              <TextField 
+              <TextField
                 {...params}
                 label="Items"
               />

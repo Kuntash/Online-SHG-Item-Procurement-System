@@ -1,4 +1,4 @@
-import  React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -73,13 +73,13 @@ export default function FormDialog(props: {
     ]);
   };
   const handleClearShg = (i: ISHG) => {
-    const filtered = selectedShgs.filter(shg=>shg.productid!==i.productid)
-    console.log("edited",filtered);
-    setSelectedShgs(filtered)
-  }
+    const filtered = selectedShgs.filter(
+      (shg) => shg.productid !== i.productid
+    );
+    setSelectedShgs(filtered);
+  };
 
   const handleSubmit = () => {
-    console.log("selected",selectedShgs)
     item.products = selectedShgs;
     props.handleAddItems(item);
     handleClose();
@@ -90,7 +90,6 @@ export default function FormDialog(props: {
 
   //   }
   // }, [])
-  
 
   // React.useEffect(() => {
   //   setSelectedShgs([])
@@ -116,7 +115,6 @@ export default function FormDialog(props: {
         if (response.status === 400)
           throw new Error('An error occured while posting orders');
         const result = await response.json();
-        console.log("shgs products",result);
         setShgs(
           result.productdata.map((r: any) => {
             return {
@@ -137,17 +135,14 @@ export default function FormDialog(props: {
     setShgs(null);
     setSelectedShgs([]);
     getshgs();
-    if(props.modifyOrder) {
-      const q :{[key: string]:number}={}
-      item.products.forEach(product => {
-        console.log(product)
-        q[product.productid] = product.selectedquantity
-      })
-      console.log('filtered quantity', q)
-      setSelectedShgs(item.products)
-      setProductQuatities(q)
+    if (props.modifyOrder) {
+      const q: { [key: string]: number } = {};
+      item.products.forEach((product) => {
+        q[product.productid] = product.selectedquantity;
+      });
+      setSelectedShgs(item.products);
+      setProductQuatities(q);
     }
-    if(props.modifyOrder) console.log("already selected items",item.products)
   }, [item, props.modifyOrder]);
 
   return (
@@ -185,22 +180,22 @@ export default function FormDialog(props: {
             </StyledTableHead>
             <TableBody>
               {shgs?.map((shg, index) => (
-                  <StyledTableRow
-                    key={index}
-                    sx={{ fontSize: '0.875rem' }}
-                  >
-                    <StyledTableCell>{shg.name}</StyledTableCell>
-                    <StyledTableCell>{shg.quantity}</StyledTableCell>
-                    <StyledTableCell>{shg.price}</StyledTableCell>
-                    <StyledTableCell>
-                      {shg.location.toUpperCase()}
-                    </StyledTableCell>
-                        {!selectedShgs.find(
-                          (selectedshg, index) =>
-                            shg.productid === selectedshg.productid
-                        ) ? (
-                          <>
-                    <StyledTableCell>
+                <StyledTableRow
+                  key={index}
+                  sx={{ fontSize: '0.875rem' }}
+                >
+                  <StyledTableCell>{shg.name}</StyledTableCell>
+                  <StyledTableCell>{shg.quantity}</StyledTableCell>
+                  <StyledTableCell>{shg.price}</StyledTableCell>
+                  <StyledTableCell>
+                    {shg.location.toUpperCase()}
+                  </StyledTableCell>
+                  {!selectedShgs.find(
+                    (selectedshg, index) =>
+                      shg.productid === selectedshg.productid
+                  ) ? (
+                    <>
+                      <StyledTableCell>
                         <StyledTextField
                           type={'number'}
                           sx={{ width: 'unset' }}
@@ -213,49 +208,49 @@ export default function FormDialog(props: {
                           label={`${item.itemname} की मात्रा (in ${item.itemunit})`}
                           onChange={(e) => handlequantity(e, shg.productid)}
                         />
-                    </StyledTableCell>
-                      <StyledTableCell>
-                          <StyledButton
-                            variant="contained"
-                            color="success"
-                            sx={{
-                              boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
-                            }}
-                            onClick={() => {
-                              handleAddShg(shg);
-                            }}
-                          >
-                            Add
-                          </StyledButton>
                       </StyledTableCell>
-                      </>
-                        ) : (
-                          <>
-                          <StyledTableCell>
-                            {productQuantities[shg.productid]}
-                          </StyledTableCell>
-                          <StyledTableCell>
-                          <StyledButton
-                            variant="contained"
-                            color="error"
-                            onClick={() => {
-                              handleClearShg(shg);
-                            }}
-                            sx={{ padding: '0.5rem 0.9rem' }}
-                          >
-                            Edit
-                          </StyledButton>
-                          </StyledTableCell>
-                          </>
-                        )}
-                  </StyledTableRow>
-                ))}
+                      <StyledTableCell>
+                        <StyledButton
+                          variant="contained"
+                          color="success"
+                          sx={{
+                            boxShadow: 'rgb(0 171 85 / 24%) 0px 8px 16px',
+                          }}
+                          onClick={() => {
+                            handleAddShg(shg);
+                          }}
+                        >
+                          Add
+                        </StyledButton>
+                      </StyledTableCell>
+                    </>
+                  ) : (
+                    <>
+                      <StyledTableCell>
+                        {productQuantities[shg.productid]}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        <StyledButton
+                          variant="contained"
+                          color="error"
+                          onClick={() => {
+                            handleClearShg(shg);
+                          }}
+                          sx={{ padding: '0.5rem 0.9rem' }}
+                        >
+                          Edit
+                        </StyledButton>
+                      </StyledTableCell>
+                    </>
+                  )}
+                </StyledTableRow>
+              ))}
             </TableBody>
           </StyledTable>
         </DialogContent>
         <DialogActions>
-              <Button onClick={handleClose}>Cancel</Button>
-              <Button onClick={handleSubmit}>submit</Button>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleSubmit}>submit</Button>
         </DialogActions>
       </Dialog>
     </div>

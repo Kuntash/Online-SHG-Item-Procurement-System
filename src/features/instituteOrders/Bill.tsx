@@ -88,7 +88,6 @@ const Bill = () => {
           throw new Error('Error occurred while getting saved order');
         const result = await response.json();
         setShgData(result.shgdata);
-        console.log('order details', result);
       } catch (err) {
         console.log(err);
       }

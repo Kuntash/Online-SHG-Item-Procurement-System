@@ -33,7 +33,6 @@ const initialState: OrderState = {
   orders: [],
 };
 
-
 export const approveBidByInstitute = createAsyncThunk(
   'instituteOrders/approveBidByInstitute',
   async (
@@ -51,7 +50,6 @@ export const approveBidByInstitute = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      console.log(token);
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
       headers.append('Content-type', 'application/json');
@@ -69,12 +67,10 @@ export const approveBidByInstitute = createAsyncThunk(
       };
 
       const response = await fetch(
-        backendUrl+'institute/approveorder',
+        backendUrl + 'institute/approveorder',
         requestOptions
       );
       const result = await response.json();
-      console.log(result);
-
       if (response.status === 400)
         throw new Error('An error occured while approving bid');
       return result;
@@ -87,7 +83,6 @@ export const getSavedOrder = createAsyncThunk(
   'instituteOrders/getSavedOrder',
   async (token: undefined | string, { rejectWithValue }) => {
     try {
-      console.log("getting saved orders",token)
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
       headers.append('Content-type', 'application/json');
@@ -98,15 +93,13 @@ export const getSavedOrder = createAsyncThunk(
         redirect: 'follow',
       };
       const response = await fetch(
-        backendUrl+'institute/getsavedorder',
+        backendUrl + 'institute/getsavedorder',
         requestOptions
       );
-      console.log(response)
       if (response.status === 400)
         throw new Error('Error occurred while getting saved order');
       const result: { message: string; savedorders: PlaceOrderItem[] } =
         await response.json();
-        console.log(result.savedorders)
       return result.savedorders;
     } catch (err) {
       return rejectWithValue(err);
@@ -117,12 +110,15 @@ export const lockOrderOfInstitute = createAsyncThunk(
   'instituteOrders/lockOrdersOfInstitute',
   async (
     { token, orderId }: { token: string | undefined; orderId: string },
-    { rejectWithValue,dispatch }
+    { rejectWithValue, dispatch }
   ) => {
-    try {dispatch(handleOpenSnackbar({
-      snackbarMessage:'locking order',
-      snackbarType:'info'
-    }))
+    try {
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'locking order',
+          snackbarType: 'info',
+        })
+      );
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
       headers.append('Content-type', 'application/json');
@@ -135,23 +131,25 @@ export const lockOrderOfInstitute = createAsyncThunk(
         body: raw,
       };
 
-      const response = await fetch(
-        backendUrl+'order/lock',
-        requestOptions
-      );
-      if(response.status === 200) dispatch(handleOpenSnackbar({
-        snackbarMessage:'Order Locked Successfully',
-        snackbarType:'success'
-      }))
+      const response = await fetch(backendUrl + 'order/lock', requestOptions);
+      if (response.status === 200)
+        dispatch(
+          handleOpenSnackbar({
+            snackbarMessage: 'Order Locked Successfully',
+            snackbarType: 'success',
+          })
+        );
       if (response.status === 400) throw new Error('Error while locking order');
       const result = await response.json();
       return result;
     } catch (err) {
-      dispatch(handleOpenSnackbar({
-      snackbarMessage:'Failed to lock order',
-      snackbarType:'error'
-    }))
-      
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Failed to lock order',
+          snackbarType: 'error',
+        })
+      );
+
       return rejectWithValue(err);
     }
   }
@@ -169,13 +167,12 @@ export const fetchAllOrdersOfInstitute = createAsyncThunk(
         headers,
       };
       const response = await fetch(
-        backendUrl+'order/institute',
+        backendUrl + 'order/institute',
         requestOptions
       );
 
       if (response.status === 400) throw new Error('An error occurred');
       const result = await response.json();
-      console.log("result",result);
       return result.orders;
     } catch (error: any) {
       return rejectWithValue(error?.message);
@@ -206,7 +203,7 @@ export const orderdelivery = createAsyncThunk(
         body: raw,
       };
       const response = await fetch(
-        backendUrl+'institute/verifydelivery',
+        backendUrl + 'institute/verifydelivery',
         requestOptions
       );
       if (response.status === 400) throw new Error('An error occurred');
@@ -219,22 +216,21 @@ export const orderdelivery = createAsyncThunk(
 export const deleteOrder = createAsyncThunk(
   'instituteOrders/deleteOrder',
   async (
-    {
-      token,
-      orderId,
-    }: { token: string | undefined; orderId: string; },
-    { rejectWithValue,dispatch }
+    { token, orderId }: { token: string | undefined; orderId: string },
+    { rejectWithValue, dispatch }
   ) => {
     try {
-      dispatch(handleOpenSnackbar({
-        snackbarMessage:'Deleting order',
-        snackbarType:'info'
-      }))
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Deleting order',
+          snackbarType: 'info',
+        })
+      );
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
       headers.append('Content-type', 'application/json');
       headers.append('Access-Control-Allow-Origin', '*');
-      const raw = JSON.stringify({ orderid: orderId});
+      const raw = JSON.stringify({ orderid: orderId });
       const requestOptions: RequestInit = {
         method: 'DELETE',
         headers,
@@ -242,35 +238,36 @@ export const deleteOrder = createAsyncThunk(
         body: raw,
       };
       const response = await fetch(
-        backendUrl+'order/deleteorder/',
+        backendUrl + 'order/deleteorder/',
         requestOptions
       );
-    if(response.status === 200) {dispatch(handleOpenSnackbar({
-      snackbarMessage:'Order deleted',
-      snackbarType:'success'
-    }))
-  dispatch(fetchAllOrdersOfInstitute(token));
-  }
+      if (response.status === 200) {
+        dispatch(
+          handleOpenSnackbar({
+            snackbarMessage: 'Order deleted',
+            snackbarType: 'success',
+          })
+        );
+        dispatch(fetchAllOrdersOfInstitute(token));
+      }
       if (response.status === 400) throw new Error('An error occurred');
     } catch (err) {
-      dispatch(handleOpenSnackbar({
-        snackbarMessage:'Error occured while deleting order',
-        snackbarType:'error'
-      }))
+      dispatch(
+        handleOpenSnackbar({
+          snackbarMessage: 'Error occured while deleting order',
+          snackbarType: 'error',
+        })
+      );
       return rejectWithValue(err);
     }
   }
 );
 
-
 export const updatedelivery = createAsyncThunk(
   'institute/updatedelivery',
   async (
-    {
-      token,
-      order,
-    }: { token: string | undefined; order:InstituteOrder},
-    { rejectWithValue,dispatch }
+    { token, order }: { token: string | undefined; order: InstituteOrder },
+    { rejectWithValue, dispatch }
   ) => {
     try {
       const headers = new Headers();
@@ -278,11 +275,10 @@ export const updatedelivery = createAsyncThunk(
       headers.append('Content-type', 'application/json');
       headers.append('Access-Control-Allow-Origin', '*');
       const formatted = {
-        orderid:order._id,
-        products:order.items.map(product=>({productid:product._id}))
-      } 
-      console.log("request",formatted)
-      const raw = JSON.stringify(formatted)
+        orderid: order._id,
+        products: order.items.map((product) => ({ productid: product._id })),
+      };
+      const raw = JSON.stringify(formatted);
       const requestOptions: RequestInit = {
         method: 'POST',
         headers,
@@ -290,11 +286,11 @@ export const updatedelivery = createAsyncThunk(
         body: raw,
       };
       const response = await fetch(
-        backendUrl+'institute/updatedelivery',
+        backendUrl + 'institute/updatedelivery',
         requestOptions
       );
       if (response.status === 400) throw new Error('An error occurred');
-      if (response.status === 200) dispatch(fetchAllOrdersOfInstitute(token))
+      if (response.status === 200) dispatch(fetchAllOrdersOfInstitute(token));
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -311,9 +307,9 @@ const instituteOrdersSlice = createSlice({
     resetapproveBidStatus: (state) => {
       state.approveBidStatus = 'idle';
     },
-    resetupdatedeliver:(state)=>{
-      state.updatedelivery = 'idle'
-    }
+    resetupdatedeliver: (state) => {
+      state.updatedelivery = 'idle';
+    },
   },
   extraReducers: (builder) => {
     builder

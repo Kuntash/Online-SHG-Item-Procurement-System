@@ -43,7 +43,6 @@ const InstituteOrderDeliveryDetails = ({ orderId }: { orderId: string }) => {
   const orderDetail = useAppSelector((state: RootState) =>
     selectInstituteOrderById(state, orderId)
   ) as InstituteOrder;
-  console.log(orderDetail);
   const [updatedOrders, setUpdatedOrders] = useState<InstituteOrderItem[]>([]);
   const updatedeliveryStatus = useAppSelector(
     (state) => state.instituteOrders.updatedelivery
@@ -130,9 +129,7 @@ const InstituteOrderDeliveryDetails = ({ orderId }: { orderId: string }) => {
       );
     dispatch(resetdelivery());
   }, [updatedeliveryStatus]);
-  const handleSubmitStatus = () => {
-    console.log(orderDetail);
-  };
+  const handleSubmitStatus = () => {};
 
   useEffect(() => {
     setUpdatedOrders([]);
@@ -140,9 +137,12 @@ const InstituteOrderDeliveryDetails = ({ orderId }: { orderId: string }) => {
   // Create a Style Component
   if (orderDetail === undefined) return <h1> Order Not found</h1>;
   return (
-    <StyledPaper sx={{
-      width:'min-content',
-    }} ref={orderDetailRef}>
+    <StyledPaper
+      sx={{
+        width: 'min-content',
+      }}
+      ref={orderDetailRef}
+    >
       <ContainerRowBox
         sx={{
           justifyContent: 'space-between',

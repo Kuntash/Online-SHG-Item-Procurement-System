@@ -37,7 +37,8 @@ const LoginForm = React.forwardRef<HTMLInputElement>((prop, ref) => {
     setShowPassword(!showPassword);
   };
   useEffect(() => {
-    if (user.status === 'loading') console.log('Loading user info');
+    if (user.status === 'loading') {
+    }
     if (user.status === 'succeeded') {
       if (user.userType === 'department')
         navigate('/dashboard/department/approve-orders');

@@ -83,15 +83,13 @@ export const approveBidByIds = createAsyncThunk(
       };
 
       const response = await fetch(
-        backendUrl+'department/approveorder',
+        backendUrl + 'department/approveorder',
         requestOptions
       );
-      console.log(response);
       if (response.status === 400)
         throw new Error('An error occurred while approving bid');
 
       const result = await response.json();
-      console.log(result);
       return result;
     } catch (err) {
       return rejectWithValue(err);
@@ -124,15 +122,12 @@ export const approveOrderById = createAsyncThunk(
         }),
       };
       const response = await fetch(
-        backendUrl+'department/approvefordisplay',
+        backendUrl + 'department/approvefordisplay',
         requestOptions
       );
-
-      console.log(response);
       if (response.status === 400)
         throw new Error("Couldn't update status of the order");
       const result = await response.json();
-      console.log(result);
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -152,14 +147,12 @@ export const fetchDepartmentOrders = createAsyncThunk(
       };
 
       const response = await fetch(
-        backendUrl+'order/department',
+        backendUrl + 'order/department',
         requestOptions
       );
       if (response.status === 400)
         throw new Error("Couldn't fetch orders of the department");
       const result = await response.json();
-      console.log(result);
-
       return result.orders;
     } catch (err) {
       return rejectWithValue(err);

@@ -43,7 +43,6 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
   const orderDetail = useAppSelector((state: RootState) =>
     selectInstituteOrderById(state, orderId)
   ) as InstituteOrder;
-  console.log(orderDetail);
   const [updatedOrders, setUpdatedOrders] = useState<InstituteOrderItem[]>([]);
   const updatedeliveryStatus = useAppSelector(
     (state) => state.instituteOrders.updatedelivery
@@ -130,9 +129,7 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
       );
     dispatch(resetdelivery());
   }, [updatedeliveryStatus]);
-  const handleSubmitStatus = () => {
-    console.log(orderDetail);
-  };
+  const handleSubmitStatus = () => {};
 
   useEffect(() => {
     setUpdatedOrders([]);
@@ -140,7 +137,10 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
   // Create a Style Component
   if (orderDetail === undefined) return <h1> Order Not found</h1>;
   return (
-    <StyledPaper sx={{width:'min-content'}} ref={orderDetailRef}>
+    <StyledPaper
+      sx={{ width: 'min-content' }}
+      ref={orderDetailRef}
+    >
       <ContainerRowBox
         sx={{
           justifyContent: 'space-between',
@@ -227,17 +227,17 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
                       {parseInt(item.itemprice) * item.itemquantity}
                     </StyledTableCell>
                     <StyledTableCell>
-                    {item.accepted ? (
-                      <Checkbox
-                        checked={true}
-                        disabled={true}
-                      />
-                    ) : (
-                      <Checkbox
-                        checked={false}
-                        disabled={true}
-                      />
-                    )}
+                      {item.accepted ? (
+                        <Checkbox
+                          checked={true}
+                          disabled={true}
+                        />
+                      ) : (
+                        <Checkbox
+                          checked={false}
+                          disabled={true}
+                        />
+                      )}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
@@ -264,9 +264,23 @@ const InstituteOrderDetails = ({ orderId }: { orderId: string }) => {
             </TableRow>
           </TableBody>
         </StyledTable>
-        {orderDetail.status === 'pending'?
-        <StyledButton variant='contained' onClick={()=>dispatch(lockOrderOfInstitute({token:userToken,orderId:orderDetail._id}))}>Lock Order</StyledButton>:
-        <></>}
+        {orderDetail.status === 'pending' ? (
+          <StyledButton
+            variant="contained"
+            onClick={() =>
+              dispatch(
+                lockOrderOfInstitute({
+                  token: userToken,
+                  orderId: orderDetail._id,
+                })
+              )
+            }
+          >
+            Lock Order
+          </StyledButton>
+        ) : (
+          <></>
+        )}
       </ContainerColumnBox>
     </StyledPaper>
   );

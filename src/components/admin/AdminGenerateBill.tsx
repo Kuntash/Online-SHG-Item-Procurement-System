@@ -200,7 +200,6 @@ const getDepartmentReport = async (
       value: value,
       value2: value2,
     };
-    console.log(JSON.stringify(raw));
     const requestOptions: RequestInit = {
       method: 'POST',
       headers,
@@ -214,7 +213,6 @@ const getDepartmentReport = async (
     if (response.status === 400)
       throw new Error('Error occurred while getting saved order');
     const result = await response.json();
-    console.log('department report', result);
     return result.modifiedorderdata;
   } catch (err) {
     console.log(err);
@@ -235,7 +233,6 @@ const getShgReport = async (
       value: value,
       value2: value2,
     };
-    console.log(JSON.stringify(raw));
     const requestOptions: RequestInit = {
       method: 'POST',
       headers,
@@ -270,7 +267,6 @@ const getItemReport = async (
       value: value,
       value2: value2,
     };
-    console.log(JSON.stringify(raw));
     const requestOptions: RequestInit = {
       method: 'POST',
       headers,
@@ -285,7 +281,6 @@ const getItemReport = async (
       throw new Error('Error occurred while getting saved order');
     const result = await response.json();
 
-    console.log('item report', result);
     return result.modifiedorderdata;
   } catch (err) {
     console.log(err);
@@ -363,8 +358,6 @@ const AdminGenerateBill = () => {
         break;
       case 'shg':
         const slist = await getShgList(user.token || '');
-        console.log('usertoken', user.token);
-        console.log(slist);
         setShgList(slist);
         setStatus('');
         break;
@@ -381,7 +374,6 @@ const AdminGenerateBill = () => {
     setReportType(e.target.value);
   };
   useEffect(() => {
-    console.log(generateby, selectedDepartment, reportType);
     const fetchdata = async () => {
       setSortBy('');
       if (generateby === '' || reportType === '' || !user || !user.token)
@@ -635,12 +627,8 @@ const AdminGenerateBill = () => {
     );
   };
 
-  useEffect(() => {
-    console.log('report ', report);
-  }, [report]);
-  useEffect(() => {
-    console.log('shglist', shgList);
-  }, [shgList]);
+  useEffect(() => {}, [report]);
+  useEffect(() => {}, [shgList]);
 
   const getSelectedComponent = () => {
     if (status === 'loading') <Loading2 />;

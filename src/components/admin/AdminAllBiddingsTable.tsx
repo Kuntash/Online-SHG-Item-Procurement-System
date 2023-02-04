@@ -23,10 +23,8 @@ const AdminAllBiddingsTable = ({
   tableTitle,
   bidType,
 }: AdminBiddingDetailsTableProps) => {
-  console.log(bids);
   const navigate = useNavigate();
   const handleRedirect = (bid: AdminOrderBid, orderId: string) => {
-    console.log(bid);
     navigate(`../../../bids/${bid._id}`, {
       replace: true,
       state: {

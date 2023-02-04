@@ -116,7 +116,6 @@ const RegisterShg = () => {
     getallzones();
     getallblocks();
   }, [status, dispatch]);
-  console.log(user);
   const register = async (data: HelperTextType) => {
     if (status === 'loading') return;
     const headers = new Headers();

@@ -56,7 +56,7 @@ export const changeBidPriceOfAnOrder = createAsyncThunk(
         }),
       };
       const response = await fetch(
-        backendUrl+'ceo/changebidprice',
+        backendUrl + 'ceo/changebidprice',
         requestOptions
       );
       if (response.status === 400)
@@ -80,14 +80,13 @@ export const fetchAllAdminOrders = createAsyncThunk(
       };
 
       const response = await fetch(
-        backendUrl+'ceo/getallorders',
+        backendUrl + 'ceo/getallorders',
         requestOptions
       );
       if (response.status === 400)
         throw new Error('Error while fetching all admin orders');
       const result: { success: boolean; orders: AdminOrderDataType[] } =
         await response.json();
-        console.log("admin order details",result)
       return result.orders;
     } catch (err) {
       return rejectWithValue(err);
@@ -109,7 +108,7 @@ export const fetchAllShgData = createAsyncThunk(
         redirect: 'follow',
       };
       const response = await fetch(
-        backendUrl+'ceo/getshgdata',
+        backendUrl + 'ceo/getshgdata',
         requestOptions
       );
       if (response.status === 400)

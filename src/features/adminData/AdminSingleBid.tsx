@@ -42,7 +42,6 @@ const AdminSingleBid = () => {
     (state: RootState) => state.admin.bidChangeStatus
   );
   const state = location.state as StateType;
-  console.log(state);
   const { orderId, bid, bidType } = state;
   const theme = useTheme();
   const [productPriceList, setProductPriceList] = useState<

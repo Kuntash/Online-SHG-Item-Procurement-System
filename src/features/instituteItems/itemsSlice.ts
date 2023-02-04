@@ -8,7 +8,7 @@ export interface ItemsState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   submitOrderStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
   saveOrderStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
-  modifyOrderStatus: 'idle'| 'succeeded' | 'failed'| 'loading';
+  modifyOrderStatus: 'idle' | 'succeeded' | 'failed' | 'loading';
   savedOrders?: IItemList[];
   items: Item[];
 }
@@ -60,7 +60,6 @@ export const fetchAllItems = createAsyncThunk(
       );
       if (response.status === 400) throw new Error('An error occurred');
       const result = response.json();
-      console.log(result);
       return result;
     } catch (err) {
       return rejectWithValue(err);
@@ -126,7 +125,6 @@ export const saveOrder = createAsyncThunk(
     },
     { rejectWithValue }
   ) => {
-    console.log(addedItemsList);
     const formattedAddedItemsList = addedItemsList
       .map((addedItem, index) =>
         addedItem.products.map((product) => ({
@@ -135,7 +133,6 @@ export const saveOrder = createAsyncThunk(
         }))
       )
       .flat();
-    console.log(formattedAddedItemsList);
     try {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
@@ -156,7 +153,6 @@ export const saveOrder = createAsyncThunk(
       if (response.status === 400)
         throw new Error('An error occured while posting orders');
       const result = await response.json();
-      console.log(result);
       return result;
     } catch (err) {
       rejectWithValue(err);
@@ -183,7 +179,6 @@ export const submitOrder = createAsyncThunk(
         }))
       )
       .flat();
-    console.log("submit order",formattedAddedItemsList);
     try {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
@@ -201,14 +196,12 @@ export const submitOrder = createAsyncThunk(
         backendUrl + 'order/postorder',
         requestOptions
       );
-      console.log(response,"submit order reponse");
       if (response.status === 400)
         throw new Error('An error occured while posting orders');
       const result = await response.json();
-      console.log(result);
       return result;
     } catch (err) {
-      console.log('hi', err);
+      console.log(err);
       rejectWithValue(err);
     }
   }
@@ -220,7 +213,7 @@ export const modifyOrder = createAsyncThunk(
     {
       addedItemsList,
       token,
-      orderId
+      orderId,
     }: {
       addedItemsList: IItemList[];
       token: string | undefined;
@@ -236,13 +229,15 @@ export const modifyOrder = createAsyncThunk(
         }))
       )
       .flat();
-    console.log(formattedAddedItemsList);
     try {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
       headers.append('Content-type', 'application/json');
       headers.append('Access-Control-Allow-Origin', '*');
-      const raw = JSON.stringify({orderid:orderId,items: formattedAddedItemsList});
+      const raw = JSON.stringify({
+        orderid: orderId,
+        items: formattedAddedItemsList,
+      });
       const requestOptions: RequestInit = {
         method: 'PUT',
         headers,
@@ -254,14 +249,12 @@ export const modifyOrder = createAsyncThunk(
         backendUrl + 'order/modifyorder',
         requestOptions
       );
-      console.log(response);
       if (response.status === 400)
         throw new Error('An error occured while posting orders');
       const result = await response.json();
-      console.log("modify order result",result);
       return result;
     } catch (err) {
-      console.log('hi', err);
+      console.log(err);
       rejectWithValue(err);
     }
   }
