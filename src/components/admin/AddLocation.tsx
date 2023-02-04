@@ -38,6 +38,7 @@ const AddLocation = () => {
   const [blocks, setBlocks] = useState<any>([]);
   const [blockid, setBlockId] = useState<string>('');
   const [cluster, setCluster] = useState<string>('');
+  const [error, setError] = useState<string>('');
   const [helperTexts, setHelperTexts] = useState<HelperTextType>({
     location: '',
   });
@@ -55,13 +56,17 @@ const AddLocation = () => {
           snackbarType: 'info',
         })
       );
-    if (status === 'failed')
+    if (status === 'failed') {
       dispatch(
         handleOpenSnackbar({
-          snackbarMessage: 'Error while Adding Location ,Please try again',
+          snackbarMessage: error
+            ? error
+            : 'Error while Adding Location ,Please try again',
           snackbarType: 'error',
         })
       );
+      setError('');
+    }
     if (status === 'succeeded')
       dispatch(
         handleOpenSnackbar({
@@ -76,13 +81,17 @@ const AddLocation = () => {
           snackbarType: 'info',
         })
       );
-    if (status2 === 'failed')
+    if (status2 === 'failed') {
       dispatch(
         handleOpenSnackbar({
-          snackbarMessage: 'Error while Adding Block ,Please try again',
+          snackbarMessage: error
+            ? error
+            : 'Error while Adding Block ,Please try again',
           snackbarType: 'error',
         })
       );
+      setError('');
+    }
     if (status2 === 'succeeded')
       dispatch(
         handleOpenSnackbar({
@@ -97,13 +106,17 @@ const AddLocation = () => {
           snackbarType: 'info',
         })
       );
-    if (status3 === 'failed')
+    if (status3 === 'failed') {
       dispatch(
         handleOpenSnackbar({
-          snackbarMessage: 'Error while Adding Cluster ,Please try again',
+          snackbarMessage: error
+            ? error
+            : 'Error while Adding Cluster ,Please try again',
           snackbarType: 'error',
         })
       );
+      setError('');
+    }
     if (status3 === 'succeeded')
       dispatch(
         handleOpenSnackbar({
@@ -139,7 +152,11 @@ const AddLocation = () => {
         setStatus('succeeded');
         setLocation('');
       } else {
-        setStatus('failed');
+        const error = result.error;
+        if (error) {
+          setError(error);
+        }
+        throw new Error('Error while Adding Location');
       }
     } catch (error) {
       setStatus('failed');
@@ -170,7 +187,11 @@ const AddLocation = () => {
         setBlockId('');
         setCluster('');
       } else {
-        setStatus3('failed');
+        const error = result.message;
+        if (error) {
+          setError(error);
+        }
+        throw new Error('Error while Adding Location');
       }
     } catch (error) {
       setStatus3('failed');
@@ -200,7 +221,11 @@ const AddLocation = () => {
         setStatus2('succeeded');
         setBlock('');
       } else {
-        setStatus2('failed');
+        const error = result.message;
+        if (error) {
+          setError(error);
+        }
+        throw new Error('Error while Adding Location');
       }
     } catch (error) {
       setStatus2('failed');

@@ -114,23 +114,26 @@ const LandingPage = () => {
               </Typography> */}
             </Box>
           </Grid>
-          <ContainerRowBox gap="2rem" alignItems="center">
-          <Grid item>
-            <img
-              src={bihralogo}
-              width="80px"
-              height="80px"
-              alt="bihralogo"
-            />
-          </Grid>
-          <Grid item>
-            <img
-              src={g20}
-              width="80px"
-              height="80px"
-              alt="bihralogo"
-            />
-          </Grid>
+          <ContainerRowBox
+            gap="2rem"
+            alignItems="center"
+          >
+            <Grid item>
+              <img
+                src={bihralogo}
+                width="80px"
+                height="80px"
+                alt="bihralogo"
+              />
+            </Grid>
+            <Grid item>
+              <img
+                src={g20}
+                width="80px"
+                height="80px"
+                alt="bihralogo"
+              />
+            </Grid>
           </ContainerRowBox>
         </Grid>
       </Container>
@@ -502,8 +505,8 @@ const LandingPage = () => {
           लिए प्लेटफाॅर्म उपलब्ध करवाना।
           <br />
           <br /> मिशन:- स्व सहायता समूहों/उत्पादक समूहों/गौठानो के उत्पाद/रीपा
-          के उत्पाद आदि को शासकीय विभागों एवं खुले बाजार मे विक्रय हेतु आॅनलाईन
-          प्लेटफाॅर्म उपलब्ध करवाकर, ग्रामीण अर्थव्यवस्था को मजबूती प्रदान करना।
+          के उत्पाद आदि को शासकीय विभागों मे विक्रय हेतु ऑनलाइन माध्यम उपलब्ध
+          करवाकर, ग्रामीण अर्थव्यवस्था को मजबूती प्रदान करना।
         </Typography>
       </Box>
       <Box
@@ -566,8 +569,8 @@ const LandingPage = () => {
                   }}
                 >
                   {announcement.title}
-                  {' - '}
-                  {format(parseISO(announcement.createdAt), 'do MMM yyyy')}
+                  {/* {' - '}
+                  {format(parseISO(announcement.createdAt), 'do MMM yyyy')} */}
                 </Typography>
               </div>
             ))}

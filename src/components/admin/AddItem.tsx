@@ -24,31 +24,16 @@ interface HelperTextType {
 }
 const AddItem = () => {
   const [status, setStatus] = useState('');
-  const [zones, setZones] = useState<string[]>([]);
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const [itemname, setItemName] = useState<string>('');
   const [itemunit, setItemUnit] = useState<string>('');
+  const [error, setError] = useState<string>('');
   const [helperTexts, setHelperTexts] = useState<HelperTextType>({
     itemname: '',
     itemunit: '',
   });
-  const getallzones = async () => {
-    const requestOptions: RequestInit = {
-      method: 'GET',
-      redirect: 'follow',
-    };
-    try {
-      const response = await fetch(
-        'https://backend.cgshgmart.com/shg/getallzones',
-        requestOptions
-      );
-      const result = await response.json();
-      setZones(result.zones);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+
   useEffect(() => {
     if (status === 'loading')
       dispatch(
@@ -57,13 +42,17 @@ const AddItem = () => {
           snackbarType: 'info',
         })
       );
-    if (status === 'failed')
+    if (status === 'failed') {
       dispatch(
         handleOpenSnackbar({
-          snackbarMessage: 'Error while Adding Item ,Please try again',
+          snackbarMessage: error
+            ? error
+            : 'Error while Adding Item ,Please try again',
           snackbarType: 'error',
         })
       );
+      setError('');
+    }
     if (status === 'succeeded')
       dispatch(
         handleOpenSnackbar({
@@ -74,7 +63,6 @@ const AddItem = () => {
     if (user.token) {
       dispatch(fetchAllShgData(user.token));
     }
-    getallzones();
   }, [status, dispatch]);
 
   const register = async (data: HelperTextType) => {
@@ -97,7 +85,10 @@ const AddItem = () => {
         requestOptions
       );
       if (response.status !== 200) {
-        setStatus('failed');
+        const error = await response.json();
+        if (error?.error) {
+          setError(error.error);
+        }
         throw Error('An error occurred');
       }
       setStatus('succeeded');
@@ -161,10 +152,10 @@ const AddItem = () => {
           >
             <MenuItem value={'Kg'}>Kg</MenuItem>
             <MenuItem value={'Dozen'}>Dozen</MenuItem>
-            <MenuItem value={'Dozen'}>Gram</MenuItem>
-            <MenuItem value={'Dozen'}>Litre</MenuItem>
-            <MenuItem value={'Dozen'}>Millilitre</MenuItem>
-            <MenuItem value={'Dozen'}>Piece</MenuItem>
+            <MenuItem value={'Gram'}>Gram</MenuItem>
+            <MenuItem value={'Litre'}>Litre</MenuItem>
+            <MenuItem value={'Millilitre'}>Millilitre</MenuItem>
+            <MenuItem value={'Piece'}>Piece</MenuItem>
           </Select>
         </FormControl>
         <StyledButton

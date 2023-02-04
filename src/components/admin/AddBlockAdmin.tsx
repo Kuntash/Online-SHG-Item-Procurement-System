@@ -41,6 +41,7 @@ const AddBlockAdmin = () => {
   const [location, setLocation] = useState<string>('');
   const [contact, setContact] = useState<string>('');
   const [block, setBlock] = useState<string>('');
+  const [error, setError] = useState<string>('');
   const [blocks, setBlocks] = useState<any>([]);
   const [showPassword2, setShowPassword2] = useState<boolean>(false);
   const [helperTexts, setHelperTexts] = useState<HelperTextType>({
@@ -95,13 +96,17 @@ const AddBlockAdmin = () => {
           snackbarType: 'info',
         })
       );
-    if (status === 'failed')
+    if (status === 'failed') {
       dispatch(
         handleOpenSnackbar({
-          snackbarMessage: 'Error while Registering ,Please try again',
+          snackbarMessage: error
+            ? error
+            : 'Error while Registering ,Please try again',
           snackbarType: 'error',
         })
       );
+      setError('');
+    }
     if (status === 'succeeded')
       dispatch(
         handleOpenSnackbar({
@@ -136,7 +141,8 @@ const AddBlockAdmin = () => {
         requestOptions
       );
       if (response.status !== 200) {
-        setStatus('failed');
+        const error = await response.json();
+        if (error?.message) setError(error.message);
         throw Error('An error occurred');
       }
       setStatus('succeeded');

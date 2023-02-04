@@ -38,6 +38,7 @@ const RegisterShg = () => {
   const [blocks, setBlocks] = useState<any>([]);
   const [cluster, setCluster] = useState<string>('');
   const [village, setVillage] = useState<string>('');
+  const [error, setError] = useState<string>('');
   const [clusteroptions, setClusteroptions] = useState<any>([]);
   const [helperTexts, setHelperTexts] = useState<HelperTextType>({
     name: '',
@@ -91,13 +92,17 @@ const RegisterShg = () => {
           snackbarType: 'info',
         })
       );
-    if (status === 'failed')
+    if (status === 'failed') {
       dispatch(
         handleOpenSnackbar({
-          snackbarMessage: 'Error while Registering ,Please try again',
+          snackbarMessage: error
+            ? error
+            : 'Error while Registering ,Please try again',
           snackbarType: 'error',
         })
       );
+      setError('');
+    }
     if (status === 'succeeded')
       dispatch(
         handleOpenSnackbar({
@@ -132,8 +137,11 @@ const RegisterShg = () => {
         requestOptions
       );
       if (response.status !== 200) {
-        setStatus('failed');
-        throw Error('An error occurred');
+        await response.json().then((res) => {
+          if (res.error) setError(res.error);
+          else setError('Error while Registering ,Please try again');
+          throw new Error('Error while Registering ,Please try again');
+        });
       }
       setStatus('succeeded');
       setName('');
