@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
+import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
@@ -81,6 +82,7 @@ const AdminShgDetails = () => {
   const currentShg = useAppSelector((state: RootState) =>
     selectShgById(state, shgId as string)
   );
+
   if (currentShg === undefined)
     return (
       <StyledContainer sx={{ flexGrow: 1 }}>
@@ -118,6 +120,9 @@ const AdminShgDetails = () => {
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
     ],
+  };
+  const handleredirect = () => {
+    navigate(`/dashboard/admin/editshg/${currentShg._id}`);
   };
   return (
     <StyledContainer sx={{ flexGrow: 1 }}>
@@ -165,6 +170,7 @@ const AdminShgDetails = () => {
               sx={{ marginBottom: '1rem' }}
             >
               SHG details
+              <EditIcon onClick={() => handleredirect()} />
             </Typography>
             <StyledTable>
               <StyledTableHead sx={{ fontSize: '1rem' }}>

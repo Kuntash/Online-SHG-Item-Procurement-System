@@ -17,7 +17,8 @@ import {
 import { handleOpenSnackbar } from '../../features/utilityStates/utilitySlice';
 import { selectUser } from '../../features/auth/authSlice';
 import { fetchAllShgData } from '../../features/adminData/adminDataSlice';
-
+import { useLocation, useNavigate } from 'react-router-dom';
+import Loading2 from '../utility/Loading2';
 interface HelperTextType {
   contact: string;
   name: string;
@@ -27,10 +28,13 @@ interface HelperTextType {
   village: string;
 }
 const RegisterShg = () => {
+  const urllocation = useLocation();
+  const navigate = useNavigate();
   const [status, setStatus] = useState('');
   const [zones, setZones] = useState<string[]>([]);
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
+  const [shgid, setShgId] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [contact, setContact] = useState<string>('');
@@ -39,6 +43,7 @@ const RegisterShg = () => {
   const [cluster, setCluster] = useState<string>('');
   const [village, setVillage] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [iseditroute, setIseditroute] = useState<boolean>(false);
   const [clusteroptions, setClusteroptions] = useState<any>([]);
   const [helperTexts, setHelperTexts] = useState<HelperTextType>({
     name: '',
@@ -106,7 +111,9 @@ const RegisterShg = () => {
     if (status === 'succeeded')
       dispatch(
         handleOpenSnackbar({
-          snackbarMessage: 'SHG Registered Successfully',
+          snackbarMessage: iseditroute
+            ? 'SHG Updated Successfully'
+            : 'SHG Registered Successfully',
           snackbarType: 'success',
         })
       );
@@ -116,6 +123,45 @@ const RegisterShg = () => {
     getallzones();
     getallblocks();
   }, [status, dispatch]);
+  useEffect(() => {
+    if (urllocation.pathname.split('/')[3] === 'editshg') {
+      setIseditroute(true);
+      if (blocks.length > 0 && shgid === '') {
+        console.log('edit');
+        getdata(urllocation.pathname.split('/')[4]);
+      }
+    }
+  }, [blocks, urllocation, shgid]);
+  const getdata = async (id: String) => {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('authorization', `Bearer ${user.token}`);
+
+    const requestOptions: RequestInit = {
+      method: 'GET',
+      headers,
+      redirect: 'follow',
+    };
+    try {
+      const response = await fetch(
+        `https://backend.cgshgmart.com/ceo/getshgdatabyid/${id}`,
+        requestOptions
+      );
+      const result = await response.json();
+      setShgId(result.shgdata._id);
+      setContact(result.shgdata.contact);
+      setName(result.shgdata.name);
+      setLocation(result.shgdata.location);
+      setBlock(result.shgdata.block);
+      handleclusteroptionsandsetcluster(
+        result.shgdata.block,
+        result.shgdata.cluster
+      );
+      setVillage(result.shgdata.village);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
   const register = async (data: HelperTextType) => {
     if (status === 'loading') return;
     const headers = new Headers();
@@ -156,11 +202,52 @@ const RegisterShg = () => {
     }
   };
 
+  const Update = async (data: any) => {
+    if (status === 'loading') return;
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('authorization', `Bearer ${user.token}`);
+    const raw = JSON.stringify(data);
+
+    const requestOptions: RequestInit = {
+      method: 'POST',
+      headers,
+      body: raw,
+      redirect: 'follow',
+    };
+    setStatus('loading');
+    try {
+      const response = await fetch(
+        'https://backend.cgshgmart.com/ceo/updateshgdata',
+        requestOptions
+      );
+      if (response.status !== 200) {
+        await response.json().then((res) => {
+          if (res.error) setError(res.error);
+          else setError('Error while Updating ,Please try again');
+          throw new Error('Error while Updating ,Please try again');
+        });
+      }
+      setStatus('succeeded');
+      setName('');
+      setLocation('');
+      setContact('');
+      setBlock('');
+      setCluster('');
+      setVillage('');
+      navigate('/dashboard/admin/view-all-shgs');
+      return;
+    } catch (error: any) {
+      setStatus('failed');
+      return;
+    }
+  };
+
   const handleRegister = async () => {
     if (!name)
       setHelperTexts((prev) => ({ ...prev, name: 'SHG Name is required' }));
     else if (!location)
-      setHelperTexts((prev) => ({ ...prev, location: 'Location is required' }));
+      setHelperTexts((prev) => ({ ...prev, village: 'Location is required' }));
     else if (!contact)
       setHelperTexts((prev) => ({ ...prev, contact: 'Contact is required' }));
     else if (contact.length !== 10)
@@ -169,15 +256,38 @@ const RegisterShg = () => {
         contact: 'Contact length should be 10',
       }));
     else if (!block)
-      setHelperTexts((prev) => ({ ...prev, zone: 'Zone is required' }));
+      setHelperTexts((prev) => ({ ...prev, village: 'Block is required' }));
     else if (!cluster)
-      setHelperTexts((prev) => ({ ...prev, cluster: 'Cluster is required' }));
+      setHelperTexts((prev) => ({ ...prev, village: 'Cluster is required' }));
     else if (!village)
       setHelperTexts((prev) => ({
         ...prev,
         village: 'Village/Town Name is required',
       }));
     else register({ name, location, contact, block, cluster, village });
+  };
+  const handleUpdate = async () => {
+    if (!name)
+      setHelperTexts((prev) => ({ ...prev, name: 'SHG Name is required' }));
+    else if (!location)
+      setHelperTexts((prev) => ({ ...prev, village: 'Location is required' }));
+    else if (!contact)
+      setHelperTexts((prev) => ({ ...prev, contact: 'Contact is required' }));
+    else if (contact.length !== 10)
+      setHelperTexts((prev) => ({
+        ...prev,
+        contact: 'Contact length should be 10',
+      }));
+    else if (!block)
+      setHelperTexts((prev) => ({ ...prev, village: 'Block is required' }));
+    else if (!cluster)
+      setHelperTexts((prev) => ({ ...prev, village: 'Cluster is required' }));
+    else if (!village)
+      setHelperTexts((prev) => ({
+        ...prev,
+        village: 'Village/Town Name is required',
+      }));
+    else Update({ name, location, contact, block, cluster, village, shgid });
   };
   const handleclusteroptions = (block: string) => {
     const options = blocks.filter(
@@ -186,17 +296,31 @@ const RegisterShg = () => {
     setClusteroptions(options[0].clusters);
     setCluster('');
   };
-
+  const handleclusteroptionsandsetcluster = (
+    block: string,
+    cluster: string
+  ) => {
+    const options = blocks.filter(
+      (blockdata: any) => blockdata.blockname === block
+    );
+    setClusteroptions(options[0].clusters);
+    setCluster(cluster);
+  };
+  if (iseditroute && shgid === '') return <Loading2 />;
   return (
     <StyledPaper sx={{ width: '60%', margin: 'auto' }}>
       <ContainerColumnBox sx={{ rowGap: '1.5rem' }}>
         <ContainerColumnBox sx={{ rowGap: '1rem', marginBottom: '1rem' }}>
-          <Typography variant="h2">Register New Shg</Typography>
+          <Typography variant="h2">
+            {iseditroute ? 'Update SHG' : 'Register New Shg'}
+          </Typography>
           <Typography
             variant="body1"
             color="secondary.dark"
           >
-            Enter SHG details below
+            {iseditroute
+              ? 'Enter Updated SHG details below'
+              : 'Enter SHG details below'}
           </Typography>
         </ContainerColumnBox>
         <FormControl>
@@ -278,20 +402,37 @@ const RegisterShg = () => {
             type="text"
           />
         </FormControl>
-        <StyledButton
-          startIcon={
-            status === 'loading' ? (
-              <CircularProgress sx={{ color: 'white' }} />
-            ) : null
-          }
-          variant="contained"
-          color="primary"
-          sx={{ padding: '0.75rem 1.2rem' }}
-          type="submit"
-          onClick={handleRegister}
-        >
-          Register
-        </StyledButton>
+        {iseditroute ? (
+          <StyledButton
+            startIcon={
+              status === 'loading' ? (
+                <CircularProgress sx={{ color: 'white' }} />
+              ) : null
+            }
+            variant="contained"
+            color="primary"
+            sx={{ padding: '0.75rem 1.2rem' }}
+            type="submit"
+            onClick={handleUpdate}
+          >
+            Update
+          </StyledButton>
+        ) : (
+          <StyledButton
+            startIcon={
+              status === 'loading' ? (
+                <CircularProgress sx={{ color: 'white' }} />
+              ) : null
+            }
+            variant="contained"
+            color="primary"
+            sx={{ padding: '0.75rem 1.2rem' }}
+            type="submit"
+            onClick={handleRegister}
+          >
+            Register
+          </StyledButton>
+        )}
       </ContainerColumnBox>
     </StyledPaper>
   );

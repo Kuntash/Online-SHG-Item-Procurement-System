@@ -126,6 +126,10 @@ function App() {
               element={<RegisterShg />}
             />
             <Route
+              path="editshg/:shgid"
+              element={<RegisterShg />}
+            />
+            <Route
               path="addlocation"
               element={<AddLocation />}
             />
