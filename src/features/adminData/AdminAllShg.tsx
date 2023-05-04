@@ -5,6 +5,7 @@ import {
   Typography,
   InputAdornment,
   IconButton,
+  Button,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -20,6 +21,7 @@ import {
   StyledTablePagination,
   StyledTableRow,
 } from '../../components/custom';
+import TableViewIcon from '@mui/icons-material/TableView';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
 import { AdminSHGDataType } from '../../types/custom';
 import {
@@ -28,7 +30,9 @@ import {
   fetchAllAdminOrders,
 } from './adminDataSlice';
 import { StyledTextField } from '../../components/custom';
+import { CSVLink } from 'react-csv';
 import SearchIcon from '@mui/icons-material/Search';
+import { format } from 'date-fns';
 const AdminAllShg = () => {
   const [search, setsearch] = useState<any>();
   const [filteredShgs, setFilteredShgs] = useState<AdminSHGDataType[]>([]);
@@ -99,7 +103,7 @@ const AdminAllShg = () => {
             <Grid
               container
               spacing={2}
-              sx={{ marginBottom: '1rem' }}
+              sx={{ marginBottom: '1rem', alignItems: 'center' }}
             >
               <Grid item>
                 <Typography
@@ -135,11 +139,28 @@ const AdminAllShg = () => {
                   />
                 </form>
               </Grid>
+              <Grid item>
+                <CSVLink
+                  data={shgData}
+                  filename={'shgreport - ' + format(new Date(), 'do MMM yyyy')}
+                  headers={[
+                    { label: 'Shg id', key: '_id' },
+                    { label: 'Shg name', key: 'name' },
+                    { label: 'Shg contact', key: 'contact' },
+                  ]}
+                >
+                  <TableViewIcon color="primary" />
+                </CSVLink>
+              </Grid>
             </Grid>
-              <StyledContainer sx={{alignItems:'flex-end',width:'100%'}}>
-                <Typography
-                  variant="subtitle2" sx={{fontWeight:'bold'}}>Total SHGs: {shgData.length}</Typography>
-                </StyledContainer>
+            <StyledContainer sx={{ alignItems: 'flex-end', width: '100%' }}>
+              <Typography
+                variant="subtitle2"
+                sx={{ fontWeight: 'bold' }}
+              >
+                Total SHGs: {shgData.length}
+              </Typography>
+            </StyledContainer>
             <StyledTable>
               <StyledTableHead sx={{ fontSize: '1rem' }}>
                 <TableRow>
