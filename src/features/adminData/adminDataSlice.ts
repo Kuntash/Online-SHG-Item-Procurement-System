@@ -4,6 +4,7 @@ import {
   AdminChangedPriceOfBid,
   AdminOrderDataType,
   AdminSHGDataType,
+  AdminDepartmentDataType,
 } from '../../types/custom';
 
 import { backendUrl } from '../../config';
@@ -17,6 +18,10 @@ export interface AdminDataType {
     orderDataStatus: 'loading' | 'failed' | 'succeeded' | 'idle';
     orderData: AdminOrderDataType[];
   };
+  department: {
+    departmentDataStatus: 'loading' | 'failed' | 'succeeded' | 'idle';
+    departmentData: AdminDepartmentDataType[];
+  };
   bidChangeStatus: 'loading' | 'failed' | 'succeeded' | 'idle';
 }
 
@@ -28,6 +33,10 @@ const initialState: AdminDataType = {
   orderData: {
     orderDataStatus: 'idle',
     orderData: [],
+  },
+  department: {
+    departmentDataStatus: 'idle',
+    departmentData: [],
   },
   bidChangeStatus: 'idle',
 };
@@ -122,6 +131,36 @@ export const fetchAllShgData = createAsyncThunk(
     }
   }
 );
+export const fetchAllDepartmentData = createAsyncThunk(
+  'adminData/fetchAllDepartmentData',
+  async (token: string | undefined, { rejectWithValue }) => {
+    try {
+      if (token === undefined) throw new Error('Token is undefined');
+
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${token}`);
+      const requestOptions: RequestInit = {
+        method: 'GET',
+        headers,
+        redirect: 'follow',
+      };
+      const response = await fetch(
+        backendUrl + 'ceo/getdepartments',
+        requestOptions
+      );
+      if (response.status === 400)
+        throw new Error('Error occurred while fetching Shg Data');
+
+      const result: {
+        message: string;
+        departmentdata: AdminDepartmentDataType[];
+      } = await response.json();
+      return result.departmentdata;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
 const adminDataSlice = createSlice({
   name: 'adminData',
   initialState,
@@ -144,6 +183,16 @@ const adminDataSlice = createSlice({
       })
       .addCase(fetchAllShgData.rejected, (state) => {
         state.shgData.shgDataStatus = 'failed';
+      })
+      .addCase(fetchAllDepartmentData.pending, (state) => {
+        state.department.departmentDataStatus = 'loading';
+      })
+      .addCase(fetchAllDepartmentData.fulfilled, (state, action) => {
+        state.department.departmentDataStatus = 'succeeded';
+        state.department.departmentData = action.payload;
+      })
+      .addCase(fetchAllDepartmentData.rejected, (state) => {
+        state.department.departmentDataStatus = 'failed';
       })
       .addCase(fetchAllAdminOrders.pending, (state) => {
         state.orderData.orderDataStatus = 'loading';
@@ -171,6 +220,8 @@ export const { resetOnLogout } = adminDataSlice.actions;
 export const selectAdminOrderById = (state: RootState, id: string) =>
   state.admin.orderData.orderData.find((order, index) => order._id === id);
 export const selectAllShgs = (state: RootState) => state.admin.shgData.shgData;
+export const selectAllDepartments = (state: RootState) =>
+  state.admin.department.departmentData;
 export const selectShgById = (state: RootState, id: string) =>
   state.admin.shgData.shgData?.find((shg) => shg._id === id);
 export default adminDataSlice.reducer;

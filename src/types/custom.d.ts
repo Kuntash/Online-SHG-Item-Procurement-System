@@ -161,6 +161,12 @@ export interface AdminOrderDataType {
   updatedAt: string;
 }
 
+export interface AdminDepartmentDataType {
+  _id: string;
+  department: string;
+  contact: string;
+}
+
 export interface AdminSHGProduct {
   name: string;
   type: 'loose' | 'packed';

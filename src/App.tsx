@@ -28,6 +28,7 @@ import AdminStatsPage from './components/admin/AdminStatsPage';
 import AddItem from './components/admin/AddItem';
 import AddAdmin from './components/admin/AddAdmin';
 import AddBlockAdmin from './components/admin/AddBlockAdmin';
+import AdminAllDepartments from './features/adminData/AdminAllDepartments';
 const { useNavigate } = require('react-router-dom');
 function App() {
   const [checkcookie, setCheckcookie] = useState(true);
@@ -159,6 +160,10 @@ function App() {
                 element={<AdminShgDetails />}
               />
             </Route>
+            <Route
+              path="view-all-departments"
+              element={<AdminAllDepartments />}
+            />
             <Route path="bids">
               <Route
                 path=":bidId"
