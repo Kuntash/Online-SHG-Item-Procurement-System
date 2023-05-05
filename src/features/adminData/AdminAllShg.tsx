@@ -5,7 +5,6 @@ import {
   Typography,
   InputAdornment,
   IconButton,
-  Button,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -147,6 +146,7 @@ const AdminAllShg = () => {
                     { label: 'Shg id', key: '_id' },
                     { label: 'Shg name', key: 'name' },
                     { label: 'Shg contact', key: 'contact' },
+                    { label: 'Shg location', key: 'location' },
                   ]}
                 >
                   <TableViewIcon color="primary" />

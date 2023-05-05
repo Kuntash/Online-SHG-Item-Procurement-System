@@ -167,6 +167,12 @@ export interface AdminDepartmentDataType {
   contact: string;
 }
 
+export interface AdminProductDataType {
+  _id: string;
+  itemname: string;
+  itemunit: string;
+}
+
 export interface AdminSHGProduct {
   name: string;
   type: 'loose' | 'packed';

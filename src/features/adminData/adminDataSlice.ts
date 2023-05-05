@@ -5,6 +5,7 @@ import {
   AdminOrderDataType,
   AdminSHGDataType,
   AdminDepartmentDataType,
+  AdminProductDataType,
 } from '../../types/custom';
 
 import { backendUrl } from '../../config';
@@ -22,6 +23,10 @@ export interface AdminDataType {
     departmentDataStatus: 'loading' | 'failed' | 'succeeded' | 'idle';
     departmentData: AdminDepartmentDataType[];
   };
+  product: {
+    productDataStatus: 'loading' | 'failed' | 'succeeded' | 'idle';
+    productData: AdminProductDataType[];
+  };
   bidChangeStatus: 'loading' | 'failed' | 'succeeded' | 'idle';
 }
 
@@ -37,6 +42,10 @@ const initialState: AdminDataType = {
   department: {
     departmentDataStatus: 'idle',
     departmentData: [],
+  },
+  product: {
+    productDataStatus: 'idle',
+    productData: [],
   },
   bidChangeStatus: 'idle',
 };
@@ -149,13 +158,40 @@ export const fetchAllDepartmentData = createAsyncThunk(
         requestOptions
       );
       if (response.status === 400)
-        throw new Error('Error occurred while fetching Shg Data');
+        throw new Error('Error occurred while fetching Department Data');
 
       const result: {
         message: string;
         departmentdata: AdminDepartmentDataType[];
       } = await response.json();
       return result.departmentdata;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const fetchAllProductData = createAsyncThunk(
+  'adminData/fetchAllProductData',
+  async (token: string | undefined, { rejectWithValue }) => {
+    try {
+      if (token === undefined) throw new Error('Token is undefined');
+
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${token}`);
+      const requestOptions: RequestInit = {
+        method: 'GET',
+        headers,
+        redirect: 'follow',
+      };
+      const response = await fetch(
+        backendUrl + 'order/getallitems',
+        requestOptions
+      );
+      if (response.status === 400)
+        throw new Error('Error occurred while fetching Product Data');
+      const result: [AdminProductDataType] = await response.json();
+      return result;
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -194,6 +230,16 @@ const adminDataSlice = createSlice({
       .addCase(fetchAllDepartmentData.rejected, (state) => {
         state.department.departmentDataStatus = 'failed';
       })
+      .addCase(fetchAllProductData.pending, (state) => {
+        state.product.productDataStatus = 'loading';
+      })
+      .addCase(fetchAllProductData.fulfilled, (state, action) => {
+        state.product.productDataStatus = 'succeeded';
+        state.product.productData = action.payload;
+      })
+      .addCase(fetchAllProductData.rejected, (state) => {
+        state.product.productDataStatus = 'failed';
+      })
       .addCase(fetchAllAdminOrders.pending, (state) => {
         state.orderData.orderDataStatus = 'loading';
       })
@@ -222,6 +268,8 @@ export const selectAdminOrderById = (state: RootState, id: string) =>
 export const selectAllShgs = (state: RootState) => state.admin.shgData.shgData;
 export const selectAllDepartments = (state: RootState) =>
   state.admin.department.departmentData;
+export const selectAllProducts = (state: RootState) =>
+  state.admin.product.productData;
 export const selectShgById = (state: RootState, id: string) =>
   state.admin.shgData.shgData?.find((shg) => shg._id === id);
 export default adminDataSlice.reducer;

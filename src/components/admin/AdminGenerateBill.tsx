@@ -6,7 +6,6 @@ import {
   IconButton,
   Radio,
   RadioGroup,
-  RadioGroupState,
   Grid,
   TableBody,
   TableRow,
@@ -22,11 +21,9 @@ import {
   ContainerRowBox,
   StyledContainer,
   StyledPaper,
-  StyledStatus,
   StyledTable,
   StyledTableCell,
   StyledTableHead,
-  StyledTableHeadCell,
   StyledTableRow,
 } from '../custom';
 
@@ -287,14 +284,14 @@ const getItemReport = async (
   }
 };
 
-interface AdminOrderDetailsTableProps {
-  orderId: string;
-  orderedBy: string;
-  orderedAt: string;
-  department: string;
-  instituteLocation: string;
-  orderStatus: string;
-}
+// interface AdminOrderDetailsTableProps {
+//   orderId: string;
+//   orderedBy: string;
+//   orderedAt: string;
+//   department: string;
+//   instituteLocation: string;
+//   orderStatus: string;
+// }
 const AdminGenerateBill = () => {
   const [tablelabels, settablelabels] = useState<Ilabel[]>(labels);
   const [generateby, setGenerateBy] = useState('');

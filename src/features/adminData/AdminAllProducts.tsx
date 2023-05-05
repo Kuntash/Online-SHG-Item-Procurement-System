@@ -22,38 +22,38 @@ import {
   StyledTableRow,
 } from '../../components/custom';
 import TablePaginationActions from '../../components/custom/TablePaginationActions';
-import { AdminDepartmentDataType } from '../../types/custom';
+import { AdminProductDataType } from '../../types/custom';
 import {
-  fetchAllDepartmentData,
+  fetchAllProductData,
   fetchAllAdminOrders,
-  selectAllDepartments,
+  selectAllProducts,
 } from './adminDataSlice';
 import { StyledTextField } from '../../components/custom';
 import SearchIcon from '@mui/icons-material/Search';
 import { CSVLink } from 'react-csv';
 import { format } from 'date-fns';
-const AdminAllDepartments = () => {
+const AdminAllProducts = () => {
   const [search, setsearch] = useState<any>();
-  const [filteredDepartments, setFilteredDepartments] = useState<
-    AdminDepartmentDataType[]
+  const [filteredProducts, setFilteredProducts] = useState<
+    AdminProductDataType[]
   >([]);
   const dispatch = useAppDispatch();
   // const navigate = useNavigate();
   const userToken = useAppSelector((state: RootState) => state.auth.token);
-  const departmentDataStatus = useAppSelector(
-    (state: RootState) => state.admin.department.departmentDataStatus
+  const productDataStatus = useAppSelector(
+    (state: RootState) => state.admin.product.productDataStatus
   );
   const orderDataStatus = useAppSelector(
     (state: RootState) => state.admin.orderData.orderDataStatus
   );
-  const departmentData = useAppSelector(
-    selectAllDepartments
-  ) as unknown as AdminDepartmentDataType[];
+  const productData = useAppSelector(
+    selectAllProducts
+  ) as unknown as AdminProductDataType[];
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 5;
   const emptyRows = Math.max(
     0,
-    (1 + page) * rowsPerPage - filteredDepartments?.length
+    (1 + page) * rowsPerPage - filteredProducts?.length
   );
 
   const handleChangePage = (
@@ -63,30 +63,24 @@ const AdminAllDepartments = () => {
     setPage(newPage);
   };
   useEffect(() => {
-    if (departmentDataStatus === 'idle' && userToken)
-      dispatch(fetchAllDepartmentData(userToken));
+    if (productDataStatus === 'idle' && userToken)
+      dispatch(fetchAllProductData(userToken));
     if (orderDataStatus === 'idle') dispatch(fetchAllAdminOrders(userToken));
-    setFilteredDepartments(departmentData);
-  }, [
-    dispatch,
-    userToken,
-    departmentDataStatus,
-    orderDataStatus,
-    departmentData,
-  ]);
+    setFilteredProducts(productData);
+  }, [dispatch, userToken, productDataStatus, orderDataStatus, productData]);
   const filterdepartment = (e: any) => {
     e.preventDefault();
     if (search === '' || search === undefined) {
-      setFilteredDepartments(departmentData);
+      setFilteredProducts(productData);
       return;
     }
-    const filtereddepartments = departmentData.filter(
-      (department) =>
-        department.department.toLowerCase().includes(search.toLowerCase()) ||
-        department.contact.toLowerCase().includes(search.toLowerCase()) ||
-        department._id.toString().toLowerCase().includes(search.toLowerCase())
+    const filtereddepartments = productData.filter(
+      (product) =>
+        product.itemname.toLowerCase().includes(search.toLowerCase()) ||
+        product.itemunit.toLowerCase().includes(search.toLowerCase()) ||
+        product._id.toString().toLowerCase().includes(search.toLowerCase())
     );
-    setFilteredDepartments(filtereddepartments);
+    setFilteredProducts(filtereddepartments);
   };
 
   return (
@@ -112,7 +106,7 @@ const AdminAllDepartments = () => {
                   variant="h2"
                   sx={{ marginTop: '0.5rem' }}
                 >
-                  Departments List
+                  Products List
                 </Typography>
               </Grid>
               <Grid item>
@@ -143,14 +137,14 @@ const AdminAllDepartments = () => {
               </Grid>
               <Grid item>
                 <CSVLink
-                  data={departmentData}
+                  data={productData}
                   filename={
-                    'departmentreport - ' + format(new Date(), 'do MMM yyyy')
+                    'productreport - ' + format(new Date(), 'do MMM yyyy')
                   }
                   headers={[
-                    { label: 'Department id', key: '_id' },
-                    { label: 'Department name', key: 'department' },
-                    { label: 'Department contact', key: 'contact' },
+                    { label: 'Product id', key: '_id' },
+                    { label: 'Product name', key: 'itemname' },
+                    { label: 'unit', key: 'itemunit' },
                   ]}
                 >
                   <TableViewIcon color="primary" />
@@ -162,38 +156,38 @@ const AdminAllDepartments = () => {
                 variant="subtitle2"
                 sx={{ fontWeight: 'bold' }}
               >
-                Total Departments: {departmentData.length}
+                Total Departments: {productData.length}
               </Typography>
             </StyledContainer>
             <StyledTable>
               <StyledTableHead sx={{ fontSize: '1rem' }}>
                 <TableRow>
                   {/* <StyledTableHeadCell>Order Id</StyledTableHeadCell> */}
-                  <StyledTableHeadCell>Department id</StyledTableHeadCell>
-                  <StyledTableHeadCell>Department name</StyledTableHeadCell>
-                  <StyledTableHeadCell>Department contact</StyledTableHeadCell>
+                  <StyledTableHeadCell>Product id</StyledTableHeadCell>
+                  <StyledTableHeadCell>Product name</StyledTableHeadCell>
+                  <StyledTableHeadCell>Unit</StyledTableHeadCell>
                 </TableRow>
               </StyledTableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? filteredDepartments.slice(
+                  ? filteredProducts.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
-                  : filteredDepartments
-                ).map((department, index: number) => (
+                  : filteredProducts
+                ).map((product, index: number) => (
                   <StyledTableRow
                     sx={{ fontSize: '0.875rem' }}
-                    key={department._id}
+                    key={product._id}
                   >
                     <StyledTableCell sx={{ marginTop: '1rem' }}>
-                      <b>{department._id}</b>
+                      <b>{product._id}</b>
                     </StyledTableCell>
                     <StyledTableCell sx={{ marginTop: '1rem' }}>
-                      {department.department}
+                      {product.itemname}
                     </StyledTableCell>
                     <StyledTableCell sx={{ marginTop: '1rem' }}>
-                      {department.contact}
+                      {product.itemunit}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
@@ -211,7 +205,7 @@ const AdminAllDepartments = () => {
                       },
                       native: true,
                     }}
-                    count={filteredDepartments.length}
+                    count={filteredProducts.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
@@ -227,4 +221,4 @@ const AdminAllDepartments = () => {
   );
 };
 
-export default AdminAllDepartments;
+export default AdminAllProducts;

@@ -6,6 +6,7 @@ import {
   SummarizeRounded,
   HomeMaxRounded,
   BusinessRounded,
+  CardMembershipRounded,
 } from '@mui/icons-material';
 import KeyIcon from '@mui/icons-material/Key';
 import { ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
@@ -45,6 +46,11 @@ const CeoSideMenu = ({ drawerOpen }: { drawerOpen: boolean }) => {
       title: 'View all shgs',
       route: 'view-all-shgs',
       icon: <TableViewRounded />,
+    },
+    {
+      title: 'View all Products',
+      route: 'view-all-products',
+      icon: <CardMembershipRounded />,
     },
     {
       title: 'View all Departments',
