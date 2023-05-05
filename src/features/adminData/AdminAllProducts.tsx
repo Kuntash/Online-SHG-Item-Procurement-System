@@ -156,7 +156,7 @@ const AdminAllProducts = () => {
                 variant="subtitle2"
                 sx={{ fontWeight: 'bold' }}
               >
-                Total Departments: {productData.length}
+                Total Products: {productData.length}
               </Typography>
             </StyledContainer>
             <StyledTable>
